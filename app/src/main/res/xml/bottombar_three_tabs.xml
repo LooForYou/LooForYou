@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_home"
+        icon="@drawable/ic_home"
+        title="Home" />
+    <tab
+        id="@+id/tab_profile"
+        icon="@drawable/ic_profile"
+        title="Profile" />
+    <tab
+        id="@+id/tab_add_bathroom"
+        icon="@drawable/ic_add"
+        title="Add a Bathroom" />
+    <tab
+        id="@+id/tab_map"
+        icon="@drawable/ic_map"
+        title="Map" />
+    <tab
+        id="@+id/tab_bookmarks"
+        icon="@drawable/ic_bookmark"
+        title="Bookmarks" />
+</tabs>

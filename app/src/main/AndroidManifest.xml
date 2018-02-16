@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AddABathroomActivity" />
+        <activity android:name=".MapActivity" />
+        <activity android:name=".BookmarkActivity" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>
