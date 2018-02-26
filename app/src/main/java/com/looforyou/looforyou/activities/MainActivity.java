@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -119,9 +120,16 @@ public class MainActivity extends AppCompatActivity {
             String GMAPS_TAG = "GException";
             try {
                 Intent intent =
-//                        new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(this);
-                        new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
+                        new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(this);
+//                        new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
                 startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+
+                //test filter
+//                AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+//                        .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+//                        .build();
+
+
             } catch (GooglePlayServicesRepairableException e) {
                 Toast.makeText(this, "repairableException", Toast.LENGTH_SHORT);
                 Log.v(GMAPS_TAG, "repairableException " + e);
