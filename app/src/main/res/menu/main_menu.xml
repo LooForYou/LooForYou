@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="jj"
+        android:layout_gravity="start"
+        android:gravity="left"
+        app:showAsAction="always">
+
+        <!--android:orderInCategory="101"-->
+    </item>
+
+    <!--<item-->
+        <!--android:id="@+id/menu_search"-->
+        <!--android:title="@string/search_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--app:actionViewClass="android.support.v7.widget.SearchView"-->
+        <!--app:showAsAction="always|collapseActionView"-->
+    <!--/>-->
+        <!--android:icon="@drawable/ic_search"-->
+        <!--android:orderInCategory="102"-->
+    <!--appcompat:showAsAction="ifRoom|collapseActionView"-->
+
+    <item
+        android:id="@+id/google_search"
+        android:layout_width="match_parent"
+        android:title="Search By Location"
+        android:layout_gravity="fill_horizontal"
+        app:actionLayout="@layout/custom_search_layout"
+        app:showAsAction="always">
+    </item>
+
+    <item
+        android:id="@+id/action_listview"
+        android:icon="@drawable/ic_home"
+        android:title="ff"
+        app:showAsAction="always">
+    </item>
+        <!--android:orderInCategory="103"-->
+
+
+</menu>

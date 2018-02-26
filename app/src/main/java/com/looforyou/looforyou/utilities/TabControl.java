@@ -1,10 +1,9 @@
-package com.looforyou.looforyou.controllers;
+package com.looforyou.looforyou.utilities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
-import android.util.Log;
 
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.activities.AddABathroomActivity;

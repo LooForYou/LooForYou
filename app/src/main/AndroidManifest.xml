@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.looforyou.looforyou">
+    <permission
+        android:name="in.wptrafficanalyzer.locationsherlocksearchviewmapv2.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
 
+    <!-- Allows to receive map -->
+    <uses-permission android:name="in.wptrafficanalyzer.locationsherlocksearchviewmapv2.permission.MAPS_RECEIVE" />
+
+    <!-- Used by the Google Maps Android API V2 to download map tiles from Google Maps servers -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Allows the Google Maps Android API V2 to cache map tile data in the device's external storage area -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Allows the Google Maps Android API V2 to use WiFi or mobile cell data (or both) to determine the device's location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Allows the Google Maps Android API V2 to use the Global Positioning System (GPS)
+    to determine the device's location to within a very small area -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Allows to contact Google Serves -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/launcher_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
+        <!--android:theme="@style/AppTheme">-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA5misW_UMeIiHctV34WehXwR5rbvIgU0g"/>
+
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

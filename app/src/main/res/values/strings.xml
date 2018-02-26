@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">LooForYou</string>
     <string name="title_activity_profile">ProfileActivity</string>
+
+    <!--search bar-->
+    <string name="search_title">Search By Location</string>
 </resources>
