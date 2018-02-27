@@ -18,20 +18,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@layout/toolbar_layout"
         >
-    <TextView
+        <!--android:layout_below="@layout/toolbar_layout"-->
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Home"
 
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Homessss"
-        android:paddingTop="100dp"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -42,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        app:bb_tabXmlResource="@xml/bottombar_three_tabs" />
+        app:bb_tabXmlResource="@xml/bottom_tabs" />
 </RelativeLayout>
 </LinearLayout>
     <!--</android.support.constraint.ConstraintLayout>-->

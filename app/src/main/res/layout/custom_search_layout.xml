@@ -24,14 +24,15 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/ic_search"/>
+            android:background="@drawable/ic_search"
+            android:tint="@color/white"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/custom_search_layout"
-        android:layout_width="150dp"
+        android:layout_width="165dp"
         android:layout_height="36dp"
         android:paddingStart="5dp"
         android:paddingBottom="2dp"

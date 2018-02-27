@@ -15,20 +15,14 @@
     </item>
 
     <item
-        android:id="@+id/action_google_search"
-        android:layout_width="match_parent"
+        android:id="@+id/google_search"
+        android:layout_width="175dp"
         android:title="Search By Location"
-        android:layout_gravity="fill_horizontal"
         app:actionLayout="@layout/custom_search_layout"
         app:showAsAction="always">
+        <!--android:layout_gravity="fill_horizontal"-->
     </item>
 
-    <item
-        android:id="@+id/action_listview"
-        android:icon="@drawable/ic_view_list_36"
-        android:title="list_view"
-        app:showAsAction="always">
-    </item>
         <!--android:orderInCategory="103"-->
 
 
