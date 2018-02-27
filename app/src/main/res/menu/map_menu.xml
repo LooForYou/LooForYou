@@ -15,7 +15,7 @@
     </item>
 
     <item
-        android:id="@+id/google_search"
+        android:id="@+id/action_google_search"
         android:layout_width="175dp"
         android:title="Search By Location"
         app:actionLayout="@layout/custom_search_layout"
