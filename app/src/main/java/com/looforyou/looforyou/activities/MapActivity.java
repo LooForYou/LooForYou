@@ -184,15 +184,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         double myLatitude = location.getLatitude();
         double myLongitude = location.getLongitude();
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLatitude,myLongitude),14));
 
+        //start map at current location
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude,myLongitude)));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
 
-      /*  } else {
-            // Show rationale and request permission.
-            Log.v(GMAPS_TAG,"permission denied 1");
-        }*/
-
-
+        //test add custom marker 
         LatLng longBeach = new LatLng(33.783123, -118.113707);
         BitmapDescriptor icon = BitmapGenerator.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.map_sit_36));
         googleMap.addMarker(new MarkerOptions()
