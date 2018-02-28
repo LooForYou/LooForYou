@@ -39,6 +39,27 @@ git push                     //push to your branch
 ```
 * order of operations:   	 add -> commit -> pull -> push
 
+________________________________________________________________________________________________________________________________________________________________________
+
+ssh into server for the first time
+
+If you don't have bash install from here:
+https://docs.microsoft.com/en-us/windows/wsl/install-win10
+
+Download and install Ubuntu for Windows 10.
+
+Make sure you have the file looforyou.pem in current directory.
+
+From bash, type in commands:
+$ chown :root looforyou.pem
+
+$ chmod 600 looforyou.pem
+
+$ ssh -i looforyou.pem ubuntu@ec2-18-144-72-20.us-west-1.compute.amazonaws.com
+
+
+
+
 
 
 
