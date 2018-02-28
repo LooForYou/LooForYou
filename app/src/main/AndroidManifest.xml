@@ -8,23 +8,11 @@
 
     <!-- Allows to receive map -->
     <uses-permission android:name="in.wptrafficanalyzer.locationsherlocksearchviewmapv2.permission.MAPS_RECEIVE" />
-
-    <!-- Used by the Google Maps Android API V2 to download map tiles from Google Maps servers -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- Allows the Google Maps Android API V2 to cache map tile data in the device's external storage area -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- Allows the Google Maps Android API V2 to use WiFi or mobile cell data (or both) to determine the device's location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!--
-    Allows the Google Maps Android API V2 to use the Global Positioning System (GPS)
-    to determine the device's location to within a very small area
-    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <!-- Allows to contact Google Serves -->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
@@ -51,9 +39,6 @@
         <activity android:name=".activities.MapActivity" />
         <activity android:name=".activities.BookmarkActivity" />
         <activity android:name=".activities.ProfileActivity" />
-        <!--<activity-->
-            <!--android:name=".utilities.MapsActivityy"-->
-            <!--android:label="@string/title_activity_maps_activityy"></activity>-->
     </application>
 
 </manifest>
