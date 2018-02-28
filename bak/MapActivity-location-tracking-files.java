@@ -51,7 +51,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -91,10 +90,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     PlaceDetectionClient mPlaceDetectionClient = null;
     // Construct a FusedLocationProviderClient.
     FusedLocationProviderClient mFusedLocationProviderClient = null;
-    CameraPosition mCameraPosition;
-
-    private static final String KEY_CAMERA_POSITION = "camera_position";
-    private static final String KEY_LOCATION = "location";
 
     private LocationRequest mLocationRequest;
     private TextView testText;
@@ -104,13 +99,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        mCameraPosition = null;
-        mLastKnownLocation = null;
-        
-        if (savedInstanceState != null) {
-            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-        }
 
         testText = (TextView) findViewById(R.id.testText);
         //replace default actionbar with custom toolbar layout
@@ -137,8 +125,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGeoDataClient = Places.getGeoDataClient(this, null);
         mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
         mFusedLocationProviderClient = getFusedLocationProviderClient(this);
+        mLastKnownLocation = null;
 
-
+//        getLastLocation();
         testText.setText("getting location...");
 
     }
@@ -164,6 +153,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         @Override
                         public void onClick(View view) {
 
+
                             try {
                                 //start autoplaces search
                                 Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(MapActivity.this);
@@ -180,17 +170,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         }
+//        return true;
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (googleMap != null) {
-            outState.putParcelable(KEY_CAMERA_POSITION, googleMap.getCameraPosition());
-            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
-            super.onSaveInstanceState(outState);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -203,7 +186,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
             String GMAPS_TAG = "GException";
             try {
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(MapActivity.this);
+                Intent intent =
+                        new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(MapActivity.this);
                 startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
             } catch (GooglePlayServicesRepairableException e) {
@@ -222,6 +206,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     /* end menu*/
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -231,35 +216,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         updateLocationUI();
         startLocationUpdates();
 
+        if(checkPermissions()){
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setOnMyLocationButtonClickListener(this);
+            googleMap.setOnMyLocationClickListener(this);
+            googleMap.setOnMarkerClickListener(this);
 
-        if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return;
         }
-        googleMap.setMyLocationEnabled(true);
-        googleMap.setOnMyLocationButtonClickListener(this);
-        googleMap.setOnMyLocationClickListener(this);
-        googleMap.setOnMarkerClickListener(this);
-
 
         //test add custom marker
         LatLng longBeach = new LatLng(33.783123, -118.113707);
-        LatLng longBeach2 = new LatLng(33.783516, -118.118719);
+        LatLng longBeach2 = new LatLng(33.783116, -118.113719);
         defaultMarker = BitmapGenerator.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_23_36));
-
-        //TODO override google dialog fragment to display more data
         googleMap.addMarker(new MarkerOptions()
                 .position(longBeach)
-                .title("bathroom 1")
+                .title("custom marker")
                 .anchor(0.5f, 0.5f)
-                .snippet("bathroom 1 info\ninfo2")
+                .snippet("custom snippet")
                 .icon(defaultMarker));
 
         googleMap.addMarker(new MarkerOptions()
                 .position(longBeach2)
-                .title("bathroom 2")
+                .title("custom marker")
                 .anchor(0.5f, 0.5f)
-                .snippet("custom info")
+                .snippet("custom snippet")
                 .icon(defaultMarker));
 
         mFusedLocationProviderClient.getLastLocation()
@@ -268,17 +248,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            String myLat = String.valueOf(location.getLatitude());
-                            String myLon = String.valueOf(location.getLongitude());
-                            Log.v(GMAPS_TAG, myLat);
-                            Log.v(GMAPS_TAG, myLon);
-                            testText.setText("Current Location: " + myLat + ", " + myLon);
+//                            testText.setText("location found");
                         }
                     }
                 });
-
+        getLastLocation();
 
     }
+
 
 
     @Override
@@ -302,28 +279,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-        if (requestCode == PERMISSIONS_ACCESS_FINE_LOCATION) {
-            if (permissions.length == 1 &&
-                    permissions[0] == permission.ACCESS_FINE_LOCATION &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions();
-                }
-                googleMap.setMyLocationEnabled(true);
-                googleMap.setOnMyLocationButtonClickListener((GoogleMap.OnMyLocationButtonClickListener) this);
-                googleMap.setOnMyLocationClickListener((GoogleMap.OnMyLocationClickListener) this);
-                return;
-
-            } else {
-                // Permission was denied. Display an error message.
-                Log.v(GMAPS_TAG, "permission denied.");
-            }
-        }
-    }
-
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -331,7 +286,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (lastMarkerClicked != null) {
             lastMarkerClicked.setIcon(defaultMarker);
         }
-        marker.setIcon(BitmapGenerator.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_36_55)));
+        marker.setIcon(BitmapGenerator.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_48_75)));
         lastMarkerClicked = marker;
         return true;
     }
@@ -397,12 +352,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
-        ActivityCompat.requestPermissions(this, new String[]{permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
-    }
 
+    /*==================================================*/
     // Trigger new location updates at interval
+    @SuppressLint("MissingPermission")
     protected void startLocationUpdates() {
 
         // Create the location request to start receiving updates
@@ -422,56 +375,77 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
         // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-
-        if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return;
+        if(checkPermissions()) {
+            getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                        @Override
+                        public void onLocationResult(LocationResult locationResult) {
+                            // do work here
+                            if (checkPermissions()) {
+                                onLocationChanged(locationResult.getLastLocation());
+                            }
+                        }
+                    },
+                    Looper.myLooper());
         }
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        // do work here
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
-
     }
 
     public void onLocationChanged(Location location) {
-        //what to do when location determined
+        // New location has now been determined
+/*        String msg = "Updated Location: " +
+                Double.toString(location.getLatitude()) + "," +
+                Double.toString(location.getLongitude());
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        // You can now create a LatLng Object for use with maps
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());*/
+
         mLastKnownLocation = location;
-        testText.setText("current location: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        testText.setText("current location: "+String.valueOf(location.getLatitude())+", "+String.valueOf(location.getLongitude()));
     }
 
-
-    public Location getLastLocation() {
+    @SuppressLint("MissingPermission")
+    public void getLastLocation(){
         // Get last known recent location using new Google Play Services SDK (v11+)
-        if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return null;
-        }
-        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                // GPS location can be null if GPS is switched off
-                if (location != null) {
-                    onLocationChanged(location);
-                    mLastKnownLocation = location;
-                } else {
-                    Log.v(GMAPS_TAG, "not ready");
+        if(checkPermissions()) {
+            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    // GPS location can be null if GPS is switched off
+                    if (location != null) {
+                        onLocationChanged(location);
+                        mLastKnownLocation = location;
+                        String myLat = String.valueOf(location.getLatitude());
+                        String myLon = String.valueOf(location.getLongitude());
+                        Log.v(GMAPS_TAG,myLat);
+                        Log.v(GMAPS_TAG,myLon);
+                        testText.setText("Current Location: "+myLat+", "+myLon);
+                    }else {
+                        Log.v(GMAPS_TAG,"not ready");
+                    }
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(GMAPS_TAG, "Error trying to get last GPS location");
-                e.printStackTrace();
-            }
-        });
-        return mLastKnownLocation;
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(GMAPS_TAG, "Error trying to get last GPS location");
+                    e.printStackTrace();
+                }
+            });
+        }
+//        Log.v(GMAPS_TAG,mLastKnownLocation.toString());
     }
 
+    private boolean checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            requestPermissions();
+            return false;
+        }
+    }
 
-
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
+        ActivityCompat.requestPermissions(this, new String[]{permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
+    }
 }
