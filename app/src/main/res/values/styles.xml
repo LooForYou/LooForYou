@@ -25,4 +25,19 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="BB_BottomBarItem_Fixed" parent="BB_BottomBarItem">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
+
+    <style name="BB_BottomBarItem_TitleStyle">
+         Material spec: "Avoid long text labels as these labels do not truncate or wrap."
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">fill_horizontal</item>
+    </style>
 </resources>

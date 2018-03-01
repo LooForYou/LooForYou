@@ -37,7 +37,9 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        app:bb_tabXmlResource="@xml/bottom_tabs" />
+        app:bb_tabXmlResource="@xml/bottom_tabs"
+        />
+        <!--app:bb_titleTextAppearance="@style/tabs_on_bottom_text_style"-->
 </RelativeLayout>
 </LinearLayout>
     <!--</android.support.constraint.ConstraintLayout>-->

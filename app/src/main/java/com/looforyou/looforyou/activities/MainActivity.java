@@ -31,6 +31,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.utilities.MetricConverter;
 import com.looforyou.looforyou.utilities.TabControl;
 
 import static java.security.AccessController.getContext;
@@ -83,15 +84,15 @@ public class MainActivity extends AppCompatActivity {
 //        float d = disp.widthPixels;
 //        float d2 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, d, disp);
 //
-//        float converted = pxToDp(menuWidth);
-//        float converted2 = dpToPx(menuWidth);
+//        float converted = pxToDp(this.menuWidth);
+//        float converted2 = dpToPx(this,menuWidth);
 //        Log.v(GMAPS_TAG,String.valueOf(d2));
 //        Log.v(GMAPS_TAG,String.valueOf(converted));
 //        Log.v(GMAPS_TAG,String.valueOf(converted2));
 
         TextView textView = (TextView) findViewById(R.id.custom_search_layout);
         ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) textView.getLayoutParams();
-        params.width = (int) dpToPx(175);
+        params.width = (int) MetricConverter.dpToPx(this,175);
         textView.setLayoutParams(params);
 
         //look for custom search bar actionLayout
@@ -198,13 +199,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public float dpToPx(float dp) {
-        Resources r = getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-    }
 
-    public float pxToDp(float px) {
-        Resources r = getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, r.getDisplayMetrics());
-    }
 }
