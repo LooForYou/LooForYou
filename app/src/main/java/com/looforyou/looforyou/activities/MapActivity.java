@@ -377,16 +377,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-//    public float dpToPx(float dp) {
-//        Resources r = getResources();
-//        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-//    }
-//
-//    public float pxToDp(float px) {
-//        Resources r = getResources();
-//        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, r.getDisplayMetrics());
-//    }
-
     @Override
     public boolean onMyLocationButtonClick() {
         return false;
