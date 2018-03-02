@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,9 +18,9 @@
         android:id="@+id/main_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="?attr/actionBarSize"
-        android:paddingBottom="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize"
         android:fillViewport="false"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_weight="1"
         >
 <!--relative layout used as wrapper to prevent scrollview from clipping linear layout-->
@@ -45,12 +45,12 @@
                 android:background="@color/colorPrimaryLight"
                 android:text="SORT BY"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
-            <!--TODO in activity, make method to crop image to 150dp height-->
+                android:textSize="21sp" />
+            <!--TODO in activity, make method to crop image to 125dp height-->
             <ImageView
                 android:id="@+id/selected_location_image"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="125dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/no_image_uploaded" />
             <!--placeholder container for cardview swiping-->
@@ -67,38 +67,75 @@
                 android:layout_marginTop="10dp"
                 android:text="About This Bathroom"
                 android:textColor="@color/black"
-                android:textSize="21sp"
-                android:paddingBottom="5dp"
+                android:textSize="22sp"
+                android:paddingBottom="@dimen/default_padding"
                 />
-            <!--placeholder details 1-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                  android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="• free\n• accessible\n• parking available\n• 4.1 clean rating\n• baby-changing station\n• mirrors available"
+                android:singleLine="false"
+                android:lineSpacingExtra="5dp"
+                />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="blah\nblah\nblah\nblah\nblah\nblah\nblah\nblah\nblah\nblah\nblah\nblah"
+                android:text="Hours of Operation"
+                android:gravity="end"
                 android:singleLine="false"
-                />
-            <!--placeholder details 2-->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="one\ntwo\nthree\nfour\nfive"
-                android:singleLine="false"
+                android:textStyle="bold"
+                android:textColor="@color/black"
                />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="00:00AM to 00:00PM"
+                    android:gravity="end"
+                    android:singleLine="false"
+                    />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scheduled Maintenance"
+                android:gravity="end"
+                android:singleLine="false"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/default_padding"
+                />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="00:00AM to 00:00PM\nFridays"
+                    android:gravity="end"
+                    android:singleLine="false"
+                    />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 </RelativeLayout>
     </ScrollView>
     <!--bottombar tabs-->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        app:bb_tabXmlResource="@xml/bottom_tabs"
-        />
-</RelativeLayout>
-    </android.support.constraint.ConstraintLayout>
+
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            app:bb_tabXmlResource="@xml/bottom_tabs" />
+    </RelativeLayout>
+</FrameLayout>

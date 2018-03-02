@@ -42,7 +42,7 @@
             android:padding="15dp"
             android:text="test"
             android:layout_margin="15dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="?attr/actionBarSize"
             android:background="@color/white"
             android:textAlignment="center"
             />
