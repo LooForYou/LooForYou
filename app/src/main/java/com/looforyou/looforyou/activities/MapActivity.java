@@ -64,6 +64,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.BitmapGenerator;
+import com.looforyou.looforyou.utilities.MetricConverter;
 import com.looforyou.looforyou.utilities.TabControl;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
@@ -106,7 +107,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mCameraPosition = null;
         mLastKnownLocation = null;
-        
+
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
@@ -150,9 +151,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         TextView textView = (TextView) findViewById(R.id.custom_search_layout);
         ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) textView.getLayoutParams();
-        params.width = (int) dpToPx(200);
+        params.width = (int) MetricConverter.dpToPx(this,220);
         textView.setLayoutParams(params);
-
         //look for custom search bar actionLayout
         for (int i = 0; i < actionMenu.getMenu().size(); i++) {
             final MenuItem menuItem = actionMenu.getMenu().getItem(i);
@@ -324,7 +324,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.v(GMAPS_TAG, "marker clicked");
@@ -375,16 +374,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
-    }
-
-    public float dpToPx(float dp) {
-        Resources r = getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-    }
-
-    public float pxToDp(float px) {
-        Resources r = getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, r.getDisplayMetrics());
     }
 
     @Override

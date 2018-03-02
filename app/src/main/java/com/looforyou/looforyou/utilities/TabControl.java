@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TypefaceSpan;
+import android.widget.TextView;
 
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.activities.AddABathroomActivity;
@@ -29,6 +34,15 @@ public class TabControl {
         Activity activity = (Activity) context;
         BottomBar bottomBar = (BottomBar) activity.findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(currentTab);
+
+        int topPadding = (int)MetricConverter.dpToPx(context,4);
+        ((TextView)bottomBar.getTabWithId(R.id.tab_add_bathroom).findViewById(R.id.bb_bottom_bar_title)).setTextSize(12);
+        bottomBar.getTabWithId(R.id.tab_add_bathroom).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
+        bottomBar.getTabWithId(R.id.tab_home).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
+        bottomBar.getTabWithId(R.id.tab_profile).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
+        bottomBar.getTabWithId(R.id.tab_bookmarks).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
+        bottomBar.getTabWithId(R.id.tab_map).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
+
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
