@@ -42,7 +42,6 @@ public class TabControl {
         bottomBar.getTabWithId(R.id.tab_profile).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
         bottomBar.getTabWithId(R.id.tab_bookmarks).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
         bottomBar.getTabWithId(R.id.tab_map).findViewById(R.id.bb_bottom_bar_icon).setPadding(0,topPadding,0,0);
-//        bottomBar.getTabWithId(R.id.tab_add_bathroom).setTitle("ee");
 
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override

@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#0033ff</color>
     <color name="colorPrimaryPastel">#4e95ff</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorLight">#0099ff</color>
+    <color name="colorPrimaryLight">#0099ff</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

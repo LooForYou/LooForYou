@@ -151,9 +151,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         TextView textView = (TextView) findViewById(R.id.custom_search_layout);
         ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) textView.getLayoutParams();
-        params.width = (int) MetricConverter.dpToPx(this,200);
+        params.width = (int) MetricConverter.dpToPx(this,220);
         textView.setLayoutParams(params);
-
         //look for custom search bar actionLayout
         for (int i = 0; i < actionMenu.getMenu().size(); i++) {
             final MenuItem menuItem = actionMenu.getMenu().getItem(i);
@@ -376,16 +375,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
-//    public float dpToPx(float dp) {
-//        Resources r = getResources();
-//        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-//    }
-//
-//    public float pxToDp(float px) {
-//        Resources r = getResources();
-//        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, r.getDisplayMetrics());
-//    }
 
     @Override
     public boolean onMyLocationButtonClick() {

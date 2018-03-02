@@ -1,26 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     tools:context="com.looforyou.looforyou.activities.AddABathroomActivity">
 
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add a bathroom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottomBar"
+    <include
+        layout="@layout/toolbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        app:bb_tabXmlResource="@xml/bottom_tabs" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <!--margins do not work as a child of constraintLayout so scrollview needs to have actionbar-sized padding -->
+    <ScrollView
+        android:id="@+id/main_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:fillViewport="false"
+        android:layout_weight="1"
+        >
+        <!--relative layout used as wrapper to prevent scrollview from clipping linear layout-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/default_padding">
+            <!--linear layout used for stacking elements vertically-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_padding"
+                android:layout_marginStart="@dimen/default_padding"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/add_a_bathroom_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Add a Bathroom"
+                    android:textColor="@color/black"
+                    android:textSize="21sp"
+                    android:paddingBottom="5dp"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#dfdfdf"
+                    android:layout_marginBottom="@dimen/default_padding"
+                    android:layout_marginTop="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Help us get the most up-to-date bathroom info!"
+                    android:singleLine="false"
+                    />
+                <Button
+                    android:id="@+id/add_a_bathroom_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/colorPrimaryLight"
+                    android:text="ADD A BATHROOM"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:layout_marginTop="@dimen/default_padding"/>
+
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+    <!--bottombar tabs-->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            app:bb_tabXmlResource="@xml/bottom_tabs"
+            />
+    </RelativeLayout>
+</FrameLayout>

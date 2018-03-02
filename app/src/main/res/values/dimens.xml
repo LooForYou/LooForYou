@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="bottombar_top_padding">4dp</dimen>
+    <dimen name="default_padding">15dp</dimen>
 </resources>
