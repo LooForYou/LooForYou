@@ -33,6 +33,7 @@ public class BookmarkActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bookmark);
         TabControl tabb = new TabControl(this);
         tabb.tabs(BookmarkActivity.this,R.id.tab_bookmarks);
+        //hey all
     }
 
 }
