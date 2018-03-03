@@ -26,7 +26,8 @@
                 android:background="?attr/colorPrimary"
                 android:layout_gravity="center_vertical|start"
                 android:gravity="center_vertical|start"
-                app:popupTheme="@style/AppTheme.Toolbar">
+                app:popupTheme="@style/AppTheme.Toolbar"
+                >
                 <android.support.v7.widget.ActionMenuView
                     android:id="@+id/leftMenu"
                     android:layout_height="?attr/actionBarSize"
