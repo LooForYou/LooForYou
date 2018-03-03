@@ -15,5 +15,6 @@ public class AddABathroomActivity extends AppCompatActivity {
 
         TabControl tabb = new TabControl(this);
         tabb.tabs(AddABathroomActivity.this,R.id.tab_add_bathroom);
+        //test comment
     }
 }
