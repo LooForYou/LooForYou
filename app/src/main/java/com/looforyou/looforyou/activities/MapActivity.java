@@ -13,6 +13,7 @@ import android.graphics.drawable.VectorDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.opengl.GLException;
 import android.os.Build;
 import android.os.Looper;
@@ -112,6 +113,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private SupportMapFragment mapFragment;
     private ImageButton mapDirectionsButton;
 
+    private double markerLatitude;
+    private double markerLongitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,8 +183,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void onMapDirectionsClick(View view){
         view.setVisibility(View.GONE);
-        Toast.makeText(this,"directions clicked", Toast.LENGTH_SHORT).show();
-        Log.v(GMAPS_TAG,"directionsClicked");
+//        Uri markerUri = Uri.parse("geo:"+markerLatitude+","+markerLongitude);
+        Uri markerUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+markerLatitude+","+markerLongitude);
+        Intent directionsIntent = new Intent(Intent.ACTION_VIEW,markerUri);
+        directionsIntent.setPackage("com.google.android.apps.maps");
+        if(directionsIntent.resolveActivity(getPackageManager()) != null){
+            startActivity(directionsIntent);
+        }else {
+            Toast.makeText(this,"Unable to route", Toast.LENGTH_SHORT).show();
+            Log.v(GMAPS_TAG,"map directions failed");
+        }
     }
 
     //when options in toolbar menu are created
@@ -353,6 +365,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         lastMarkerClicked = marker;
 
         mapDirectionsButton.setVisibility(View.VISIBLE);
+        markerLatitude = marker.getPosition().latitude;
+        markerLongitude = marker.getPosition().longitude;
         return true;
     }
 
