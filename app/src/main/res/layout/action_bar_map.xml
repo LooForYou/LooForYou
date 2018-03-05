@@ -35,7 +35,6 @@
             android:background="@android:color/transparent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:paddingEnd="10dp"
             android:layout_weight="0"/>
     </TableRow>
 
