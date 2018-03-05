@@ -39,4 +39,16 @@ git push                     //push to your branch
 ```
 * order of operations:   	 add -> commit -> pull -> push
 
+### see status of files modified
+```
+git status
+```
+
+### see specific changes within files:
+```
+git diff                   // overview of things changed
+git diff {filename}        // see specific changes in file 
+git diff {branchname}      // view differences in different branches
+:wq                        // exits vim mode
+```
 ----
