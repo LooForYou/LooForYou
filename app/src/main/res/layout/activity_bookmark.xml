@@ -28,8 +28,8 @@
                 android:layout_marginEnd="@dimen/default_padding"
                 android:layout_marginStart="@dimen/default_padding"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical" >
+
                 <TextView
                     android:id="@+id/my_bookmarks_title"
                     android:layout_width="match_parent"
@@ -38,37 +38,113 @@
                     android:text="My Bookmarks"
                     android:textColor="@color/black"
                     android:textSize="21sp"
-                    android:paddingBottom="5dp"
-                    />
+                    android:paddingBottom="5dp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#dfdfdf"
                     android:layout_marginBottom="@dimen/default_padding"
-                    android:layout_marginTop="5dp"/>
+                    android:layout_marginTop="5dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="It appears you have not made any bookmarks yet.\nBrowse through bathrooms to save your favorites!"
-                    android:singleLine="false"
-                    />
-                <!--placeholder details 2-->
+                    android:text="Your bookmarks will appear here:"
+                    android:singleLine="false" />
 
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Bookmark 1:"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/bookmark_image1"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="95dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_gravity="left"
+                        android:src="@drawable/no_image_uploaded" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_gravity="right"
+                        android:text="  Bookmark Information \n  will display here: \n  • rating:    *****\n • Bathroom Status- " />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Bookmark 2:"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/bookmark_image2"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="95dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_gravity="left"
+                        android:src="@drawable/no_image_uploaded" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_gravity="right"
+                        android:text="  Bookmark Information \n  will display here: \n  • rating:    *****\n • Bathroom Status- " /> />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/add_a_bookmark_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryLight"
+                    android:text="ADD A BOOKMARK"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:layout_marginTop="25dp"/>
             </LinearLayout>
+            <!--placeholder details 2-->
+
+
         </RelativeLayout>
     </ScrollView>
     <!--bottombar tabs-->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.roughike.bottombar.BottomBar
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:bb_tabXmlResource="@xml/bottom_tabs"
-            />
+            app:bb_tabXmlResource="@xml/bottom_tabs" />
+
     </RelativeLayout>
 </FrameLayout>
