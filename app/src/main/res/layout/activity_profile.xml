@@ -30,16 +30,6 @@
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 >
-                <TextView
-                    android:id="@+id/profile_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="My Profile"
-                    android:textColor="@color/black"
-                    android:textSize="21sp"
-                    android:paddingBottom="5dp"
-                    />
 
                 <View
                     android:layout_width="match_parent"
@@ -48,27 +38,85 @@
                     android:layout_marginBottom="@dimen/default_padding"
                     android:layout_marginTop="5dp"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Profile"
-                    android:singleLine="false"
                     />
 
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
     <!--bottombar tabs-->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.roughike.bottombar.BottomBar
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:bb_tabXmlResource="@xml/bottom_tabs"
-            />
+            app:bb_tabXmlResource="@xml/bottom_tabs" />
+
+        <TextView
+            android:id="@+id/profile_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:paddingBottom="5dp"
+            android:text="My Profile"
+            android:textColor="@color/black"
+            android:textSize="21sp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profilePic"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_below="@+id/profile_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:cropToPadding="true"
+            android:src="@drawable/no_image_uploaded" />
+
+        <EditText
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profilePic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="23dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/profileEmailAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/profileName"
+            android:layout_below="@+id/profileName"
+            android:layout_marginTop="21dp"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/profilePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/profileEmailAddress"
+            android:layout_below="@+id/profileEmailAddress"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/resetPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/profilePassword"
+            android:layout_below="@+id/profilePassword"
+            android:layout_marginTop="16dp"
+            android:text="Reset Password" />
+
     </RelativeLayout>
+
 </FrameLayout>

@@ -1,11 +1,7 @@
 <resources>
     <string name="app_name">LooForYou</string>
-    <string name="title_activity_profile">ProfileActivity</string>
 
     <!--search bar-->
-    <string name="search_title">Search By Location</string>
-    <string name="title_activity_maps_activityy">Map</string>
 
     <!--google maps-->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyA5misW_UMeIiHctV34WehXwR5rbvIgU0g</string>
 </resources>

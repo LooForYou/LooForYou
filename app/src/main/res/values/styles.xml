@@ -13,30 +13,6 @@
         <!--<item name="android:minWidth">0dp</item>-->
     <!--</style>-->
 
-    <style name="AppTheme.Toolbar" parent="AppTheme.PopupOverlay" >
-        <item name="android:textColorSecondary">#ffffff</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-    </style>
-
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="BB_BottomBarItem_Fixed" parent="BB_BottomBarItem">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-    </style>
-
 
     <style name="BB_BottomBarItem_TitleStyle">
          Material spec: "Avoid long text labels as these labels do not truncate or wrap."
@@ -48,11 +24,6 @@
         <item name="android:layout_gravity">fill_horizontal</item>
     </style>
 
-
-
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-    </style>
 
     <!--<style name="CustomTheme" parent="Theme.AppCompat.Light">-->
     <style name="CustomTheme" parent="Theme.AppCompat.Light.DarkActionBar">
