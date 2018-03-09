@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.looforyou.looforyou.LoginActivity">
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="239dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="73dp"
+        tools:layout_editor_absoluteY="53dp" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        tools:layout_editor_absoluteX="72dp"
+        tools:layout_editor_absoluteY="140dp" />
+
+    <Button
+        android:id="@+id/bLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        tools:layout_editor_absoluteX="84dp"
+        tools:layout_editor_absoluteY="231dp" />
+
+    <Button
+        android:id="@+id/bRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        tools:layout_editor_absoluteX="210dp"
+        tools:layout_editor_absoluteY="231dp" />
+
+    <Button
+        android:id="@+id/bFBLogin"
+        android:layout_width="214dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="Log in with Facebook"
+        tools:layout_editor_absoluteX="84dp"
+        tools:layout_editor_absoluteY="308dp" />
+
+    <Button
+        android:id="@+id/bGoogleLogin"
+        android:layout_width="211dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_light"
+        android:text="Log in with Google"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="386dp" />
+
+</android.support.constraint.ConstraintLayout>
