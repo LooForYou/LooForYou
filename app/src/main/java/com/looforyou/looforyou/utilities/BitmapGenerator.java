@@ -39,4 +39,14 @@ public class BitmapGenerator {
             return null;
         }
     }
+
+    public static Drawable DrawableFromAsset(Context context, String filename) {
+            Drawable drawable = null;
+        try {
+            drawable = Drawable.createFromStream(context.getAssets().open(filename), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return drawable;
+    }
 }
