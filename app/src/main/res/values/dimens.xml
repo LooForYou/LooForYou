@@ -3,5 +3,6 @@
     <dimen name="bottombar_top_padding">4dp</dimen>
     <dimen name="default_padding">15dp</dimen>
     <dimen name="action_button_padding">1dp</dimen>
-    <dimen name="card_padding">85dp</dimen>
+    <dimen name="card_padding">40dp</dimen>
+    <dimen name="card_star_padding">45dp</dimen>
 </resources>

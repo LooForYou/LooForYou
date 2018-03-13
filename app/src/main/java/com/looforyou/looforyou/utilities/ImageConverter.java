@@ -17,7 +17,7 @@ import java.io.InputStream;
  * Created by ibreaker on 2/26/2018.
  */
 
-public class BitmapGenerator {
+public class ImageConverter {
     public static BitmapDescriptor drawableToBitmapDescriptor(Drawable drawable) {
         Canvas canvas = new Canvas();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
