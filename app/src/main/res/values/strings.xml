@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">LooForYou</string>
+    <string name="description">ShowPassword</string>
+    <string name="password">Enter Password</string>
 
     <!--search bar-->
 
