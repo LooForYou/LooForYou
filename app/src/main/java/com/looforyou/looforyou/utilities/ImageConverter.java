@@ -17,7 +17,7 @@ import java.io.InputStream;
  * Created by ibreaker on 2/26/2018.
  */
 
-public class BitmapGenerator {
+public class ImageConverter {
     public static BitmapDescriptor drawableToBitmapDescriptor(Drawable drawable) {
         Canvas canvas = new Canvas();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -38,5 +38,15 @@ public class BitmapGenerator {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Drawable DrawableFromAsset(Context context, String filename) {
+            Drawable drawable = null;
+        try {
+            drawable = Drawable.createFromStream(context.getAssets().open(filename), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return drawable;
     }
 }

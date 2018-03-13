@@ -6,4 +6,8 @@
     <!--search bar-->
 
     <!--google maps-->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyA5misW_UMeIiHctV34WehXwR5rbvIgU0g</string>
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam eget ligula eu lectus lobortis condimentum.</string>
+
 </resources>
