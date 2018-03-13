@@ -1,42 +1,23 @@
 package com.looforyou.looforyou.activities;
 
 import android.Manifest.permission;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.opengl.GLException;
-import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +41,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -73,8 +53,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.looforyou.looforyou.R;
-import com.looforyou.looforyou.utilities.BitmapGenerator;
-import com.looforyou.looforyou.utilities.MetricConverter;
+import com.looforyou.looforyou.utilities.ImageConverter;
 import com.looforyou.looforyou.utilities.TabControl;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
@@ -276,7 +255,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //test add custom marker
         LatLng longBeach = new LatLng(33.783123, -118.113707);
         LatLng longBeach2 = new LatLng(33.783516, -118.118719);
-        defaultMarker = BitmapGenerator.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_23_36));
+        defaultMarker = ImageConverter.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_23_36));
 
         //TODO override google dialog fragment to display more data
         googleMap.addMarker(new MarkerOptions()
@@ -361,7 +340,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (lastMarkerClicked != null) {
             lastMarkerClicked.setIcon(defaultMarker);
         }
-        marker.setIcon(BitmapGenerator.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_36_55)));
+        marker.setIcon(ImageConverter.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_36_55)));
         lastMarkerClicked = marker;
 
         mapDirectionsButton.setVisibility(View.VISIBLE);

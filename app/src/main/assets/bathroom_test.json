@@ -1,0 +1,80 @@
+[
+  {
+    "name" : "Bradsbupy Bathroom",
+    "id" : "123",
+    "rating" : 4.5,
+    "clean_rating" : 4.6,
+    "latitude" : 33.788155,
+    "longitude" : -118.124688,
+    "address" : "1785 N Bellflower Blvd, Long Beach, CA, 90815",
+    "start_time" : "T9:00:00.000Z",
+    "end_time" : "T21:30:00.000Z",
+    "maintenance_start" : "T11:59:00.00Z",
+    "maintenance_end" : "T12:30:00.00Z",
+    "maintenance_days" : "Tuesdays, Fridays",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "accessible",
+      "parking available",
+      "baby-changing station",
+      "water fountain",
+      "mirrors available"
+    ],
+    "descriptions" : [
+      "East Bradsbupy Building, 1st Floor",
+      "Near Starbucks"
+    ],
+    "image_url" : "https://picsum.photos/950/440/?random"
+  },
+  {
+    "name" : "Altos Migusos",
+    "id" : "456",
+    "rating" : 3.0,
+    "clean_rating" : 3.5,
+    "latitude" : 33.782223,
+    "longitude" : -118.108102,
+    "address" : "Long Beach, CA, 90840",
+    "start_time" : "T00:00:00.000Z",
+    "end_time" : "T00:00:00.000Z",
+    "maintenance_start" : "T",
+    "maintenance_end" : "",
+    "maintenance_days" : "",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "accessible",
+      "parking available",
+      "water fountain",
+      "no key required"
+    ],
+    "descriptions" : [
+      "Near the duck pond"
+    ],
+    "image_url" : "https://picsum.photos/950/440/?random"
+  },
+  {
+    "name" : "Earl Warren Japanese Garden",
+    "id" : "789",
+    "rating" : 3.9,
+    "clean_rating" : 5.0,
+    "latitude" : 33.785186,
+    "longitude" : -118.119461,
+    "address" : "Earl Warren Dr, Long Beach, CA 90840",
+    "start_time" : "T9:00:00.000Z",
+    "end_time" : "T21:30:00.000Z",
+    "maintenance_start" : "T11:59:00.00Z",
+    "maintenance_end" : "T12:30:00.00Z",
+    "maintenance_days" : "Every day",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "parking available"
+    ],
+    "descriptions" : [
+      "Porto Party",
+      "Go at your own risk"
+    ],
+    "image_url" : "https://picsum.photos/950/440/?random"
+  }
+]
