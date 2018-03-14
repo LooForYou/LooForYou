@@ -76,5 +76,30 @@
       "Go at your own risk"
     ],
     "image_url" : "https://s.aolcdn.com/hss/storage/midas/b008e12102b62657968491b07d789135/206027438/toto.jpg"
+  },
+  {
+    "name" : "Redondo Pier Latrine",
+    "id" : "987",
+    "rating" : 1.9,
+    "clean_rating" : 3.0,
+    "latitude" : 33.850908,
+    "longitude" : -118.385042,
+    "address" : "Redondo Beach Beach, CA 90277",
+    "start_time" : "Mon Jan 01 09:00:00 PST 2018",
+    "end_time" : "Mon Jan 01 21:00:00 PST 2018",
+    "maintenance_start" : "Mon Jan 01 12:00:00 PST 2018",
+    "maintenance_end" : "Mon Jan 01 12:30:00 PST 2018",
+    "maintenance_days" : "Every day",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "parking available",
+      "water fountain"
+    ],
+    "descriptions" : [
+      "Public Pier Bathroom",
+      "Beware of homeless people"
+    ],
+    "image_url" : ""
   }
 ]
