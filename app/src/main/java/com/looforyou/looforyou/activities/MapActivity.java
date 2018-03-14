@@ -52,9 +52,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.ImageConverter;
+import com.looforyou.looforyou.utilities.LooLoader;
 import com.looforyou.looforyou.utilities.TabControl;
+
+import java.util.List;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -95,6 +99,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private double markerLatitude;
     private double markerLongitude;
 
+    private List<Bathroom> bathroomList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,20 +117,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
-        testText = (TextView) findViewById(R.id.testText);
 
         TabControl tabb = new TabControl(this);
         tabb.tabs(MapActivity.this, R.id.tab_map);
 
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        mGeoDataClient = Places.getGeoDataClient(this, null);
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-        mFusedLocationProviderClient = getFusedLocationProviderClient(this);
-
-        testText.setText("getting location...");
+        initializeComponents();
 
 
 
@@ -158,6 +156,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 onMapDirectionsClick(v);
             }
         });
+    }
+
+    public void initializeComponents() {
+        testText = (TextView) findViewById(R.id.testText);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        mGeoDataClient = Places.getGeoDataClient(this, null);
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
+        mFusedLocationProviderClient = getFusedLocationProviderClient(this);
+        testText.setText("getting location...");
+        bathroomList = LooLoader.loadBathrooms(this.getApplicationContext());
+    }
+    public void initializeMarkers(GoogleMap map, List<Bathroom> bathrooms) {
+//        LatLng longBeach = new LatLng(33.783123, -118.113707);
+        map.clear();
+        for(Bathroom br : bathrooms){
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(br.getLatLng().latitude,br.getLatLng().longitude))
+                    .title(br.getName())
+                    .anchor(0.5f, 0.5f)
+                    .snippet((br.getDescriptions().size() > 0 ? br.getDescriptions().get(0) : "") +"\n"+ (br.getDescriptions().size() > 1 ? br.getDescriptions().get(1) : ""))
+                    .icon(defaultMarker));
+        }
+
     }
 
     public void onMapDirectionsClick(View view){
@@ -251,26 +273,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.setOnMyLocationClickListener(this);
         googleMap.setOnMarkerClickListener(this);
 
-
-        //test add custom marker
-        LatLng longBeach = new LatLng(33.783123, -118.113707);
-        LatLng longBeach2 = new LatLng(33.783516, -118.118719);
         defaultMarker = ImageConverter.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_23_36));
-
+        initializeMarkers(googleMap,bathroomList);
         //TODO override google dialog fragment to display more data
-        googleMap.addMarker(new MarkerOptions()
-                .position(longBeach)
-                .title("bathroom 1")
-                .anchor(0.5f, 0.5f)
-                .snippet("bathroom 1 info\ninfo2")
-                .icon(defaultMarker));
-
-        googleMap.addMarker(new MarkerOptions()
-                .position(longBeach2)
-                .title("bathroom 2")
-                .anchor(0.5f, 0.5f)
-                .snippet("custom info")
-                .icon(defaultMarker));
 
         mFusedLocationProviderClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -282,7 +287,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             String myLon = String.valueOf(location.getLongitude());
                             Log.v(GMAPS_TAG, myLat);
                             Log.v(GMAPS_TAG, myLon);
-                            testText.setText("Current Location: " + myLat + ", " + myLon);
+                            testText.setText("Testing purposes: \n\n\nCurrent Location: " + myLat + ", " + myLon);
                         }
                     }
                 });
@@ -302,7 +307,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.i(GMAPS_TAG, "Place:" + place.getLatLng().latitude);
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.getLatLng().latitude, place.getLatLng().longitude), DEFAULT_ZOOM));
                 //clears map every time new location is inputted
-                googleMap.clear();
+//                googleMap.clear();
                 mapDirectionsButton.setVisibility(View.GONE);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
@@ -346,7 +351,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapDirectionsButton.setVisibility(View.VISIBLE);
         markerLatitude = marker.getPosition().latitude;
         markerLongitude = marker.getPosition().longitude;
-        return true;
+        return false;
     }
 
     private void updateLocationUI() {
@@ -455,7 +460,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         //what to do when location determined
         mLastKnownLocation = location;
-        testText.setText("current location: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+        testText.setText("Testing purposes: \n\n\ncurrent location: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
     }
 
 
