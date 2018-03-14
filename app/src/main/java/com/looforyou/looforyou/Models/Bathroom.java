@@ -1,32 +1,42 @@
 package com.looforyou.looforyou.Models;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.looforyou.looforyou.utilities.BathroomDeserializer;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by ibreaker on 3/9/2018.
  */
-
+@JsonAdapter(BathroomDeserializer.class)
 public class Bathroom implements Serializable {
-    private String name, address;
+    private String name, address, imageURL, maintenanceDays;
     private Coordinates latLng;
     private double rating;
     private Date startTime, endTime, maintenanceStart, maintenanceEnd;
-    private ArrayList<String> maintenanceDays, amenities, descriptions;
+    private ArrayList<String> amenities, descriptions;
     private boolean bookmarked;
     private ArrayList<String> reviews;
     private Drawable image;
+
 
     public Bathroom(){
         this.name = "Unknown";
@@ -36,16 +46,17 @@ public class Bathroom implements Serializable {
         this.endTime = new Date();
         this.maintenanceStart = new Date();
         this.maintenanceEnd = new Date();
-        this.maintenanceDays = new ArrayList<String>();
+        this.maintenanceDays = "Unknown";
         this.bookmarked = false;
         this.amenities = new ArrayList<String>();
         this.descriptions = new ArrayList<String>();
         reviews = new ArrayList<String>();
         image = null;
         this.address = "Unknown location";
+        imageURL = null;
     }
 
-    public Bathroom(String name, Coordinates latLng, double rating, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, ArrayList<String> maintenanceDays, boolean bookmarked, ArrayList<String> amenities, ArrayList<String> descriptions, String address){
+    public Bathroom(String name, Coordinates latLng, double rating, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, String maintenanceDays, boolean bookmarked, ArrayList<String> amenities, ArrayList<String> descriptions, String address){
         this.name = name;
         this.latLng = latLng;
         this.rating = rating;
@@ -60,7 +71,6 @@ public class Bathroom implements Serializable {
         reviews = new ArrayList<String>();
         image = null;
         this.address = address;
-
     }
 
 
@@ -145,11 +155,11 @@ public class Bathroom implements Serializable {
         this.maintenanceEnd = maintenanceEnd;
     }
 
-    public ArrayList<String> getMaintenanceDays() {
+    public String getMaintenanceDays() {
         return maintenanceDays;
     }
 
-    public void setMaintenanceDays(ArrayList<String> maintenanceDays) {
+    public void setMaintenanceDays(String maintenanceDays) {
         this.maintenanceDays = maintenanceDays;
     }
 
@@ -161,12 +171,15 @@ public class Bathroom implements Serializable {
         this.amenities = amenities;
     }
 
+    public Drawable getImage(){
+        return image;
+    }
+
     @Override
     public String toString() {
         return "Bathroom name: "+ name + "\ncoord: " + latLng.latitude+", "+ latLng.longitude+"\nrating: "+rating+"\nhours: "+startTime+" - "+endTime+"\nmaintenance: "+
                 maintenanceStart+" - "+maintenanceEnd+", "+maintenanceDays+"\nbookmarked: "+String.valueOf(bookmarked)+"\namenities: "+amenities.toString()+"\ndescriptions: "+
                 descriptions.toString()+"\nimage: "+String.valueOf(image);
-
     }
 
     public String getAddress() {
@@ -175,5 +188,17 @@ public class Bathroom implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public void setImage(Drawable image) {
+        this.image = image;
     }
 }

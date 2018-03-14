@@ -32,12 +32,34 @@
             >
 
             <!--TODO in activity, make method to crop image to 125dp height-->
-            <ImageView
-                android:id="@+id/selected_location_image"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:paddingBottom="0dp"
-                android:src="@drawable/no_image_uploaded" />
+                android:animateLayoutChanges="true"
+                >
+                <WebView
+                    android:id="@+id/bathroom_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </WebView>
+                <ProgressBar
+                    android:id="@+id/bathroom_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center_vertical"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/selected_location_image"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="150dp"-->
+                <!--android:paddingBottom="0dp"-->
+                <!--android:src="@drawable/no_image_uploaded" />-->
             <!--placeholder container for cardview swiping-->
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager"
@@ -78,6 +100,7 @@
                   android:orientation="horizontal"
                     android:paddingBottom="@dimen/default_padding">
             <TextView
+                android:id="@+id/bathroom_amenities"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -102,6 +125,7 @@
                 android:textColor="@color/black"
                />
                 <TextView
+                    android:id="@+id/hours_of_operation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="00:00AM to 00:00PM"
@@ -119,6 +143,7 @@
                 android:layout_marginTop="@dimen/default_padding"
                 />
                 <TextView
+                    android:id="@+id/maintenance_hours"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="00:00AM to 00:00PM\nFridays"

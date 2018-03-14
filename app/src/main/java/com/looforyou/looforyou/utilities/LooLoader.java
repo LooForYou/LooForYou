@@ -37,8 +37,9 @@ public class LooLoader {
         try{
             List<Bathroom> bathroomList = new ArrayList<>();
             GsonBuilder gsonBuilder = new GsonBuilder();
-            Gson gson = gsonBuilder.create();
             gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
+            Gson gson = gsonBuilder.create();
+//            gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
             ArrayList<Bathroom> bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(loadJSONFromAsset(context, "bathroom_test.json"), Bathroom[].class)));
 
             for(Bathroom b : bathrooms){
@@ -48,7 +49,7 @@ public class LooLoader {
 
             return bathroomList;
         }catch (Exception e){
-            Log.d(TAG,"seedGames parseException " + e);
+            Log.d(TAG,"parseException " + e);
             e.printStackTrace();
             return null;
         }

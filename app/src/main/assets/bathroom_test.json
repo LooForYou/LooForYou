@@ -7,10 +7,10 @@
     "latitude" : 33.788155,
     "longitude" : -118.124688,
     "address" : "1785 N Bellflower Blvd, Long Beach, CA, 90815",
-    "start_time" : "T9:00:00.000Z",
-    "end_time" : "T21:30:00.000Z",
-    "maintenance_start" : "T11:59:00.00Z",
-    "maintenance_end" : "T12:30:00.00Z",
+    "start_time" : "Mon Jan 01 09:00:00 PST 2018",
+    "end_time" : "Mon Jan 01 21:00:00 PST 2018",
+    "maintenance_start" : "Mon Jan 01 12:00:00 PST 2018",
+    "maintenance_end" : "Mon Jan 01 13:00:00 PST 2018",
     "maintenance_days" : "Tuesdays, Fridays",
     "bookmarked" : false,
     "amenities" : [
@@ -25,7 +25,7 @@
       "East Bradsbupy Building, 1st Floor",
       "Near Starbucks"
     ],
-    "image_url" : "https://picsum.photos/950/440/?random"
+    "image_url" : "https://cdn.thewirecutter.com/wp-content/uploads/2017/08/small-bathroom-2x1-fullres-2718-1024x512.jpg"
   },
   {
     "name" : "Altos Migusos",
@@ -35,9 +35,9 @@
     "latitude" : 33.782223,
     "longitude" : -118.108102,
     "address" : "Long Beach, CA, 90840",
-    "start_time" : "T00:00:00.000Z",
-    "end_time" : "T00:00:00.000Z",
-    "maintenance_start" : "T",
+    "start_time" : "",
+    "end_time" : "",
+    "maintenance_start" : "",
     "maintenance_end" : "",
     "maintenance_days" : "",
     "bookmarked" : false,
@@ -51,7 +51,7 @@
     "descriptions" : [
       "Near the duck pond"
     ],
-    "image_url" : "https://picsum.photos/950/440/?random"
+    "image_url" : "https://hips.hearstapps.com/hbu.h-cdn.co/assets/cm/16/29/1600x800/landscape-54bf40cf5e1b8-hbx-hacienda-style-bathroom-1013-s2.jpg?resize=768:*"
   },
   {
     "name" : "Earl Warren Japanese Garden",
@@ -61,10 +61,10 @@
     "latitude" : 33.785186,
     "longitude" : -118.119461,
     "address" : "Earl Warren Dr, Long Beach, CA 90840",
-    "start_time" : "T9:00:00.000Z",
-    "end_time" : "T21:30:00.000Z",
-    "maintenance_start" : "T11:59:00.00Z",
-    "maintenance_end" : "T12:30:00.00Z",
+    "start_time" : "Mon Jan 01 00:00:00 PST 2018",
+    "end_time" : "Mon Jan 01 00:00:00 PST 2018",
+    "maintenance_start" : "Mon Jan 01 14:00:00 PST 2018",
+    "maintenance_end" : "Mon Jan 01 14:30:00 PST 2018",
     "maintenance_days" : "Every day",
     "bookmarked" : false,
     "amenities" : [
@@ -75,6 +75,6 @@
       "Porto Party",
       "Go at your own risk"
     ],
-    "image_url" : "https://picsum.photos/950/440/?random"
+    "image_url" : "https://s.aolcdn.com/hss/storage/midas/b008e12102b62657968491b07d789135/206027438/toto.jpg"
   }
 ]
