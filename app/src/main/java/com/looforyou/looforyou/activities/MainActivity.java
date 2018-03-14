@@ -1,6 +1,7 @@
 package com.looforyou.looforyou.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.view.ViewPager;
@@ -12,9 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -25,14 +30,22 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.BathroomCardFragmentPagerAdapter;
+import com.looforyou.looforyou.utilities.ImageFromURL;
 import com.looforyou.looforyou.utilities.ImageConverter;
 import com.looforyou.looforyou.utilities.LooLoader;
 import com.looforyou.looforyou.utilities.MetricConverter;
 import com.looforyou.looforyou.utilities.ShadowTransformer;
 import com.looforyou.looforyou.utilities.TabControl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -40,12 +53,17 @@ public class MainActivity extends AppCompatActivity {
     private final String GMAPS_TAG = "GException";
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private View view;
-    private ArrayList<Drawable> tempPics;
     private ImageView currentImage;
     private ImageView previousImage;
     private BathroomCardFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private GestureDetector gestureScanner;
+    private ArrayList<Bathroom> bathrooms;
+    private TextView amenities;
+    private WebView loadedImage;
+    private TextView hoursOfOperation;
+    private TextView maintenanceHours;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         tabb.tabs(MainActivity.this, R.id.tab_home);
 
         initializePageViewer();
-
-//        setupView();
+        initializeDisplayData();
+        refreshDisplay(0);
     }
 
     private void setupView(){
@@ -79,32 +97,125 @@ public class MainActivity extends AppCompatActivity {
         Log.v("TEST FEEDLIST",feedList.get(2).getEndTime().toString());
         for(Bathroom b: feedList){
             pagerAdapter.addCardFragment(b);
-//          tempPics.add(BitmapGenerator.DrawableFromAsset(MainActivity.this, "no-image-uploaded.png")); //delete me
         }
-        //delete me
-        for(int i= 0;i<pagerAdapter.getCount();i++){
-            if(i%3 == 1){
-                tempPics.add(ImageConverter.DrawableFromAsset(this,"no-image-uploaded.png"));
-            }else if(i%3 == 2) {
-                tempPics.add(ImageConverter.DrawableFromAsset(this,"temp_toilet_1.jpg"));
-            }else {
-                tempPics.add(ImageConverter.DrawableFromAsset(this,"temp_toilet_2.jpg"));
-            }
-        }
-        //end delet me
+
     }
 
+    private void refreshDisplay(int position){
+        bathrooms = pagerAdapter.getBathrooms();
+
+        ArrayList<String> amenitiesList = bathrooms.get(position).getAmenities();
+        Collections.sort(amenitiesList);
+        String formattedAmenities = amenitiesList.toString().replaceAll(", ","\n• ");
+        formattedAmenities = "• " + formattedAmenities.substring(1,formattedAmenities.length()-1);
+        amenities.setText(formattedAmenities);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+        Date startTime = bathrooms.get(position).getStartTime();
+        String start = null;
+        if(startTime != null){
+            try {
+                start = sdf.format(startTime);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Date endTime = bathrooms.get(position).getEndTime();
+        String end = null;
+        if(endTime != null){
+            try {
+                end = sdf.format(endTime);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(startTime == null || endTime == null){
+            hoursOfOperation.setText("Unknown");
+        } else if(start.equals(end)){
+            hoursOfOperation.setText("24HR");
+        }else{
+            hoursOfOperation.setText(start+" to "+end);
+        }
+
+        Date maintenanceStartTime = bathrooms.get(position).getMaintenanceStart();
+        String mStart = null;
+        if(startTime != null){
+            try {
+                mStart = sdf.format(maintenanceStartTime);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Date maintenanceEndTime = bathrooms.get(position).getMaintenanceEnd();
+        String mEnd = null;
+        if(endTime != null){
+            try {
+                mEnd = sdf.format(maintenanceEndTime);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        String maintenanceDays = bathrooms.get(position).getMaintenanceDays().toString();
+
+        if(maintenanceStartTime == null || maintenanceEndTime == null){
+            maintenanceHours.setText("Unknown");
+        }else{
+            maintenanceHours.setText(mStart+" to "+mEnd+"\n"+maintenanceDays);
+        }
+
+/*
+        ImageView selectedImage = (ImageView) findViewById(R.id.selected_location_image);
+//        bathrooms.get(position).setImage(new ImageFromURL(selectedImage).execute(bathrooms.get(position).getImageURL()));
+        try {
+            bathrooms.get(position).setImage(new ImageFromURL(this).execute(bathrooms.get(position).getImageURL()).get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        currentImage = (ImageView) findViewById(R.id.selected_location_image);
+        previousImage = currentImage;*/
+//      currentImage.setImageDrawable(bathrooms.get(position).get);
+
+        loadWebviewFromURL(loadedImage,bathrooms.get(position).getImageURL());
+
+    }
+
+    public void loadWebviewFromURL(WebView webview,String url){
+        if(url == null || url.equals("")) {
+            url = "no-image-uploaded.png";
+        }
+        String css = "width:100%;height:100%;overflow:hidden;background:url("+url+");background-size:cover;background-position:center center;";
+        String html = "<html><body style=\"height:100%;width:100%;margin:0;padding:0;overflow:hidden;\">" + "<div style=\"" + css + "\"></div></body></html>";
+        webview.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", null);
+    }
+    private void initializeDisplayData() {
+        amenities = (TextView) findViewById(R.id.bathroom_amenities);
+        loadedImage = (WebView) findViewById(R.id.bathroom_webview);
+        hoursOfOperation = (TextView) findViewById(R.id.hours_of_operation);
+        maintenanceHours = (TextView) findViewById(R.id.maintenance_hours);
+
+        final ProgressBar Pbar = (ProgressBar) findViewById(R.id.bathroom_progress);
+        loadedImage.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress)
+            {
+                if(progress < 100 && Pbar.getVisibility() == ProgressBar.GONE){
+                    Pbar.setVisibility(ProgressBar.VISIBLE);
+                }
+                Pbar.setProgress(progress);
+                if(progress == 100) {
+                    Pbar.setVisibility(ProgressBar.GONE);
+                }
+            }
+        });
+
+    }
     private void initializePageViewer(){
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new BathroomCardFragmentPagerAdapter(getSupportFragmentManager(), MetricConverter.dpToPx(this,2));
-        tempPics = new ArrayList<Drawable>();
+
         setupView();
-
-
-
-        currentImage = (ImageView) findViewById(R.id.selected_location_image);
-        previousImage = currentImage;
-        currentImage.setImageDrawable(tempPics.get(0));
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);
@@ -123,20 +234,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 Log.v("scrollchange", "position "+String.valueOf(position));
-                Drawable[] layers = new Drawable[2];
-
+               /* Drawable[] layers = new Drawable[2];
                 layers[0] = previousImage.getDrawable();
-                layers[1] = tempPics.get(position);
+                try {
+                    layers[1] = bathrooms.get(position).setImage(new ImageFromURL(MainActivity.this).execute(bathrooms.get(position).getImageURL()).get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }*/
+                for(int i = 0; i<2;i++){
+                    Log.v("scrollchange: drawables", String.valueOf(bathrooms.get(i).getImage()));
+                }
+//                layers[1] = tempPics.get(position);
+//                Log.v("drawable",String.valueOf(pagerAdapter.getBathrooms().get(position).getImage()));
+//                pagerAdapter.getBathrooms().get(position).getImage();
+//               layers[1] =  pagerAdapter.getBathrooms().get(position).getImage();
 
-
-                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
+//                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
+/*                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
                 currentImage.setImageDrawable(transitionDrawable);
                 transitionDrawable.startTransition(150);
-                previousImage = currentImage;
+                previousImage = currentImage;*/
+
+                refreshDisplay(position);
+
 
                 if(position == pagerAdapter.getCount() - 1) {
-
-
 
 /*                            for(int i = 0; i< 100; i++) {
                                 //test add new items:
