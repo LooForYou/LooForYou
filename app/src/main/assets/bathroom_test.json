@@ -1,0 +1,105 @@
+[
+  {
+    "name" : "Bradsbupy Bathroom",
+    "id" : "123",
+    "rating" : 4.5,
+    "clean_rating" : 4.6,
+    "latitude" : 33.788155,
+    "longitude" : -118.124688,
+    "address" : "1785 N Bellflower Blvd, Long Beach, CA, 90815",
+    "start_time" : "Mon Jan 01 09:00:00 PST 2018",
+    "end_time" : "Mon Jan 01 21:00:00 PST 2018",
+    "maintenance_start" : "Mon Jan 01 12:00:00 PST 2018",
+    "maintenance_end" : "Mon Jan 01 13:00:00 PST 2018",
+    "maintenance_days" : "Tuesdays, Fridays",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "accessible",
+      "parking available",
+      "baby-changing station",
+      "water fountain",
+      "mirrors available"
+    ],
+    "descriptions" : [
+      "East Bradsbupy Building, 1st Floor",
+      "Near Starbucks"
+    ],
+    "image_url" : "https://cdn.thewirecutter.com/wp-content/uploads/2017/08/small-bathroom-2x1-fullres-2718-1024x512.jpg"
+  },
+  {
+    "name" : "Altos Migusos",
+    "id" : "456",
+    "rating" : 3.0,
+    "clean_rating" : 3.5,
+    "latitude" : 33.782223,
+    "longitude" : -118.108102,
+    "address" : "Long Beach, CA, 90840",
+    "start_time" : "",
+    "end_time" : "",
+    "maintenance_start" : "",
+    "maintenance_end" : "",
+    "maintenance_days" : "",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "accessible",
+      "parking available",
+      "water fountain",
+      "no key required"
+    ],
+    "descriptions" : [
+      "Near the duck pond"
+    ],
+    "image_url" : "https://hips.hearstapps.com/hbu.h-cdn.co/assets/cm/16/29/1600x800/landscape-54bf40cf5e1b8-hbx-hacienda-style-bathroom-1013-s2.jpg?resize=768:*"
+  },
+  {
+    "name" : "Earl Warren Japanese Garden",
+    "id" : "789",
+    "rating" : 3.9,
+    "clean_rating" : 5.0,
+    "latitude" : 33.785186,
+    "longitude" : -118.119461,
+    "address" : "Earl Warren Dr, Long Beach, CA 90840",
+    "start_time" : "Mon Jan 01 00:00:00 PST 2018",
+    "end_time" : "Mon Jan 01 00:00:00 PST 2018",
+    "maintenance_start" : "Mon Jan 01 14:00:00 PST 2018",
+    "maintenance_end" : "Mon Jan 01 14:30:00 PST 2018",
+    "maintenance_days" : "Every day",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "parking available"
+    ],
+    "descriptions" : [
+      "Porto Party",
+      "Go at your own risk"
+    ],
+    "image_url" : "https://s.aolcdn.com/hss/storage/midas/b008e12102b62657968491b07d789135/206027438/toto.jpg"
+  },
+  {
+    "name" : "Redondo Pier Latrine",
+    "id" : "987",
+    "rating" : 1.9,
+    "clean_rating" : 3.0,
+    "latitude" : 33.850908,
+    "longitude" : -118.385042,
+    "address" : "Redondo Beach Beach, CA 90277",
+    "start_time" : "Mon Jan 01 09:00:00 PST 2018",
+    "end_time" : "Mon Jan 01 21:00:00 PST 2018",
+    "maintenance_start" : "Mon Jan 01 12:00:00 PST 2018",
+    "maintenance_end" : "Mon Jan 01 12:30:00 PST 2018",
+    "maintenance_days" : "Every day",
+    "bookmarked" : false,
+    "amenities" : [
+      "free",
+      "parking available",
+      "water fountain"
+    ],
+    "descriptions" : [
+      "Public Pier Bathroom",
+      "Beware of homeless people"
+    ],
+    "image_url" : ""
+  }
+]
