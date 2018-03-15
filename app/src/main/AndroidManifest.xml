@@ -51,9 +51,7 @@
             android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".activities.Pop"
-            android:theme="@style/AppTheme.PopupTheme"
-            ></activity>
+
     </application>
 
 </manifest>
