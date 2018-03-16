@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private GestureDetector gestureScanner;
     private ArrayList<Bathroom> bathrooms;
     private TextView amenities;
-    private WebView loadedImage;
     private TextView hoursOfOperation;
     private TextView maintenanceHours;
 
@@ -184,37 +183,16 @@ public class MainActivity extends AppCompatActivity {
         previousImage = currentImage;*/
 //      currentImage.setImageDrawable(bathrooms.get(position).get);
 
-        loadWebviewFromURL(loadedImage,bathrooms.get(position).getImageURL());
+
 
     }
 
-    public void loadWebviewFromURL(WebView webview,String url){
-        if(url == null || url.equals("")) {
-            url = "no-image-uploaded.png";
-        }
-        String css = "width:100%;height:100%;overflow:hidden;background:url("+url+");background-size:cover;background-position:center center;";
-        String html = "<html><body style=\"height:100%;width:100%;margin:0;padding:0;overflow:hidden;\">" + "<div style=\"" + css + "\"></div></body></html>";
-        webview.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", null);
-    }
     private void initializeDisplayData() {
         amenities = (TextView) findViewById(R.id.bathroom_amenities);
-        loadedImage = (WebView) findViewById(R.id.bathroom_webview);
         hoursOfOperation = (TextView) findViewById(R.id.hours_of_operation);
         maintenanceHours = (TextView) findViewById(R.id.maintenance_hours);
 
-        final ProgressBar Pbar = (ProgressBar) findViewById(R.id.bathroom_progress);
-        loadedImage.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress)
-            {
-                if(progress < 100 && Pbar.getVisibility() == ProgressBar.GONE){
-                    Pbar.setVisibility(ProgressBar.VISIBLE);
-                }
-                Pbar.setProgress(progress);
-                if(progress == 100) {
-                    Pbar.setVisibility(ProgressBar.GONE);
-                }
-            }
-        });
+
 
     }
     private void initializePageViewer(){
