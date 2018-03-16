@@ -1,9 +1,6 @@
 <resources>
     <dimen name="default_padding">15dp</dimen>
-<<<<<<< HEAD
-=======
     <dimen name="action_button_padding">1dp</dimen>
     <dimen name="card_padding">40dp</dimen>
     <dimen name="card_star_padding">45dp</dimen>
->>>>>>> 11f81cea5433e557340b3354b81e72f483fc8e40
 </resources>
