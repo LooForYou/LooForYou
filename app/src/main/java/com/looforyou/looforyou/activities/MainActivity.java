@@ -1,5 +1,6 @@
 package com.looforyou.looforyou.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ImageButton;
@@ -63,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView hoursOfOperation;
     private TextView maintenanceHours;
 
+    Dialog myDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        myDialog = new Dialog(this);
+        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         showActionBar();
         bindActionBar();
@@ -279,9 +285,16 @@ public class MainActivity extends AppCompatActivity {
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.v("Custom Tag","profile button clicked");
-                Toast.makeText(MainActivity.this,"profile...", Toast.LENGTH_SHORT).show();
-
+                TextView txtclose;
+                myDialog.setContentView(R.layout.activity_login);
+                txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
+                txtclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                    }
+                });
+                myDialog.show();
             }
         });
 

@@ -28,18 +28,7 @@
                 android:layout_marginEnd="@dimen/default_padding"
                 android:layout_marginStart="@dimen/default_padding"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:id="@+id/profile_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="My Profile"
-                    android:textColor="@color/black"
-                    android:textSize="21sp"
-                    android:paddingBottom="5dp"
-                    />
+                android:orientation="vertical" >
 
                 <View
                     android:layout_width="match_parent"
@@ -49,18 +38,75 @@
                     android:layout_marginTop="5dp"/>
 
                 <TextView
+                    android:id="@+id/profile_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Profile"
-                    android:singleLine="false"
-                    />
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:paddingBottom="5dp"
+                    android:text="My Profile"
+                    android:textColor="@color/black"
+                    android:textSize="21sp" />
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilePic"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_below="@+id/profile_title"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:cropToPadding="true"
+                    android:src="@drawable/no_image_uploaded" />
+
+                <EditText
+                    android:id="@+id/profileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profilePic"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="21dp"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:hint="Name" />
+
+                <EditText
+                    android:id="@+id/profileEmailAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/profileName"
+                    android:layout_below="@+id/profileName"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="21dp"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:hint="Email Address"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="21dp"
+                    android:ems="10"
+                    app:passwordToggleContentDescription="@string/password_description"
+                    app:passwordToggleDrawable="@drawable/ic_remove_red_eye_black_24dp"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/colorPrimaryLight">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:inputType="textPassword" />
+                </android.support.design.widget.TextInputLayout>
+
+                />
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
+
     <!--bottombar tabs-->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -83,4 +129,5 @@
             android:text="Pop up login"
             tools:ignore="OnClick" />
     </RelativeLayout>
+
 </FrameLayout>

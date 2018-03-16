@@ -19,16 +19,9 @@ public class LoginActivity extends AppCompatActivity {
         final EditText etUserName = (EditText)findViewById(R.id.etUsername);
         final EditText etPass = (EditText) findViewById(R.id.etPassword);
 
-        final Button bLogin = (Button) findViewById(R.id.bLogin);
+        final Button popLogin = (Button) findViewById(R.id.popLogin);
         final Button bRegister = (Button) findViewById(R.id.bRegister);
         final Button bFB = (Button) findViewById(R.id.bFBLogin);
         final Button bGoogle = (Button) findViewById(R.id.bGoogleLogin);
-
-        bLogin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v){
-                Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
-                LoginActivity.this.startActivity(loginIntent);
-            }
-        });
     }
 }
