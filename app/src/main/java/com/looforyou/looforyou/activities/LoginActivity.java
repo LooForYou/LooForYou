@@ -19,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText etUserName = (EditText)findViewById(R.id.etUsername);
         final EditText etPass = (EditText) findViewById(R.id.etPassword);
 
-        final Button popLogin = (Button) findViewById(R.id.bLogin);
+        final Button popLogin = (Button) findViewById(R.id.popLogin);
         final Button bRegister = (Button) findViewById(R.id.bRegister);
         final Button bFB = (Button) findViewById(R.id.bFBLogin);
         final Button bGoogle = (Button) findViewById(R.id.bGoogleLogin);
