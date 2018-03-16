@@ -7,74 +7,100 @@
     android:orientation="vertical"
     tools:context="com.looforyou.looforyou.activities.MainActivity">
 
-    <include
-        layout="@layout/toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
     <!--margins do not work as a child of constraintLayout so scrollview needs to have actionbar-sized padding -->
-    <ScrollView
-        android:id="@+id/main_scrollview"
+    <RelativeLayout
+        android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="?attr/actionBarSize"
         android:fillViewport="false"
-        android:layout_marginTop="?attr/actionBarSize"
         android:layout_weight="1"
         >
 <!--relative layout used as wrapper to prevent scrollview from clipping linear layout-->
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/default_padding">
+   >
         <!--linear layout used for stacking elements vertically-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/default_padding"
             android:layout_marginStart="@dimen/default_padding"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:orientation="vertical"
             >
-            <Button
-                android:id="@+id/sort_by_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@color/colorPrimaryLight"
-                android:text="SORT BY"
-                android:textColor="@color/white"
-                android:textSize="21sp" />
+
             <!--TODO in activity, make method to crop image to 125dp height-->
-            <ImageView
-                android:id="@+id/selected_location_image"
-                android:layout_width="match_parent"
-                android:layout_height="125dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/no_image_uploaded" />
-            <!--placeholder container for cardview swiping-->
-            <ScrollView
-                android:id="@+id/scroller_main"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:background="@color/colorAccent"></ScrollView>
+                android:animateLayoutChanges="true"
+                >
+                <WebView
+                    android:id="@+id/bathroom_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </WebView>
+                <ProgressBar
+                    android:id="@+id/bathroom_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center_vertical"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/selected_location_image"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="150dp"-->
+                <!--android:paddingBottom="0dp"-->
+                <!--android:src="@drawable/no_image_uploaded" />-->
+            <!--placeholder container for cardview swiping-->
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="165dp"
+                android:layout_gravity="bottom"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:layout_marginTop="0dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="0dp"
+                android:paddingEnd="@dimen/card_padding"
+                android:paddingLeft="@dimen/card_padding"
+                android:paddingRight="@dimen/card_padding"
+                android:paddingStart="@dimen/card_padding" />
             <!--about bathroom title-->
-            <TextView
-                android:id="@+id/about_this_bathroom_title"
+            <ScrollView
+                android:id="@+id/description_scrollview_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="About This Bathroom"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                android:paddingBottom="@dimen/default_padding"
-                />
-            <LinearLayout
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/about_this_bathroom_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="About This Bathroom"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:paddingBottom="5dp"
+                        />
+                    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                  android:orientation="horizontal">
+                  android:orientation="horizontal"
+                    android:paddingBottom="@dimen/default_padding">
             <TextView
+                android:id="@+id/bathroom_amenities"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -86,7 +112,9 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+
+                    >
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,6 +125,7 @@
                 android:textColor="@color/black"
                />
                 <TextView
+                    android:id="@+id/hours_of_operation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="00:00AM to 00:00PM"
@@ -114,6 +143,7 @@
                 android:layout_marginTop="@dimen/default_padding"
                 />
                 <TextView
+                    android:id="@+id/maintenance_hours"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="00:00AM to 00:00PM\nFridays"
@@ -122,10 +152,12 @@
                     />
                 </LinearLayout>
             </LinearLayout>
-
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
+
 </RelativeLayout>
-    </ScrollView>
+    </RelativeLayout>
     <!--bottombar tabs-->
     <RelativeLayout
         android:layout_width="match_parent"

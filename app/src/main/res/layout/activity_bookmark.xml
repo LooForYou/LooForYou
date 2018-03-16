@@ -7,18 +7,11 @@
     android:orientation="vertical"
     tools:context="com.looforyou.looforyou.activities.BookmarkActivity">
 
-    <include
-        layout="@layout/toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
     <!--margins do not work as a child of constraintLayout so scrollview needs to have actionbar-sized padding -->
     <ScrollView
         android:id="@+id/main_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="?attr/actionBarSize"
         android:fillViewport="false"
         android:layout_weight="1"

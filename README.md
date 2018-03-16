@@ -39,5 +39,23 @@ git push                     //push to your branch
 ```
 * order of operations:   	 add -> commit -> pull -> push
 
-<<<<<<< HEAD
-________________________________________________________________________________________________________________________________________________________________________
+### see status of files modified
+```
+git status
+```
+
+### see specific changes within files:
+```
+git diff                   // overview of things changed
+git diff {filename}        // see specific changes in file 
+git diff {branchname}      // view differences in different branches
+:wq                        // exits vim mode
+
+```
+
+### see list of commits
+```
+git log      // view commit log
+git checkout {first 6 characters of chosen checkpoint hash} -b {new branch name}  // checkout log to new branch
+```
+----
