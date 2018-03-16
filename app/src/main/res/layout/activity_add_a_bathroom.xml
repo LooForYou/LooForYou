@@ -38,8 +38,7 @@
                     android:text="Add a Bathroom"
                     android:textColor="@color/black"
                     android:textSize="21sp"
-                    android:paddingBottom="5dp"
-                    />
+                    android:paddingBottom="5dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -49,24 +48,49 @@
                     android:layout_marginTop="5dp"/>
 
                 <TextView
+                    android:id="@+id/about_this_bathroom_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Help us get the most up-to-date bathroom info!"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="center"
+                    android:text="Adding a Bathroom is Fun &amp; Easy!"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:paddingBottom="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="You just need to give us:\n • Bathroom location\n • Bathroom attributes\n • Upload Image of the new bathroom"
                     android:singleLine="false"
+                    android:lineSpacingExtra="5dp"
                     />
+
+                <ImageView
+                    android:id="@+id/bathroom_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="125dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_above="@+id/bottomBar"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="30dp"
+                    android:src="@drawable/no_image_uploaded" />
+
                 <Button
                     android:id="@+id/add_a_bathroom_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:background="@color/colorPrimaryLight"
                     android:text="ADD A BATHROOM"
                     android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:layout_marginTop="@dimen/default_padding"/>
-
+                    android:textSize="24sp" />
 
             </LinearLayout>
+
+
+
         </RelativeLayout>
     </ScrollView>
     <!--bottombar tabs-->
@@ -81,5 +105,7 @@
             android:layout_alignParentBottom="true"
             app:bb_tabXmlResource="@xml/bottom_tabs"
             />
+
+
     </RelativeLayout>
 </FrameLayout>
