@@ -117,17 +117,6 @@
             android:layout_alignParentBottom="true"
             app:bb_tabXmlResource="@xml/bottom_tabs" />
 
-        <Button
-            android:id="@+id/blogin"
-            android:onClick="ShowPopup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="123dp"
-            android:text="Pop up login"
-            tools:ignore="OnClick" />
     </RelativeLayout>
 
 </FrameLayout>

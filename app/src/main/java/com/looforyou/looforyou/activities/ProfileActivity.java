@@ -22,7 +22,9 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         myDialog = new Dialog(this);
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
+
+        ShowPopup(getWindow().getDecorView());
+
         Log.v("mylog","this is a test log");
         TabControl tabb = new TabControl(this);
         tabb.tabs(ProfileActivity.this,R.id.tab_profile);
