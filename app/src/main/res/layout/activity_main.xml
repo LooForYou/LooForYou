@@ -31,29 +31,28 @@
             android:orientation="vertical"
             >
 
-            <!--TODO in activity, make method to crop image to 125dp height-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:animateLayoutChanges="true"
-                >
-                <WebView
-                    android:id="@+id/bathroom_webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="150dp"-->
+                <!--android:animateLayoutChanges="true"-->
+                <!--&gt;-->
+                <!--<WebView-->
+                    <!--android:id="@+id/bathroom_webview"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
 
-                </WebView>
-                <ProgressBar
-                    android:id="@+id/bathroom_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center_vertical"
-                    android:layout_centerInParent="true"
-                    />
+                <!--</WebView>-->
+                <!--<ProgressBar-->
+                    <!--android:id="@+id/bathroom_progress"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--/>-->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
             <!--<ImageView-->
                 <!--android:id="@+id/selected_location_image"-->
                 <!--android:layout_width="match_parent"-->
@@ -64,12 +63,12 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="165dp"
+                android:layout_height="300dp"
                 android:layout_gravity="bottom"
                 android:clipToPadding="false"
                 android:overScrollMode="never"
                 android:layout_marginTop="0dp"
-                android:paddingBottom="5dp"
+                android:paddingBottom="15dp"
                 android:paddingTop="0dp"
                 android:paddingEnd="@dimen/card_padding"
                 android:paddingLeft="@dimen/card_padding"
