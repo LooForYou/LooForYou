@@ -32,7 +32,7 @@ import java.util.List;
 
 public class LooLoader {
     private static final String TAG = "TEST FEEDLIST LooLoader";
-
+    private static final String API_URL = "http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/Bathrooms?access_token=pBWBnDboL5RSFunF6E08EZJGD1skk9kkX3xAKJwDK4VLhVgHg0nYdvUjz6Oh7401\n";
     public static List<Bathroom> loadBathrooms(Context context){
         try{
             List<Bathroom> bathroomList = new ArrayList<>();
@@ -40,7 +40,13 @@ public class LooLoader {
             gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
             Gson gson = gsonBuilder.create();
 //            gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
-            ArrayList<Bathroom> bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(loadJSONFromAsset(context, "bathroom_test.json"), Bathroom[].class)));
+
+            //Loopback Async http requiest
+            String result;
+            HttpGet getRequest = new HttpGet();
+            result = getRequest.execute(API_URL).get();
+            //
+            ArrayList<Bathroom> bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(result, Bathroom[].class)));
 
             for(Bathroom b : bathrooms){
                 Log.v(TAG,"Bathroom:\n "+b);
