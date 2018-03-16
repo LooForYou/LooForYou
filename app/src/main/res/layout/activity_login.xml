@@ -7,7 +7,6 @@
     android:layout_gravity="center"
     android:padding="5dp"
     android:orientation="vertical"
-    android:background="@drawable/loginborder"
     tools:context="com.looforyou.looforyou.activities.LoginActivity">
 
     <TextView
