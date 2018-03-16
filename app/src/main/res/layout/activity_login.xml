@@ -8,7 +8,7 @@
     android:padding="5dp"
     android:orientation="vertical"
     android:background="@drawable/loginborder"
-    tools:context="com.looforyou.looforyou.LoginActivity">
+    tools:context="com.looforyou.looforyou.activities.LoginActivity">
 
     <TextView
         android:id="@+id/txtclose"

@@ -50,7 +50,7 @@
         <activity
             android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".activities.LoginActivity"></activity>
 
     </application>
 
