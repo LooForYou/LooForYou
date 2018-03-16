@@ -11,4 +11,6 @@
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam eget ligula eu lectus lobortis condimentum.</string>
 
+    <!--profile page -->
+    <string name="password_description">Enter your password</string>
 </resources>
