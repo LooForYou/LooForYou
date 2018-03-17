@@ -1,5 +1,6 @@
 package com.looforyou.looforyou.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ImageButton;
@@ -60,14 +62,17 @@ public class MainActivity extends AppCompatActivity {
     private GestureDetector gestureScanner;
     private ArrayList<Bathroom> bathrooms;
     private TextView amenities;
-    private WebView loadedImage;
     private TextView hoursOfOperation;
     private TextView maintenanceHours;
+
+    Dialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        myDialog = new Dialog(this);
+        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         showActionBar();
         bindActionBar();
@@ -178,37 +183,16 @@ public class MainActivity extends AppCompatActivity {
         previousImage = currentImage;*/
 //      currentImage.setImageDrawable(bathrooms.get(position).get);
 
-        loadWebviewFromURL(loadedImage,bathrooms.get(position).getImageURL());
+
 
     }
 
-    public void loadWebviewFromURL(WebView webview,String url){
-        if(url == null || url.equals("")) {
-            url = "no-image-uploaded.png";
-        }
-        String css = "width:100%;height:100%;overflow:hidden;background:url("+url+");background-size:cover;background-position:center center;";
-        String html = "<html><body style=\"height:100%;width:100%;margin:0;padding:0;overflow:hidden;\">" + "<div style=\"" + css + "\"></div></body></html>";
-        webview.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", null);
-    }
     private void initializeDisplayData() {
         amenities = (TextView) findViewById(R.id.bathroom_amenities);
-        loadedImage = (WebView) findViewById(R.id.bathroom_webview);
         hoursOfOperation = (TextView) findViewById(R.id.hours_of_operation);
         maintenanceHours = (TextView) findViewById(R.id.maintenance_hours);
 
-        final ProgressBar Pbar = (ProgressBar) findViewById(R.id.bathroom_progress);
-        loadedImage.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress)
-            {
-                if(progress < 100 && Pbar.getVisibility() == ProgressBar.GONE){
-                    Pbar.setVisibility(ProgressBar.VISIBLE);
-                }
-                Pbar.setProgress(progress);
-                if(progress == 100) {
-                    Pbar.setVisibility(ProgressBar.GONE);
-                }
-            }
-        });
+
 
     }
     private void initializePageViewer(){
@@ -301,9 +285,16 @@ public class MainActivity extends AppCompatActivity {
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.v("Custom Tag","profile button clicked");
-                Toast.makeText(MainActivity.this,"profile...", Toast.LENGTH_SHORT).show();
-
+                TextView txtclose;
+                myDialog.setContentView(R.layout.activity_login);
+                txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
+                txtclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                    }
+                });
+                myDialog.show();
             }
         });
 

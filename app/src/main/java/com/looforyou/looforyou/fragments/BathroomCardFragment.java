@@ -9,7 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,14 @@ public class BathroomCardFragment extends Fragment implements Serializable{
 
     }
 
+    public void loadWebviewFromURL(WebView webview,String url){
+        if(url == null || url.equals("")) {
+            url = "no-image-uploaded.png";
+        }
+        String css = "width:100%;height:100%;overflow:hidden;background:url("+url+");background-size:cover;background-position:center center;";
+        String html = "<html><body style=\"height:100%;width:100%;margin:0;padding:0;overflow:hidden;\"><div style=\"" + css + "\"></div></body></html>";
+        webview.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", null);
+    }
 
     @SuppressLint("DefaultLocale")
     @Nullable
@@ -51,6 +62,23 @@ public class BathroomCardFragment extends Fragment implements Serializable{
 
         cardView = (CardView) view.findViewById(R.id.cardView);
         cardView.setMaxCardElevation(cardView.getCardElevation() * BathroomCardAdapter.MAX_ELEVATION_FACTOR);
+
+        WebView loadedImage = (WebView) view.findViewById(R.id.bathroom_webview);
+        loadWebviewFromURL(loadedImage,bathroom.getImageURL());
+        final ProgressBar Pbar = (ProgressBar) view.findViewById(R.id.bathroom_progress);
+        loadedImage.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress)
+            {
+                if(progress < 100 && Pbar.getVisibility() == ProgressBar.GONE){
+                    Pbar.setVisibility(ProgressBar.VISIBLE);
+                }
+                Pbar.setProgress(progress);
+                if(progress == 100) {
+                    Pbar.setVisibility(ProgressBar.GONE);
+                }
+            }
+        });
+
 
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(bathroom.getName());

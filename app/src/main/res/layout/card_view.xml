@@ -17,6 +17,32 @@
             android:orientation="vertical"
             android:layout_marginTop="26dp"
             android:layout_marginBottom="0dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:animateLayoutChanges="true"
+                android:paddingTop="10dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="15dp"
+                >
+                <WebView
+                    android:id="@+id/bathroom_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </WebView>
+                <ProgressBar
+                    android:id="@+id/bathroom_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center_vertical"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
