@@ -2,6 +2,7 @@ package com.looforyou.looforyou.utilities;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -11,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.looforyou.looforyou.Models.Bathroom;
+import com.looforyou.looforyou.R;
 
 import org.json.JSONArray;
 
@@ -32,14 +34,14 @@ import java.util.List;
 
 public class LooLoader {
     private static final String TAG = "TEST FEEDLIST LooLoader";
-    private static final String API_URL = "http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/Bathrooms?access_token=pBWBnDboL5RSFunF6E08EZJGD1skk9kkX3xAKJwDK4VLhVgHg0nYdvUjz6Oh7401\n";
+    //    private static final String API_URL = "http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/Bathrooms?access_token=pBWBnDboL5RSFunF6E08EZJGD1skk9kkX3xAKJwDK4VLhVgHg0nYdvUjz6Oh7401\n";
     public static List<Bathroom> loadBathrooms(Context context){
+    final String API_URL = context.getResources().getString(R.string.loopbacks_api_root)+"Bathrooms";
         try{
             List<Bathroom> bathroomList = new ArrayList<>();
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
             Gson gson = gsonBuilder.create();
-//            gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
 
             //Loopback Async http requiest
             String result;
