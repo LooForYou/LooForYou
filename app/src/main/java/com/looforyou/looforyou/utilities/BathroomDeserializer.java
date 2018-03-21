@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static android.support.v7.widget.AppCompatDrawableManager.get;
 
@@ -41,25 +42,23 @@ public class BathroomDeserializer implements JsonDeserializer<Bathroom>{
             Calendar closed = Calendar.getInstance();
             Calendar maintenanceStart = Calendar.getInstance();
             Calendar maintenanceEnd = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-//            cal.set(Calendar.YEAR, 1988);
-//            open.set(Calendar.MONTH, Calendar.JANUARY);
-//            cal.set(Calendar.DAY_OF_MONTH, 1);
-//            Date dateRepresentation = cal.getTime();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH); //pattern for date parsing from string to time
+        dateFormat.setTimeZone(TimeZone.getTimeZone("PST"));
 
-//            Log.v("date::cal:",dateRepresentation.toString());
-//            Calendar cal2 = Calendar.getInstance();
-//            cal2.setTime(dateRepresentation);
-//            Log.v("date::cal2:",cal.getTime().toString());
-
-
-//        Log.v("bathroom deserializer",jsonObject.get("name").getAsString());
         String stringOpen = jsonObject.get("start_time").getAsString();
         if(!stringOpen.equals("") && stringOpen != null) {
             try {
                 open.setTime(dateFormat.parse(stringOpen));
+                Log.v("time:::",String.valueOf(dateFormat.parse(stringOpen)));
             } catch (ParseException e) {
                 e.printStackTrace();
+                try {
+                    Log.v("time:::","parse start time failed");
+                    Log.v("time:::",String.valueOf(dateFormat.parse(stringOpen)));
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
             }
         }else {
             open = null;
