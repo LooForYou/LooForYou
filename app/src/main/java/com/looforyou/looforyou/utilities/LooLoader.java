@@ -47,8 +47,19 @@ public class LooLoader {
             String result;
             HttpGet getRequest = new HttpGet();
             result = getRequest.execute(API_URL).get();
-            //
-            ArrayList<Bathroom> bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(result, Bathroom[].class)));
+            Log.v("result_val",result);
+            ArrayList<Bathroom> bathrooms;
+            if(!result.equals("")){
+                bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(result, Bathroom[].class)));
+            }else{
+                bathrooms = new ArrayList<Bathroom>();
+                Bathroom noBathroom = new Bathroom();
+                noBathroom.setName("We weren't able to find bathrooms in the area");
+                noBathroom.setImageURL("were-sorry.png");
+                noBathroom.setDescriptions(new ArrayList<String>(Arrays.asList("please try again")));
+                bathrooms.add(noBathroom);
+            }
+
 
             for(Bathroom b : bathrooms){
                 Log.v(TAG,"Bathroom:\n "+b);

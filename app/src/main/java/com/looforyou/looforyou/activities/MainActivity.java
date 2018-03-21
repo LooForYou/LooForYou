@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
 //            mLoadMoreView.addView(new MenuView.ItemView(this.getApplicationContext(), feedList.get(i)));
 //        }
 //        mLoadMoreView.setLoadMoreResolver(new LoadMoreView(mLoadMoreView, feedList));
-        Log.v("TEST FEEDLIST","feed size: "+feedList.size());
+/*        Log.v("TEST FEEDLIST","feed size: "+feedList.size());
         Log.v("TEST FEEDLIST",String.valueOf(feedList.get(0).getLatLng()));
         Log.v("TEST FEEDLIST",feedList.get(1).getName());
-        Log.v("TEST FEEDLIST",feedList.get(2).getEndTime().toString());
+        Log.v("TEST FEEDLIST",feedList.get(2).getEndTime().toString());*/
         for(Bathroom b: feedList){
             pagerAdapter.addCardFragment(b);
         }
@@ -108,83 +108,82 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshDisplay(int position){
         bathrooms = pagerAdapter.getBathrooms();
+        if(bathrooms.size() > 0) {
+            ArrayList<String> amenitiesList = bathrooms.get(position).getAmenities();
+            Collections.sort(amenitiesList);
+            String formattedAmenities = amenitiesList.toString().replaceAll(", ", "\n• ");
+            formattedAmenities = "• " + formattedAmenities.substring(1, formattedAmenities.length() - 1);
+            amenities.setText(formattedAmenities);
 
-        ArrayList<String> amenitiesList = bathrooms.get(position).getAmenities();
-        Collections.sort(amenitiesList);
-        String formattedAmenities = amenitiesList.toString().replaceAll(", ","\n• ");
-        formattedAmenities = "• " + formattedAmenities.substring(1,formattedAmenities.length()-1);
-        amenities.setText(formattedAmenities);
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+            Date startTime = bathrooms.get(position).getStartTime();
+            String start = null;
+            if (startTime != null) {
+                try {
+                    start = sdf.format(startTime);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            Date endTime = bathrooms.get(position).getEndTime();
+            String end = null;
+            if (endTime != null) {
+                try {
+                    end = sdf.format(endTime);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (startTime == null || endTime == null) {
+                hoursOfOperation.setText("Unknown");
+            } else if (start.equals(end)) {
+                hoursOfOperation.setText("24HR");
+            } else {
+                hoursOfOperation.setText(start + " to " + end);
+            }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-        Date startTime = bathrooms.get(position).getStartTime();
-        String start = null;
-        if(startTime != null){
+            Date maintenanceStartTime = bathrooms.get(position).getMaintenanceStart();
+            String mStart = null;
+            if (startTime != null) {
+                try {
+                    mStart = sdf.format(maintenanceStartTime);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            Date maintenanceEndTime = bathrooms.get(position).getMaintenanceEnd();
+            String mEnd = null;
+            if (endTime != null) {
+                try {
+                    mEnd = sdf.format(maintenanceEndTime);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            String maintenanceDays = bathrooms.get(position).getMaintenanceDays().toString();
+
+            if (maintenanceStartTime == null || maintenanceEndTime == null) {
+                maintenanceHours.setText("Unknown");
+            } else {
+                maintenanceHours.setText(mStart + " to " + mEnd + "\n" + maintenanceDays);
+            }
+
+    /*
+            ImageView selectedImage = (ImageView) findViewById(R.id.selected_location_image);
+    //        bathrooms.get(position).setImage(new ImageFromURL(selectedImage).execute(bathrooms.get(position).getImageURL()));
             try {
-                start = sdf.format(startTime);
-            } catch (Exception e) {
+                bathrooms.get(position).setImage(new ImageFromURL(this).execute(bathrooms.get(position).getImageURL()).get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-        }
-        Date endTime = bathrooms.get(position).getEndTime();
-        String end = null;
-        if(endTime != null){
-            try {
-                end = sdf.format(endTime);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if(startTime == null || endTime == null){
-            hoursOfOperation.setText("Unknown");
-        } else if(start.equals(end)){
-            hoursOfOperation.setText("24HR");
-        }else{
-            hoursOfOperation.setText(start+" to "+end);
-        }
 
-        Date maintenanceStartTime = bathrooms.get(position).getMaintenanceStart();
-        String mStart = null;
-        if(startTime != null){
-            try {
-                mStart = sdf.format(maintenanceStartTime);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            currentImage = (ImageView) findViewById(R.id.selected_location_image);
+            previousImage = currentImage;*/
+            //      currentImage.setImageDrawable(bathrooms.get(position).get);
+
         }
-        Date maintenanceEndTime = bathrooms.get(position).getMaintenanceEnd();
-        String mEnd = null;
-        if(endTime != null){
-            try {
-                mEnd = sdf.format(maintenanceEndTime);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        String maintenanceDays = bathrooms.get(position).getMaintenanceDays().toString();
-
-        if(maintenanceStartTime == null || maintenanceEndTime == null){
-            maintenanceHours.setText("Unknown");
-        }else{
-            maintenanceHours.setText(mStart+" to "+mEnd+"\n"+maintenanceDays);
-        }
-
-/*
-        ImageView selectedImage = (ImageView) findViewById(R.id.selected_location_image);
-//        bathrooms.get(position).setImage(new ImageFromURL(selectedImage).execute(bathrooms.get(position).getImageURL()));
-        try {
-            bathrooms.get(position).setImage(new ImageFromURL(this).execute(bathrooms.get(position).getImageURL()).get());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        currentImage = (ImageView) findViewById(R.id.selected_location_image);
-        previousImage = currentImage;*/
-//      currentImage.setImageDrawable(bathrooms.get(position).get);
-
-
-
     }
 
     private void initializeDisplayData() {
@@ -218,29 +217,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 Log.v("scrollchange", "position "+String.valueOf(position));
-               /* Drawable[] layers = new Drawable[2];
-                layers[0] = previousImage.getDrawable();
-                try {
-                    layers[1] = bathrooms.get(position).setImage(new ImageFromURL(MainActivity.this).execute(bathrooms.get(position).getImageURL()).get());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }*/
                 for(int i = 0; i<2;i++){
-                    Log.v("scrollchange: drawables", String.valueOf(bathrooms.get(i).getImage()));
+//                    Log.v("scrollchange: drawables", String.valueOf(bathrooms.get(i).getImage()));
                 }
-//                layers[1] = tempPics.get(position);
-//                Log.v("drawable",String.valueOf(pagerAdapter.getBathrooms().get(position).getImage()));
-//                pagerAdapter.getBathrooms().get(position).getImage();
-//               layers[1] =  pagerAdapter.getBathrooms().get(position).getImage();
-
-//                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
-/*                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
-                currentImage.setImageDrawable(transitionDrawable);
-                transitionDrawable.startTransition(150);
-                previousImage = currentImage;*/
-
                 refreshDisplay(position);
 
 

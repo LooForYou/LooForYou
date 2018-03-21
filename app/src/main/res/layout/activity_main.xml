@@ -103,7 +103,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="• free\n• accessible\n• parking available\n• 4.1 clean rating\n• baby-changing station\n• mirrors available"
+                android:text=""
                 android:singleLine="false"
                 android:lineSpacingExtra="5dp"
                 />
@@ -145,7 +145,7 @@
                     android:id="@+id/maintenance_hours"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="00:00AM to 00:00PM\nFridays"
+                    android:text="00:00AM to 00:00PM"
                     android:gravity="end"
                     android:singleLine="false"
                     />
