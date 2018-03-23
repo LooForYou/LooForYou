@@ -125,7 +125,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         initializeComponents();
 
 
-
+        //Test add new FrameLayout to view programatically
         /*===================================================================*/
         /*FrameLayout layout = new FrameLayout(this);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM|Gravity.END);
@@ -169,11 +169,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         bathroomList = LooLoader.loadBathrooms(this.getApplicationContext());
     }
     public void initializeMarkers(GoogleMap map, List<Bathroom> bathrooms) {
-//        LatLng longBeach = new LatLng(33.783123, -118.113707);
         map.clear();
         for(Bathroom br : bathrooms){
             map.addMarker(new MarkerOptions()
-                    .position(new LatLng(br.getLatLng().latitude,br.getLatLng().longitude))
+                    .position(new LatLng(br.getCoordinates().latitude,br.getCoordinates().longitude))
                     .title(br.getName())
                     .anchor(0.5f, 0.5f)
                     .snippet((br.getDescriptions().size() > 0 ? br.getDescriptions().get(0) : "") +"\n"+ (br.getDescriptions().size() > 1 ? br.getDescriptions().get(1) : ""))
