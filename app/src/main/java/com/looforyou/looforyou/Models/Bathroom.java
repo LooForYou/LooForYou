@@ -29,7 +29,7 @@ import java.util.Date;
 @JsonAdapter(BathroomDeserializer.class)
 public class Bathroom implements Serializable {
     private String name, address, imageURL, maintenanceDays;
-    private Coordinates latLng;
+    private Coordinates coordinates;
     private double rating;
     private Date startTime, endTime, maintenanceStart, maintenanceEnd;
     private ArrayList<String> amenities, descriptions;
@@ -40,7 +40,7 @@ public class Bathroom implements Serializable {
 
     public Bathroom(){
         this.name = "Unknown";
-        latLng = new Coordinates(0,0);
+        coordinates = new Coordinates(0,0);
         this.rating = 0.0;
         this.startTime = new Date();
         this.endTime = new Date();
@@ -56,9 +56,9 @@ public class Bathroom implements Serializable {
         imageURL = null;
     }
 
-    public Bathroom(String name, Coordinates latLng, double rating, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, String maintenanceDays, boolean bookmarked, ArrayList<String> amenities, ArrayList<String> descriptions, String address){
+    public Bathroom(String name, Coordinates coordinates, double rating, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, String maintenanceDays, boolean bookmarked, ArrayList<String> amenities, ArrayList<String> descriptions, String address){
         this.name = name;
-        this.latLng = latLng;
+        this.coordinates = coordinates;
         this.rating = rating;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -74,7 +74,14 @@ public class Bathroom implements Serializable {
     }
 
 
+    public LatLng getLatLng(){
+        try {
+            return new LatLng(coordinates.latitude,coordinates.longitude);
+        }catch(Exception e){
 
+        }
+        return null;
+    }
     public ArrayList<String> getReviews() {
         return reviews;
     }
@@ -99,12 +106,12 @@ public class Bathroom implements Serializable {
         this.rating = rating;
     }
 
-    public Coordinates getLatLng() {
-        return latLng;
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
-    public void setLatLng(Coordinates latLng) {
-        this.latLng = latLng;
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
     }
 
     public String getName() {
@@ -177,7 +184,7 @@ public class Bathroom implements Serializable {
 
     @Override
     public String toString() {
-        return "Bathroom name: "+ name + "\ncoord: " + latLng.latitude+", "+ latLng.longitude+"\nrating: "+rating+"\nhours: "+startTime+" - "+endTime+"\nmaintenance: "+
+        return "Bathroom name: "+ name + "\ncoord: " + coordinates.latitude+", "+ coordinates.longitude+"\nrating: "+rating+"\nhours: "+startTime+" - "+endTime+"\nmaintenance: "+
                 maintenanceStart+" - "+maintenanceEnd+", "+maintenanceDays+"\nbookmarked: "+String.valueOf(bookmarked)+"\namenities: "+amenities.toString()+"\ndescriptions: "+
                 descriptions.toString()+"\nimage: "+String.valueOf(image);
     }
