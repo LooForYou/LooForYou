@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.TypedValue;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
+
 /**
  * Created by ibreaker on 2/28/2018.
  */
@@ -23,5 +26,14 @@ public class MetricConverter {
         Resources r = context.getResources();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, r.getDisplayMetrics());
     }
+
+    public static Double distanceBetweenInMiles(LatLng point1, LatLng point2){
+        double milesPerMeter = 0.000621371;
+        if (point1 == null || point2 == null) {
+            return null;
+        }
+        return SphericalUtil.computeDistanceBetween(point1, point2) * milesPerMeter;
+    }
+
 
 }

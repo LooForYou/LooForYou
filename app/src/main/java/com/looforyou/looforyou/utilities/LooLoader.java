@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static com.looforyou.looforyou.Constants.*;
+
 /**
  * Created by ibreaker on 3/11/2018.
  */
@@ -36,7 +38,8 @@ public class LooLoader {
     private static final String TAG = "TEST FEEDLIST LooLoader";
     //    private static final String API_URL = "http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/Bathrooms?access_token=pBWBnDboL5RSFunF6E08EZJGD1skk9kkX3xAKJwDK4VLhVgHg0nYdvUjz6Oh7401\n";
     public static List<Bathroom> loadBathrooms(Context context){
-    final String API_URL = context.getResources().getString(R.string.loopbacks_api_root)+"Bathrooms";
+//    final String API_URL = context.getResources().getString(R.string.loopbacks_api_root)+"Bathrooms";
+        String API_URL = GET_BATHROOMS;
         try{
             List<Bathroom> bathroomList = new ArrayList<>();
             GsonBuilder gsonBuilder = new GsonBuilder();
