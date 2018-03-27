@@ -97,10 +97,62 @@
                     android:inputType="textLongMessage"
                     android:text="Bathroom Hours of Operation" />
 
+                <TextView
+                    android:id="@+id/bathroom_attributes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="1dp"
+                    android:text="Select Attributes:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/bathroom_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Type:"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioMale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/bottomBar"
+                        android:text="Male" />
+
+                    <RadioButton
+                        android:id="@+id/radioFemale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/bottomBar"
+                        android:text="Female" />
+
+                    <RadioButton
+                        android:id="@+id/radioNeutral"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/bottomBar"
+                        android:text="Gender Neutral" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
                     <ToggleButton
                         android:id="@+id/bathroom_accessible"
@@ -108,42 +160,70 @@
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/bottomBar"
                         android:layout_alignParentStart="true"
-                        android:layout_marginBottom="42dp"
-                        android:layout_marginStart="26dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:text="HC" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_free"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        android:text="$" />
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="$$$" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_keyless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/bottomBar"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:text="Key" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:orientation="horizontal">
 
                     <ToggleButton
                         android:id="@+id/bathroom_parking"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/bottomBar"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="2dp"
-                        android:text="P" />
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Park" />
+
+                    <ToggleButton
+                        android:id="@+id/bathroom_mirrors"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Mirror" />
+
+                    <ToggleButton
+                        android:id="@+id/bathroom_baby_station"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/bottomBar"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Baby" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </RelativeLayout>
     </ScrollView>
+
     <!--bottombar tabs-->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -156,5 +236,7 @@
             android:layout_alignParentBottom="true"
             app:bb_tabXmlResource="@xml/bottom_tabs"
             />
+
+
     </RelativeLayout>
 </FrameLayout>
