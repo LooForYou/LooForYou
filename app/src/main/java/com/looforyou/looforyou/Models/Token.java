@@ -8,7 +8,7 @@ import com.looforyou.looforyou.utilities.TokenDeserializer;
  */
 
 @JsonAdapter(TokenDeserializer.class)
-public class Token {
+public class Token implements Serializable {
     private String id;
     private String userID;
 
@@ -48,5 +48,11 @@ public class Token {
         result += ("access_token=" + this.id);
 
         return  result;
+    }
+
+    @Override
+    //Add to end of request url that requires authorization
+    public String toString() {
+        return "access_token=" + this.id;
     }
 }
