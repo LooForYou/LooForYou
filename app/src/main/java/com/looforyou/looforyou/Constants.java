@@ -17,9 +17,10 @@ public class Constants {
 
     /* bathrooms */
     public static final String GET_BATHROOMS = API_ROOT + "Bathrooms/";
+    public static final String GET_USERS = API_ROOT + "Users/";
     public static final String BATHROOM_COUNT = GET_BATHROOMS + "count/";
     public static final String UPDATE_BATHROOM = GET_BATHROOMS + "update?where=";
-
+    public static final String LOGIN = GET_USERS + "login";
 
     /* move this to a utility class later*/
     public static URL encodeQuery(String query) {
