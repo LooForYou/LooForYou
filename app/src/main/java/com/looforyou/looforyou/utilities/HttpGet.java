@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -23,8 +25,10 @@ public class HttpGet extends AsyncTask<String, Void, String> {
         String result = "";
         String inputLine = "";
 
+
         try{
-            URL apiUrl = new URL(stringUrl);
+            URI apiUri = new URI(stringUrl);
+            URL apiUrl = apiUri.toURL();
             HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
             connection.setRequestMethod(REQUEST_METHOD);
             connection.setReadTimeout(READ_TIMEOUT);
@@ -42,7 +46,12 @@ public class HttpGet extends AsyncTask<String, Void, String> {
             reader.close();
             streamReader.close();
             result = stringBuilder.toString();
+            connection.disconnect();
+
         }catch(IOException e){
+            e.printStackTrace();
+            result = "";
+        }catch(URISyntaxException e){
             e.printStackTrace();
             result = "";
         }
