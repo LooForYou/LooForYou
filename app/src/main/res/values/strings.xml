@@ -15,5 +15,6 @@
     <string name="password_description">Enter your password</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bathroomType">Bathroom Type: </string>
     <!--<string name="loopbacks_api_root">http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/</string>-->
 </resources>

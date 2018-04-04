@@ -413,8 +413,8 @@ public class MainActivity extends AppCompatActivity {
             mLastKnownLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         }
         DecimalFormat df = new DecimalFormat("0.0");
-        double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(),getLastLocation().getLongitude()),bathrooms.get(viewPager.getCurrentItem()).getLatLng());
-        te.setText(df.format(dist)+" mi");
+       // double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(),getLastLocation().getLongitude()),bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+        //te.setText(df.format(dist)+" mi");
     }
 
     //when options in toolbar menu are created

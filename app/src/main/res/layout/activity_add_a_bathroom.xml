@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context="com.looforyou.looforyou.activities.AddABathroomActivity">
 
@@ -13,9 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="?attr/actionBarSize"
-        android:fillViewport="false"
         android:layout_weight="1"
-        >
+        android:fillViewport="false">
         <!--relative layout used as wrapper to prevent scrollview from clipping linear layout-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,15 +27,14 @@
                 android:layout_marginEnd="@dimen/default_padding"
                 android:layout_marginStart="@dimen/default_padding"
                 android:layout_marginTop="5dp"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/add_a_bathroom_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
                     android:text="Add a Bathroom"
                     android:textColor="@color/black"
                     android:textSize="21sp" />
@@ -45,57 +43,75 @@
                     android:id="@+id/bathroom_image"
                     android:layout_width="match_parent"
                     android:layout_height="125dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginEnd="@dimen/default_padding"
-                    android:layout_marginStart="@dimen/default_padding"
                     android:layout_above="@+id/bottomBar"
                     android:layout_alignParentStart="true"
                     android:layout_gravity="center"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="4dp"
                     android:src="@drawable/no_image_uploaded" />
+
                 <TextView
-                    android:id="@+id/add_a_bathroom_link"
+                    android:id="@+id/bathroom_image_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="1dp"
                     android:layout_gravity="right"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="3dp"
+                    android:onClick="uploadImage"
                     android:text="Claick to upload Image"
                     android:textColor="@color/black"
                     android:textSize="11sp" />
 
-                <EditText
-                    android:id="@+id/editBathroomName"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:inputType="text"
-                    android:text="Bathroom Name" />
+                    android:layout_marginTop="2dp">
 
-                <EditText
-                    android:id="@+id/editBathroomLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/default_padding"
-                    android:layout_marginStart="@dimen/default_padding"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:inputType="text"
-                    android:text="Bathroom Location" />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editBathroomName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Bathroom Name"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/editInfo"
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="2dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editBathroomLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Bathroom Location"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginBottom="2dp"
-                    android:inputType="textLongMessage"
-                    android:text="Bathroom Hours of Operation" />
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="2dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editBathroomInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Bathroom Hours of Operation"
+                        android:inputType="textLongMessage" />
+                </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:id="@+id/bathroom_attributes"
@@ -110,40 +126,50 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="2dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/bathroom_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Type:"
                         android:layout_gravity="center_vertical"
+                        android:text="@string/bathroomType"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="15dp" />
 
-                    <RadioButton
-                        android:id="@+id/radioMale"
+                    <RadioGroup
+                        android:id="@+id/radioGroup"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
-                        android:text="Male" />
+                        android:layout_height="wrap_content">
 
-                    <RadioButton
-                        android:id="@+id/radioFemale"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
-                        android:text="Female" />
+                        <RadioButton
+                            android:id="@+id/radioMale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/bottomBar"
+                            android:checked="true"
+                            android:onClick="checkButton"
+                            android:text="Male" />
 
-                    <RadioButton
-                        android:id="@+id/radioNeutral"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
-                        android:text="Gender Neutral" />
+                        <RadioButton
+                            android:id="@+id/radioFemale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/bottomBar"
+                            android:onClick="checkButton"
+                            android:text="Female" />
+
+                        <RadioButton
+                            android:id="@+id/radioNeutral"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/bottomBar"
+                            android:onClick="checkButton"
+                            android:text="Gender Neutral" />
+                    </RadioGroup>
                 </LinearLayout>
 
                 <LinearLayout
@@ -162,7 +188,8 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:text="HC" />
+                        android:onClick="checkToggle"
+                        android:text="Handicapped" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_free"
@@ -171,7 +198,8 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:text="$$$" />
+                        android:onClick="checkToggle"
+                        android:text="Free" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_keyless"
@@ -181,7 +209,8 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:text="Key" />
+                        android:onClick="checkToggle"
+                        android:text="Keyless" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -199,7 +228,8 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:text="Park" />
+                        android:onClick="checkToggle"
+                        android:text="Parking" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_mirrors"
@@ -208,7 +238,8 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:text="Mirror" />
+                        android:onClick="checkToggle"
+                        android:text="Mirrors" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_baby_station"
@@ -218,7 +249,8 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:text="Baby" />
+                        android:onClick="checkToggle"
+                        android:text="Changing Station" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -229,14 +261,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.roughike.bottombar.BottomBar
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:bb_tabXmlResource="@xml/bottom_tabs"
-            />
-
-
+            app:bb_tabXmlResource="@xml/bottom_tabs" />
     </RelativeLayout>
 </FrameLayout>
