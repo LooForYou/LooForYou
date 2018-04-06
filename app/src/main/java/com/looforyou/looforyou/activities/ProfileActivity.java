@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.TabControl;
+
+import org.w3c.dom.Text;
 
 public class ProfileActivity extends AppCompatActivity {
     Dialog myDialog;
@@ -33,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         public void ShowPopup(View v){
             TextView txtclose;
+            Button register;
             myDialog.setContentView(R.layout.activity_login);
             txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
             txtclose.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +45,28 @@ public class ProfileActivity extends AppCompatActivity {
                     myDialog.dismiss();
                 }
             });
+            register = (Button)myDialog.findViewById(R.id.bRegister);
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                    registerPop(getWindow().getDecorView());
+                }
+            });
             myDialog.show();
-    }
+        }
+
+        public void registerPop(View v){
+            TextView txtcloseReg;
+            myDialog.setContentView(R.layout.activity_register);
+            txtcloseReg = (TextView) myDialog.findViewById(R.id.txtcloseReg);
+            txtcloseReg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                }
+            });
+            myDialog.show();
+        }
 }
 
