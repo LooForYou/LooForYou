@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -432,12 +433,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 TextView txtclose;
+                Button bSignUp;
+                Button bLogin;
                 myDialog.setContentView(R.layout.activity_login);
                 txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
                 txtclose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         myDialog.dismiss();
+                    }
+                });
+
+                bLogin = (Button) myDialog.findViewById(R.id.bLogin);
+                bLogin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        Intent login = new Intent(v.getContext(), ProfileActivity.class);
+                        startActivity(login);
+                    }
+                });
+                bSignUp = (Button) myDialog.findViewById(R.id.bRegister);
+                bSignUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        Intent signup = new Intent(v.getContext(), ProfileActivity.class);
+                        startActivity(signup);
                     }
                 });
                 myDialog.show();
