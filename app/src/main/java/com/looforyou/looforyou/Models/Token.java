@@ -3,6 +3,8 @@ package com.looforyou.looforyou.Models;
 import com.google.gson.annotations.JsonAdapter;
 import com.looforyou.looforyou.utilities.TokenDeserializer;
 
+import java.io.Serializable;
+
 /**
  * Created by quanl on 3/29/2018.
  */
