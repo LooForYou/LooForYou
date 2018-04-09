@@ -2,56 +2,52 @@ package com.looforyou.looforyou.utilities;
 
 import android.os.AsyncTask;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-
 /**
- * Created by quanl on 3/16/2018.
+ * Authored by BooG on 4/5/18
  */
-
-public class HttpGet extends AsyncTask<String, Void, String> {
-    public static final String REQUEST_METHOD = "GET";
-    public static  final  int READ_TIMEOUT = 15000;
+public class HttpDelete extends AsyncTask<String, Void, String> {
+    public static final String REQUEST_METHOD = "DELETE";
+    public static final int READ_TIMEOUT = 15000;
     public static final int CONNECTION_TIMEOUT = 15000;
+    private JSONObject params;
 
     @Override
-    protected String doInBackground(String... params){
+    protected String doInBackground(String... params) {
         String stringUrl = params[0];
         String result = "";
         String inputLine = "";
 
-
-        try{
-            URI apiUri = new URI(stringUrl);
-            URL apiUrl = apiUri.toURL();
+        try {
+            URL apiUrl = new URL(stringUrl);
             HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
             connection.setRequestMethod(REQUEST_METHOD);
+            connection.setRequestProperty("Content-Type", "application/json");
             connection.setReadTimeout(READ_TIMEOUT);
             connection.setConnectTimeout(CONNECTION_TIMEOUT);
+            connection.setDoOutput(true);
             connection.connect();
 
             InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
-            BufferedReader reader = new BufferedReader(streamReader);
+            BufferedReader br = new BufferedReader(streamReader);
             StringBuilder stringBuilder = new StringBuilder();
 
-            while((inputLine = reader.readLine())!= null){
+            while((inputLine = br.readLine()) != null){
                 stringBuilder.append(inputLine);
             }
 
-            reader.close();
+            br.close();
             streamReader.close();
             result = stringBuilder.toString();
             connection.disconnect();
 
-        }catch(IOException e){
-            e.printStackTrace();
-            result = "";
-        }catch(URISyntaxException e){
+        } catch (IOException e){
             e.printStackTrace();
             result = "";
         }
@@ -59,7 +55,6 @@ public class HttpGet extends AsyncTask<String, Void, String> {
         return result;
     }
     @Override
-    protected void onPostExecute(String result){
-        super.onPostExecute(result);
-    }
+    protected void onPostExecute(String result) { super.onPostExecute(result); }
+
 }

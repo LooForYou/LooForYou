@@ -430,6 +430,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             mLastKnownLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         }
         DecimalFormat df = new DecimalFormat("0.0");
+
 //        double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(),getLastLocation().getLongitude()),bathrooms.get(viewPager.getCurrentItem()).getLatLng());
   //      te.setText(df.format(dist)+" mi");
     }
@@ -449,12 +450,33 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             @Override
             public void onClick(View v) {
                 TextView txtclose;
+                Button bSignUp;
+                Button bLogin;
                 myDialog.setContentView(R.layout.activity_login);
                 txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
                 txtclose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         myDialog.dismiss();
+                    }
+                });
+
+                bLogin = (Button) myDialog.findViewById(R.id.bLogin);
+                bLogin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        Intent login = new Intent(v.getContext(), ProfileActivity.class);
+                        startActivity(login);
+                    }
+                });
+                bSignUp = (Button) myDialog.findViewById(R.id.bRegister);
+                bSignUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        Intent signup = new Intent(v.getContext(), ProfileActivity.class);
+                        startActivity(signup);
                     }
                 });
                 myDialog.show();
