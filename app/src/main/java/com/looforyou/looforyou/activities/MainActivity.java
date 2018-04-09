@@ -11,9 +11,13 @@ import android.graphics.drawable.TransitionDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +60,7 @@ import com.looforyou.looforyou.Constants;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.BathroomCardFragmentPagerAdapter;
+import com.looforyou.looforyou.fragments.BathroomViewFragment;
 import com.looforyou.looforyou.utilities.ImageFromURL;
 import com.looforyou.looforyou.utilities.ImageConverter;
 import com.looforyou.looforyou.utilities.LooLoader;
@@ -78,7 +83,7 @@ import java.util.concurrent.ExecutionException;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 import static com.looforyou.looforyou.Constants.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BathroomViewFragment.OnFragmentInteractionListener{
     private Toolbar toolbar;
     private ActionMenuView actionMenu;
     private final String GMAPS_TAG = "GException";
@@ -98,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationRequest mLocationRequest;
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 100;
     private Location mLastKnownLocation = null;
+    private Handler mHandler = null;
     FusedLocationProviderClient mFusedLocationProviderClient = null;
     Dialog myDialog;
 
@@ -108,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         myDialog = new Dialog(this);
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        mHandler = new Handler();
         showActionBar();
         bindActionBar();
 
@@ -295,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
 
             Date maintenanceStartTime = bathrooms.get(position).getMaintenanceStart();
             String mStart = null;
-            if (startTime != null) {
+            if (maintenanceStartTime != null) {
                 try {
                     mStart = sdf.format(maintenanceStartTime);
                 } catch (Exception e) {
@@ -304,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
             }
             Date maintenanceEndTime = bathrooms.get(position).getMaintenanceEnd();
             String mEnd = null;
-            if (endTime != null) {
+            if (maintenanceEndTime != null) {
                 try {
                     mEnd = sdf.format(maintenanceEndTime);
                 } catch (Exception e) {
@@ -361,8 +368,15 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
                 updateDistance();
+                pagerAdapter.getCardViewAt(position).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this,bathrooms.get(position).getName()+" clicked", Toast.LENGTH_SHORT).show();
+                        loadBathroomView();
+                    }
+                });
             }
 
             @Override
@@ -372,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Log.v("scrollchange: drawables", String.valueOf(bathrooms.get(i).getImage()));
                 }
                 refreshDisplay(position);
+
 
 
                 if (position == pagerAdapter.getCount() - 1) {
@@ -399,6 +414,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
     }
 
     public void updateDistance() {
@@ -414,8 +430,9 @@ public class MainActivity extends AppCompatActivity {
             mLastKnownLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         }
         DecimalFormat df = new DecimalFormat("0.0");
-       // double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(),getLastLocation().getLongitude()),bathrooms.get(viewPager.getCurrentItem()).getLatLng());
-        //te.setText(df.format(dist)+" mi");
+
+//        double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(),getLastLocation().getLongitude()),bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+  //      te.setText(df.format(dist)+" mi");
     }
 
     //when options in toolbar menu are created
@@ -520,5 +537,61 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /***
+     * Returns respected fragment that user
+     * selected from navigation menu
+     */
+    private void loadBathroomView() {
+        // set toolbar title
+        getSupportActionBar().setTitle("Bathroom View");
+
+        Runnable mPendingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                // update the main content by replacing fragments
+                final Fragment fragment = new BathroomViewFragment();
+                final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.frame,fragment);
+                fragmentTransaction.addToBackStack(null);
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("current bathroom",bathrooms.get(viewPager.getCurrentItem()));
+                fragment.setArguments(bundle);
+                fragmentTransaction.commitAllowingStateLoss();
+                pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).setClickable(false); //disable pagerAdapter touch event temporarily
+
+                getSupportActionBar().setCustomView(R.layout.action_bar_back);
+                view = getSupportActionBar().getCustomView();
+
+                ImageButton backButton= (ImageButton) view.findViewById(R.id.action_bar_back_button);
+                backButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.super.onBackPressed();
+                        pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).setClickable(true); //reenable pagerAdapter touch event
+                        showActionBar();
+                        bindActionBar();
+                    }
+                });
+
+        };
+        };
+
+
+        // If mPendingRunnable is not null, then add to the message queue
+        if (mPendingRunnable != null) {
+            mHandler.post(mPendingRunnable);
+        }
+
+
+        // refresh toolbar menu
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }
 
