@@ -7,6 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
@@ -27,7 +29,7 @@ import java.util.Date;
  * Created by ibreaker on 3/9/2018.
  */
 @JsonAdapter(BathroomDeserializer.class)
-public class Bathroom implements Serializable {
+public class Bathroom implements Serializable, Parcelable {
     private String name, address, imageURL, maintenanceDays;
     private Coordinates coordinates;
     private double rating;
@@ -36,6 +38,7 @@ public class Bathroom implements Serializable {
     private boolean bookmarked;
     private ArrayList<String> reviews;
     private Drawable image;
+    private String id;
 
 
     public Bathroom(){
@@ -54,6 +57,7 @@ public class Bathroom implements Serializable {
         image = null;
         this.address = "Unknown location";
         imageURL = null;
+        id = null;
     }
 
     public Bathroom(String name, Coordinates coordinates, double rating, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, String maintenanceDays, boolean bookmarked, ArrayList<String> amenities, ArrayList<String> descriptions, String address){
@@ -71,9 +75,16 @@ public class Bathroom implements Serializable {
         reviews = new ArrayList<String>();
         image = null;
         this.address = address;
+        id = null;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
     public LatLng getLatLng(){
         try {
             return new LatLng(coordinates.latitude,coordinates.longitude);
@@ -207,5 +218,49 @@ public class Bathroom implements Serializable {
 
     public void setImage(Drawable image) {
         this.image = image;
+    }
+
+    protected Bathroom(Parcel in) {
+        name = in.readString();
+        address = in.readString();
+        imageURL = in.readString();
+        maintenanceDays = in.readString();
+        rating = in.readDouble();
+        amenities = in.createStringArrayList();
+        descriptions = in.createStringArrayList();
+        bookmarked = in.readByte() != 0;
+        reviews = in.createStringArrayList();
+        id = in.readString();
+    }
+
+    public static final Creator<Bathroom> CREATOR = new Creator<Bathroom>() {
+        @Override
+        public Bathroom createFromParcel(Parcel in) {
+            return new Bathroom(in);
+        }
+
+        @Override
+        public Bathroom[] newArray(int size) {
+            return new Bathroom[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(address);
+        parcel.writeString(imageURL);
+        parcel.writeString(maintenanceDays);
+        parcel.writeDouble(rating);
+        parcel.writeStringList(amenities);
+        parcel.writeStringList(descriptions);
+        parcel.writeByte((byte) (bookmarked ? 1 : 0));
+        parcel.writeStringList(reviews);
+        parcel.writeString(id);
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context="com.looforyou.looforyou.activities.BookmarkActivity">
 
@@ -13,9 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="?attr/actionBarSize"
-        android:fillViewport="false"
         android:layout_weight="1"
-        >
+        android:fillViewport="false">
         <!--relative layout used as wrapper to prevent scrollview from clipping linear layout-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,30 +27,30 @@
                 android:layout_marginEnd="@dimen/default_padding"
                 android:layout_marginStart="@dimen/default_padding"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/my_bookmarks_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:paddingBottom="5dp"
                     android:text="My Bookmarks"
                     android:textColor="@color/black"
-                    android:textSize="21sp"
-                    android:paddingBottom="5dp" />
+                    android:textSize="21sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#dfdfdf"
                     android:layout_marginBottom="@dimen/default_padding"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="5dp"
+                    android:background="#dfdfdf" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Your bookmarks will appear here:"
-                    android:singleLine="false" />
+                    android:singleLine="false"
+                    android:text="Your bookmarks will appear here:" />
 
 
                 <TextView
@@ -71,20 +70,20 @@
                     <ImageView
                         android:id="@+id/bookmark_image1"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="95dp"
-                        android:layout_marginTop="0dp"
                         android:layout_alignParentStart="true"
                         android:layout_gravity="left"
+                        android:layout_marginTop="0dp"
+                        android:layout_weight="1"
                         android:src="@drawable/no_image_uploaded" />
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_alignParentStart="true"
                         android:layout_gravity="right"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
                         android:text="  Bookmark Information \n  will display here: \n  • rating:    *****\n • Bathroom Status- " />
                 </LinearLayout>
 
@@ -102,32 +101,33 @@
                     <ImageView
                         android:id="@+id/bookmark_image2"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="95dp"
-                        android:layout_marginTop="0dp"
                         android:layout_alignParentStart="true"
                         android:layout_gravity="left"
+                        android:layout_marginTop="0dp"
+                        android:layout_weight="1"
                         android:src="@drawable/no_image_uploaded" />
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_alignParentStart="true"
                         android:layout_gravity="right"
-                        android:text="  Bookmark Information \n  will display here: \n  • rating:    *****\n • Bathroom Status- " /> />
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:text="  Bookmark Information \n  will display here: \n  • rating:    *****\n • Bathroom Status- " />
+                    />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/add_a_bookmark_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
                     android:background="@color/colorPrimaryLight"
                     android:text="ADD A BOOKMARK"
                     android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:layout_marginTop="25dp"/>
+                    android:textSize="24sp" />
             </LinearLayout>
             <!--placeholder details 2-->
 

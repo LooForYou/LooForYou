@@ -122,6 +122,8 @@ public class BathroomCardFragment extends Fragment implements Serializable{
         });
 
 
+
+
         return view;
     }
 
