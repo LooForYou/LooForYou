@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +18,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.adapters.ReviewsAdapter;
+import com.looforyou.looforyou.adapters.ReviewsListItem;
+import com.looforyou.looforyou.utilities.MetricConverter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
@@ -43,6 +50,9 @@ public class BathroomViewFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private List<ReviewsListItem> reviewsListItems;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -182,7 +192,32 @@ public class BathroomViewFragment extends Fragment {
             }
         });
 
+        loadReviews(view);
+
         return view;
+    }
+
+    public void loadReviews(View v) {
+        recyclerView = (RecyclerView) v.findViewById(R.id.review_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        reviewsListItems = new ArrayList<>();
+
+        for(int i = 0; i<=10; i++) {
+            ReviewsListItem reviewsListItem = new ReviewsListItem("UserName "+(i+1),"blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah "+(i+1),"");
+            reviewsListItems.add(reviewsListItem);
+        }
+
+        adapter = new ReviewsAdapter(reviewsListItems,getActivity().getApplicationContext());
+        recyclerView.setAdapter(adapter);
+
+/*        LinearLayout sv = (LinearLayout) v.findViewById(R.id.review_scroll_container);
+        sv.measure(0, 0);
+        if (MetricConverter.pxToDp(getActivity().getApplicationContext(),sv.getMeasuredHeight()) > 200) {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) MetricConverter.dpToPx(getActivity().getApplicationContext(),200));
+            sv.setLayoutParams(lp);
+        }*/
+
     }
 
     public void loadWebviewFromURL(WebView webview,String url){
