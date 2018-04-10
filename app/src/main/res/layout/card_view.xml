@@ -24,7 +24,7 @@
                 android:layout_height="125dp"
                 android:animateLayoutChanges="true"
                 android:paddingBottom="8dp"
-                android:paddingEnd="15dp"
+                android:paddingEnd="8dp"
                 android:paddingStart="8dp"
                 android:paddingTop="10dp">
 
