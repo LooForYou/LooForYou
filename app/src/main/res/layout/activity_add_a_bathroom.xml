@@ -26,43 +26,39 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_padding"
                 android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/add_a_bathroom_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
                     android:text="Add a Bathroom"
                     android:textColor="@color/black"
                     android:textSize="21sp" />
 
+
                 <ImageView
                     android:id="@+id/bathroom_image"
                     android:layout_width="match_parent"
-                    android:layout_height="125dp"
-                    android:layout_above="@+id/bottomBar"
+                    android:layout_height="120dp"
+                    android:layout_below="@+id/add_a_bathroom_title"
+                    android:layout_above="@+id/bathroom_image_link"
                     android:layout_alignParentStart="true"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginEnd="@dimen/default_padding"
-                    android:layout_marginStart="@dimen/default_padding"
-                    android:layout_marginTop="4dp"
-                    android:src="@drawable/no_image_uploaded" />
+                    android:src="@drawable/no_image_uploaded" >
+                    <requestFocus/>
+                </ImageView>
 
                 <TextView
                     android:id="@+id/bathroom_image_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginBottom="1dp"
-                    android:layout_marginTop="3dp"
-                    android:onClick="uploadImage"
                     android:text="Claick to upload Image"
                     android:textColor="@color/black"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    android:layout_below="@+id/bathroom_image"
+                    android:layout_above="@+id/editBathroomName" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -143,31 +139,26 @@
                     <RadioGroup
                         android:id="@+id/radioGroup"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:onClick="rbCheck"
+                        android:checkedButton="@id/radioNeutral">
 
                         <RadioButton
                             android:id="@+id/radioMale"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_above="@+id/bottomBar"
-                            android:checked="true"
-                            android:onClick="checkButton"
                             android:text="Male" />
 
                         <RadioButton
                             android:id="@+id/radioFemale"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_above="@+id/bottomBar"
-                            android:onClick="checkButton"
                             android:text="Female" />
 
                         <RadioButton
                             android:id="@+id/radioNeutral"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_above="@+id/bottomBar"
-                            android:onClick="checkButton"
                             android:text="Gender Neutral" />
                     </RadioGroup>
                 </LinearLayout>
@@ -187,30 +178,22 @@
                         android:layout_above="@+id/bottomBar"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:onClick="checkToggle"
-                        android:text="Handicapped" />
+                        android:layout_marginRight="2.5dp" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_free"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:onClick="checkToggle"
-                        android:text="Free" />
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="2.5dp" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_keyless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/bottomBar"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:onClick="checkToggle"
-                        android:text="Keyless" />
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="5dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -227,9 +210,7 @@
                         android:layout_above="@+id/bottomBar"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:onClick="checkToggle"
-                        android:text="Parking" />
+                        android:layout_marginRight="5dp" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_mirrors"
@@ -237,9 +218,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:onClick="checkToggle"
-                        android:text="Mirrors" />
+                        android:layout_marginRight="5dp" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_baby_station"
@@ -248,9 +227,7 @@
                         android:layout_above="@+id/bottomBar"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:onClick="checkToggle"
-                        android:text="Changing Station" />
+                        android:layout_marginRight="5dp" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
