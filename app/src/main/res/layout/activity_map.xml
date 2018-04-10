@@ -47,7 +47,7 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_toilet_directions_36"
+                android:src="@drawable/ic_navigation_45"
                 android:id="@+id/toilet_directions"
                 android:background="@android:color/transparent"
                 android:visibility="gone"

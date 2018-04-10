@@ -6,10 +6,8 @@ import com.looforyou.looforyou.APIConnectionException;
 
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -75,6 +73,7 @@ public class HttpPost extends AsyncTask<String, Void, String> {
                 throw new APIConnectionException("Status Code: " + statusCode);
             }
 
+            connection.disconnect();
         }catch(IOException e){
             e.printStackTrace();
             result = "";

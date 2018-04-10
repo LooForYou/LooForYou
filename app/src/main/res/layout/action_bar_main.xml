@@ -2,52 +2,53 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
 
     <TableRow>
 
         <ImageButton
+            android:id="@+id/action_bar_profile_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_placeholder_face_36"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/action_bar_profile_main"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical"
             android:layout_weight="0"
-            />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_placeholder_face_36" />
+
         <LinearLayout
             android:id="@+id/action_bar_search_main"
             android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_height="?attr/actionBarSize">
+            android:orientation="horizontal">
+
             <include layout="@layout/custom_search_layout" />
         </LinearLayout>
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sort_24"
-            android:id="@+id/action_bar_sort_main"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:paddingEnd="10dp"
-            android:layout_weight="0"/>
 
         <ImageButton
+            android:id="@+id/action_bar_sort_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_view_list_36"
-            android:id="@+id/action_bar_list_view_main"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center_vertical|end"
-            android:gravity="end"
             android:layout_alignParentTop="true"
-            android:layout_weight="0"/>
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0"
+            android:background="@android:color/transparent"
+            android:paddingEnd="10dp"
+            android:src="@drawable/ic_sort_24" />
+
+        <ImageButton
+            android:id="@+id/action_bar_list_view_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="0"
+            android:background="@android:color/transparent"
+            android:gravity="end"
+            android:src="@drawable/ic_view_list_36" />
 
 
     </TableRow>

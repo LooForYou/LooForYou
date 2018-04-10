@@ -1,0 +1,515 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.looforyou.looforyou.fragments.BathroomViewFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/default_padding">
+
+            <RelativeLayout
+                android:id="@+id/bathroom_fragment_webview_container"
+                android:layout_width="match_parent"
+                android:layout_height="175dp">
+
+                <WebView
+                    android:id="@+id/bathroom_fragment_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"></WebView>
+
+                <ProgressBar
+                    android:id="@+id/bathroom_fragment_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_vertical" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/bathroom_fragment_info_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/default_padding"
+                android:paddingStart="@dimen/default_padding">
+
+                <LinearLayout
+                    android:id="@+id/bathroom_fragment_info_header_top_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/bathroom_fragment_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="NO DATA"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/bathroom_fragment_distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="4sp"
+                            android:text="0.00 mi"
+                            android:textAlignment="textEnd"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/bathroom_fragment_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Address Unknown"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/bathroom_fragment_operation_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Unknown hours"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/bathroom_fragment_info_header_mid_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/default_padding">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/bathroom_fragment_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="5dp"
+                            android:singleLine="false"
+                            android:text="no description\n\n"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:id="@+id/bathroom_fragment_toggle_bookmark"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:orientation="vertical">
+
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:src="@drawable/ic_bookmark_button_disabled_45" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingTop="1sp"
+                                android:text="bookmark"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/bathroom_fragment_directions"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:clickable="true"
+                            android:orientation="vertical">
+
+                            <ImageButton
+                                android:id="@+id/bathroom_fragment_directions_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:src="@drawable/ic_navigation_45" />
+
+                            <TextView
+                                android:id="@+id/bathroom_fragment_directions_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingTop="1sp"
+                                android:text="directions"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bathroom_fragment_info_header_bottom_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/default_padding">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/bathroom_fragment_stars"
+                            android:layout_width="115dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/five_stars" />
+
+                        <TextView
+                            android:id="@+id/bathroom_fragment_num_reviews"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="2dp"
+                            android:text="0 Reviews"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <ImageView
+                            android:id="@+id/bathroom_fragment_accessibility_icon"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:src="@drawable/ic_accessibility_disabled_20" />
+
+                            <TextView
+                                android:id="@+id/bathroom_fragment_accessibility_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="2dp"
+                                android:text="accessible"
+                                android:textSize="8sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/bathroom_fragment_free_icon"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:src="@drawable/ic_pay_disabled_20" />
+
+                            <TextView
+                                android:id="@+id/bathroom_fragment_free_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="2dp"
+                                android:text="free"
+                                android:textSize="8sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/bathroom_fragment_keyless_icon"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:src="@drawable/ic_keyless_disabled_20" />
+
+                            <TextView
+                                android:id="@+id/bathroom_fragment_keyless_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="2dp"
+                                android:text="keyless"
+                                android:textSize="8sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/bathroom_fragment_parking_icon"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:src="@drawable/ic_parking_disabled_20" />
+
+                            <TextView
+                                android:id="@+id/bathroom_fragment_parking_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="2dp"
+                                android:text="parking"
+                                android:textSize="8sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/divider" />
+
+            <LinearLayout
+                android:id="@+id/bathroom_fragment_about_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingEnd="@dimen/default_padding"
+                    android:paddingStart="@dimen/default_padding">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:gravity="start"
+                        android:text="About This Bathroom"
+                        android:textColor="@color/black"
+                        android:textSize="21sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="end"
+                            android:foregroundGravity="right"
+                            android:src="@drawable/ic_edit" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingEnd="@dimen/default_padding"
+                    android:paddingStart="@dimen/default_padding">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:paddingBottom="5dp"
+                            android:text="Amenities"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/bathroom_fragment_amenities"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="• no data \n\n" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:textAlignment="textEnd">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:paddingBottom="5dp"
+                            android:text="Scheduled Maintenance"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/bathroom_fragment_maintenance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Unknown"
+                            android:textAlignment="textEnd" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/divider" />
+
+            <LinearLayout
+                android:id="@+id/bathroom_fragment_gallery_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/default_padding"
+                android:paddingStart="@dimen/default_padding">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pictures Of This Location"
+                    android:textColor="@color/black"
+                    android:textSize="21sp" />
+
+                <LinearLayout
+                    android:id="@+id/bathroom_fragment_gallery_pictures"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:background="@color/colorAccent" />
+                    </ScrollView>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SEE ALL PICTURES"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+
+            <include layout="@layout/divider" />
+
+            <LinearLayout
+                android:id="@+id/bathroom_fragment_review_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/default_padding"
+                android:paddingStart="@dimen/default_padding">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Reviews"
+                    android:textColor="@color/black"
+                    android:textSize="21sp" />
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
+                    android:alpha="0.4"
+                    android:background="@drawable/border"
+                    android:paddingEnd="6dp"
+                    android:paddingStart="6dp"
+                    android:src="@drawable/one_star_90_15" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/border"
+                    android:hint="Say something about this bathroom..."
+                    android:padding="7dp"
+                    android:paddingStart="5dp"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_padding"
+                    android:layout_marginTop="5dp"
+                    android:text="START YOUR REVIEW"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Top Reviews"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <View xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/default_padding"
+                    android:layout_marginTop="5dp"
+                    android:background="#dfdfdf" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="There are currently no reviews for this location" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/bathroom_fragment_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Click me"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

@@ -7,23 +7,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.TabControl;
 
+import org.w3c.dom.Text;
+
 public class ProfileActivity extends AppCompatActivity {
-    Dialog myDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        myDialog = new Dialog(this);
-        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        ShowPopup(getWindow().getDecorView());
 
         Log.v("mylog","this is a test log");
         TabControl tabb = new TabControl(this);
@@ -31,17 +29,5 @@ public class ProfileActivity extends AppCompatActivity {
 
         };
 
-        public void ShowPopup(View v){
-            TextView txtclose;
-            myDialog.setContentView(R.layout.activity_login);
-            txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
-            txtclose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    myDialog.dismiss();
-                }
-            });
-            myDialog.show();
-    }
 }
 
