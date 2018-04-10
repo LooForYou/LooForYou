@@ -230,7 +230,6 @@ public class BathroomViewFragment extends Fragment {
     }
 
     public void onDirectionsButtonClick(View view, Bathroom bathroom){
-            view.setVisibility(View.GONE);
             Uri markerUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+bathroom.getLatLng().latitude+","+bathroom.getLatLng().longitude);
             Intent directionsIntent = new Intent(Intent.ACTION_VIEW,markerUri);
             directionsIntent.setPackage("com.google.android.apps.maps");
