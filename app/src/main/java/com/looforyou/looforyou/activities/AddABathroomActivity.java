@@ -2,7 +2,9 @@ package com.looforyou.looforyou.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,6 +43,8 @@ public class AddABathroomActivity extends AppCompatActivity {
     private ToggleButton bathroom_mirrors;
     private ToggleButton bathroom_baby_station;
 
+    private Button submitButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,22 @@ public class AddABathroomActivity extends AppCompatActivity {
         final RadioButton radioMale = (RadioButton) findViewById(R.id.radioMale);
         final RadioButton radioFemale = (RadioButton) findViewById(R.id.radioFemale);
         final RadioButton radioNeutral = (RadioButton) findViewById(R.id.radioNeutral);
+
+        radioGroup.setOnClickListener(new View.OnClickListener() {
+            int radioButtonID = radioGroup.getCheckedRadioButtonId();
+            final RadioButton radioButton = (RadioButton)findViewById(radioButtonID);
+            @Override
+            public void onClick(View v) {
+                switch (radioGroup.getCheckedRadioButtonId()){
+                    case R.id.radioMale:
+                        Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
+                    case R.id.radioFemale:
+                        Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
+                    case R.id.radioNeutral:
+                        Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         final ToggleButton bathroom_accessible = (ToggleButton)findViewById(R.id.bathroom_accessible);
         bathroom_accessible.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -136,6 +156,18 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
+        final Button submitButton = (Button)findViewById(R.id.submitBathroom);
+        String bathroomName = editBathroomName.getText().toString();
+        String bathroomLocation = editBathroomLocation.getText().toString();
+        String bathroomInfo = editBathroomInfo.getText().toString();
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("Custom Tag","New Bathroom Added");
+                Toast.makeText(AddABathroomActivity.this,"Bathroom Added", Toast.LENGTH_LONG).show();
+            }
+        });
+
         final TabControl tabb = new TabControl(this);
         tabb.tabs(AddABathroomActivity.this,R.id.tab_add_bathroom);
         //test comment
@@ -146,15 +178,18 @@ public class AddABathroomActivity extends AppCompatActivity {
         final RadioButton radioButton = (RadioButton)findViewById(radioButtonID);
         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
     }
-
+/*
     private void checkHandler() {
         String bathroomName = editBathroomName.getText().toString();
         String bathroomLocation = editBathroomLocation.getText().toString();
         String bathroomInfo = editBathroomInfo.getText().toString();
     }
-
+*/
     private void uploadImage() {
 
     }
 
+    public void submitBathroom(View v) {
+
+    }
 }
