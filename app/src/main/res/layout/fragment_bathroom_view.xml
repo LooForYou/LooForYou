@@ -491,6 +491,7 @@
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
+
                 <View xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -502,8 +503,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="There are currently no reviews for this location" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/review_scroll_container">
+                    <ScrollView
+                        android:id="@+id/review_scroller"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/review_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        </android.support.v7.widget.RecyclerView>
+                    </ScrollView>
+                </LinearLayout>
             </LinearLayout>
-
             <Button
                 android:id="@+id/bathroom_fragment_button"
                 android:layout_width="match_parent"

@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                 pagerAdapter.getCardViewAt(position).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(MainActivity.this,bathrooms.get(position).getName()+" clicked", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this,bathrooms.get(position).getName()+" clicked", Toast.LENGTH_SHORT).show();
                         loadBathroomView();
                     }
                 });
