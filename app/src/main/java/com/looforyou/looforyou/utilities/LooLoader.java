@@ -56,7 +56,7 @@ public class LooLoader {
                 bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(result, Bathroom[].class)));
             }else{
                 bathrooms = new ArrayList<Bathroom>();
-                Bathroom noBathroom = new Bathroom();
+                Bathroom noBathroom = new Bathroom("");
                 noBathroom.setName("We weren't able to find bathrooms in the area");
                 noBathroom.setImageURL("were-sorry.png");
                 noBathroom.setDescriptions(new ArrayList<String>(Arrays.asList("please try again")));

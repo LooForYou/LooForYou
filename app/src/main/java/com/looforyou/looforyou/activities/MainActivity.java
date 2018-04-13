@@ -192,7 +192,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         }
 
         // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
+//        mLocationRequest = new LocationRequest();
+        mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
@@ -431,8 +432,13 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         }
         DecimalFormat df = new DecimalFormat("0.0");
 
-//        double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(),getLastLocation().getLongitude()),bathrooms.get(viewPager.getCurrentItem()).getLatLng());
-  //      te.setText(df.format(dist)+" mi");
+        try {
+            double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(), getLastLocation().getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+            te.setText(df.format(dist) + " mi");
+        }catch(Exception e) {
+            Log.v("home exception",e.getMessage());
+        }
+
     }
 
     //when options in toolbar menu are created

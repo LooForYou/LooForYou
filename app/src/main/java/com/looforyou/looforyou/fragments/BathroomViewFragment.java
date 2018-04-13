@@ -210,13 +210,13 @@ public class BathroomViewFragment extends Fragment {
 
         adapter = new ReviewsAdapter(reviewsListItems,getActivity().getApplicationContext());
         recyclerView.setAdapter(adapter);
-
-/*        LinearLayout sv = (LinearLayout) v.findViewById(R.id.review_scroll_container);
+        int maxScrollHeight = 360;
+        LinearLayout sv = (LinearLayout) v.findViewById(R.id.review_scroll_container);
         sv.measure(0, 0);
-        if (MetricConverter.pxToDp(getActivity().getApplicationContext(),sv.getMeasuredHeight()) > 200) {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) MetricConverter.dpToPx(getActivity().getApplicationContext(),200));
+        if (MetricConverter.pxToDp(getActivity().getApplicationContext(),sv.getMeasuredHeight()) > maxScrollHeight) {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) MetricConverter.dpToPx(getActivity().getApplicationContext(),maxScrollHeight));
             sv.setLayoutParams(lp);
-        }*/
+        }
 
     }
 

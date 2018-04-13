@@ -41,7 +41,8 @@ public class Bathroom implements Serializable, Parcelable {
     private String id;
 
 
-    public Bathroom(){
+    public Bathroom(String id){
+        this.id = id;
         this.name = "Unknown";
         coordinates = new Coordinates(0,0);
         this.rating = 0.0;
@@ -60,7 +61,7 @@ public class Bathroom implements Serializable, Parcelable {
         id = null;
     }
 
-    public Bathroom(String name, Coordinates coordinates, double rating, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, String maintenanceDays, boolean bookmarked, ArrayList<String> amenities, ArrayList<String> descriptions, String address){
+    public Bathroom(String id, String name, Coordinates coordinates, double rating, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, String maintenanceDays, boolean bookmarked, ArrayList<String> amenities, ArrayList<String> descriptions, String address){
         this.name = name;
         this.coordinates = coordinates;
         this.rating = rating;
@@ -75,7 +76,7 @@ public class Bathroom implements Serializable, Parcelable {
         reviews = new ArrayList<String>();
         image = null;
         this.address = address;
-        id = null;
+        this.id = id;
     }
 
     public String getId() {
@@ -232,7 +233,6 @@ public class Bathroom implements Serializable, Parcelable {
         reviews = in.createStringArrayList();
         id = in.readString();
     }
-
     public static final Creator<Bathroom> CREATOR = new Creator<Bathroom>() {
         @Override
         public Bathroom createFromParcel(Parcel in) {

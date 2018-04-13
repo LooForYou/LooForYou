@@ -111,6 +111,7 @@ public class BathroomDeserializer implements JsonDeserializer<Bathroom>{
                 jsonObject.get("longitude").getAsDouble()
         );
             Bathroom bathroom = new Bathroom(
+                    jsonObject.get("id").getAsString(),
                     jsonObject.get("name").getAsString(),
                     coord,
                     jsonObject.get("rating").getAsDouble(),
