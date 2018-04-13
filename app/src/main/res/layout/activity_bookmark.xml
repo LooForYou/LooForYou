@@ -118,16 +118,6 @@
                         android:text="  Bookmark Information \n  will display here: \n  • rating:    *****\n • Bathroom Status- " />
                     />
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/add_a_bookmark_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@color/colorPrimaryLight"
-                    android:text="ADD A BOOKMARK"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
             </LinearLayout>
             <!--placeholder details 2-->
 
