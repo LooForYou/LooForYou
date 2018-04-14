@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -104,8 +105,9 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 100;
     private Location mLastKnownLocation = null;
     private Handler mHandler = null;
-    FusedLocationProviderClient mFusedLocationProviderClient = null;
-    Dialog myDialog;
+    private FusedLocationProviderClient mFusedLocationProviderClient = null;
+    private Dialog myDialog;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,11 +124,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         TabControl tabb = new TabControl(this);
         tabb.tabs(MainActivity.this, R.id.tab_home);
 
-        /*getDeviceLocation();*/
-        /*startLocationUpdates();*/
-
         initializePageViewer();
-        initializeDisplayData();
+        initializeComponents();
         refreshDisplay(0);
 
     }
@@ -138,124 +137,6 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         }
 
     }
-
-    /* ============================================================================================*/
-//    private void getDeviceLocation() {
-//    /*
-//     * Get the best and most recent location of the device, which may be null in rare
-//     * cases when a location is not available.
-//     */
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions();
-//            return;
-//        }
-//        try {
-//            mFusedLocationProviderClient = getFusedLocationProviderClient(this);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            Task locationResult = mFusedLocationProviderClient.getLastLocation();
-//            locationResult.addOnCompleteListener(this, new OnCompleteListener() {
-//                @Override
-//                public void onComplete(@NonNull Task task) {
-//                    if (task.isSuccessful()) {
-//                        // Set the map's camera position to the current location of the device.
-//                        mLastKnownLocation = (Location) task.getResult();
-////                        Log.v(GMAPS_TAG,String.valueOf(getCurrentLocation().getLatitude())); //delete me
-//                    } else {
-//                        Log.d(GMAPS_TAG, "Current location is null. Using defaults.");
-//                        Log.e(GMAPS_TAG, "Exception: %s", task.getException());
-//                    }
-//                }
-//            });
-//        } catch (SecurityException e) {
-//            Log.e("Exception: %s", e.getMessage());
-//        }
-//    }
-//
-//    // Trigger new location updates at interval
-///*
-//    protected void startLocationUpdates() {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions();
-//            return;
-//        }
-//*/
-//
-//        // Create the location request to start receiving updates
-////        mLocationRequest = new LocationRequest();
-//        mLocationRequest = LocationRequest.create();
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        mLocationRequest.setInterval(UPDATE_INTERVAL);
-//        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-//
-//        // Create LocationSettingsRequest object using location request
-//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-//        builder.addLocationRequest(mLocationRequest);
-//        LocationSettingsRequest locationSettingsRequest = builder.build();
-//
-//        // Check whether location settings are satisfied
-//        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-//        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-//        settingsClient.checkLocationSettings(locationSettingsRequest);
-//
-//        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions();
-//            return;
-//        }
-//        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-//                    @Override
-//                    public void onLocationResult(LocationResult locationResult) {
-//                        // do work here
-//                        onLocationChanged(locationResult.getLastLocation());
-//                    }
-//                },
-//                Looper.myLooper());
-//
-//    }
-
-//    public void onLocationChanged(Location location) {
-//        //what to do when location determined
-//        mLastKnownLocation = location;
-//        Log.v("testLocation", "current location home: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-//        updateDistance();
-//    }
-
-//    public Location getLastLocation() {
-//        // Get last known recent location using new Google Play Services SDK (v11+)
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions();
-//            return null;
-//        }
-//        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-//            @Override
-//            public void onSuccess(Location location) {
-//                // GPS location can be null if GPS is switched off
-//                if (location != null) {
-//                    onLocationChanged(location);
-//                    mLastKnownLocation = location;
-//                } else {
-//                    Log.v(GMAPS_TAG, "not ready");
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d(GMAPS_TAG, "Error trying to get last GPS location");
-//                e.printStackTrace();
-//            }
-//        });
-//        return mLastKnownLocation;
-//    }
-//
-//    private void requestPermissions() {
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
-////        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
-//    }
-    /* ============================================================================================*/
 
     private void refreshDisplay(int position) {
         bathrooms = pagerAdapter.getBathrooms();
@@ -318,29 +199,23 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             } else {
                 maintenanceHours.setText(mStart + " to " + mEnd + "\n" + maintenanceDays);
             }
-
-    /*
-            ImageView selectedImage = (ImageView) findViewById(R.id.selected_location_image);
-    //        bathrooms.get(position).setImage(new ImageFromURL(selectedImage).execute(bathrooms.get(position).getImageURL()));
-            try {
-                bathrooms.get(position).setImage(new ImageFromURL(this).execute(bathrooms.get(position).getImageURL()).get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-
-            currentImage = (ImageView) findViewById(R.id.selected_location_image);
-            previousImage = currentImage;*/
-            //      currentImage.setImageDrawable(bathrooms.get(position).get);
-
-        }
+          }
     }
 
-    private void initializeDisplayData() {
+    private void initializeComponents() {
         amenities = (TextView) findViewById(R.id.bathroom_amenities);
         hoursOfOperation = (TextView) findViewById(R.id.hours_of_operation);
         maintenanceHours = (TextView) findViewById(R.id.maintenance_hours);
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateDistance();
+            }
+        });
 
 
     }
@@ -374,12 +249,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
 
             @Override
             public void onPageSelected(int position) {
-                Log.v("scrollchange", "position " + String.valueOf(position));
-                for (int i = 0; i < 2; i++) {
-//                    Log.v("scrollchange: drawables", String.valueOf(bathrooms.get(i).getImage()));
-                }
                 refreshDisplay(position);
-
 
 
                 if (position == pagerAdapter.getCount() - 1) {
@@ -394,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                 }
             }
 
-
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (ViewPager.SCROLL_STATE_IDLE == state) {
@@ -402,15 +271,12 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                     Log.v("scrollchange", "end of cards " + state + " position " + String.valueOf(viewPager.getVerticalScrollbarPosition()));
 
                 }
-
             }
-
         });
-
-
     }
 
     public void updateDistance() {
+        Log.v("updating distance","updating distance...");
         TextView te = (TextView) pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).findViewById(R.id.bathroom_distance);
         if (mLastKnownLocation == null) {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -429,8 +295,10 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             double dist = MetricConverter.distanceBetweenInMiles(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
             te.setText(df.format(dist) + " mi");
         }catch(Exception e) {
+            swipeContainer.setRefreshing(false);
             Log.v("home exception",e.getMessage());
         }
+        swipeContainer.setRefreshing(false);
 
     }
 
