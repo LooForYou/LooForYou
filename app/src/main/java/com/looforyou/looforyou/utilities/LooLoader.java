@@ -68,16 +68,18 @@ public class LooLoader {
                 //get current location
                 @SuppressLint("MissingPermission") final Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
                 if(String.valueOf(sortBy[0]).equalsIgnoreCase("distance")){
-
+                    Log.v("looLoader","sorting by distance:");
                     Collections.sort(bathrooms, new Comparator<Bathroom>() {
                         @Override
                         public int compare(Bathroom b1, Bathroom b2) {
                             double dist1 = MetricConverter.distanceBetweenInMiles(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),new LatLng(b1.getLatLng().latitude,b1.getLatLng().longitude));
                             double dist2 = MetricConverter.distanceBetweenInMiles(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),new LatLng(b2.getLatLng().latitude,b2.getLatLng().longitude));
-                            return (int) (dist1 - dist2);
+                            if(dist2 < dist1) return 1;
+                            else if(dist2 > dist1) return -1;
+                            return 0;
                         }
-
                     });
+
                 }
             }
 

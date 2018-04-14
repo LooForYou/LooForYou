@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.looforyou.looforyou.Models.Bathroom;
@@ -26,12 +27,6 @@ public class BathroomCardFragmentPagerAdapter extends FragmentStatePagerAdapter 
         fragments = new ArrayList<>();
         bathrooms = new ArrayList<Bathroom>();
         this.baseElevation = baseElevation;
-    //test inserting bathrooms
-/*        for(int i = 0; i< 8; i++){
-            Bathroom br = new Bathroom();
-            br.setName("BATHROOM "+(i+1));
-            addCardFragment(br);
-        }*/
     }
 
     public void addBathroom(Bathroom bathroom){
@@ -69,12 +64,6 @@ public class BathroomCardFragmentPagerAdapter extends FragmentStatePagerAdapter 
         return fragment;
     }
 
-//    public BathroomCardFragment initializeCard(BathroomCardFragment fragment, Bathroom bathroom){
-//        fragment.setTitle(bathroom.getName());
-//
-//        return fragment;
-//    }
-
     public void addCardFragment(Bathroom bathroom) {
 //        fragments.add(initializeCard(fragment,bathroom));
         addBathroom(bathroom);
@@ -89,4 +78,9 @@ public class BathroomCardFragmentPagerAdapter extends FragmentStatePagerAdapter 
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        bathrooms.clear();
+        fragments.clear();
+        notifyDataSetChanged();
+    }
 }

@@ -124,18 +124,22 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         TabControl tabb = new TabControl(this);
         tabb.tabs(MainActivity.this, R.id.tab_home);
 
-        initializePageViewer();
         initializeComponents();
+        initializePageViewer();
         refreshDisplay(0);
 
     }
 
-    private void setupView() {
-        List<Bathroom> feedList = LooLoader.loadBathrooms(this.getApplicationContext());
+    private void setUpPagerData() {
+        //TODO refresh data
+//        viewPager.setSaveFromParentEnabled(false);
+//        pagerAdapter.clear();
+        List<Bathroom> feedList = LooLoader.loadBathrooms(this.getApplicationContext(),"distance");
         for (Bathroom b : feedList) {
             pagerAdapter.addCardFragment(b);
+            pagerAdapter.notifyDataSetChanged();
         }
-
+        swipeContainer.setRefreshing(false);
     }
 
     private void refreshDisplay(int position) {
@@ -213,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+//                setUpPagerData();
                 updateDistance();
             }
         });
@@ -223,8 +228,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     private void initializePageViewer() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new BathroomCardFragmentPagerAdapter(getSupportFragmentManager(), MetricConverter.dpToPx(this, 2));
+        setUpPagerData();
 
-        setupView();
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);
@@ -299,7 +304,6 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             Log.v("home exception",e.getMessage());
         }
         swipeContainer.setRefreshing(false);
-
     }
 
     //when options in toolbar menu are created
