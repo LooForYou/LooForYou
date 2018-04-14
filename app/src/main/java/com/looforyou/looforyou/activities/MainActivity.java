@@ -415,6 +415,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         Runnable mPendingRunnable = new Runnable() {
             @Override
             public void run() {
+                swipeContainer.setEnabled(false);
                 // update the main content by replacing fragments
                 final Fragment fragment = new BathroomViewFragment();
                 final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -439,6 +440,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                         pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).setClickable(true); //reenable pagerAdapter touch event
                         showActionBar();
                         bindActionBar();
+                        swipeContainer.setEnabled(false);
                     }
                 });
 
