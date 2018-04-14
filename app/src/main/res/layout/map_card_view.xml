@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/map_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:id="@+id/map_extra_info"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="right|bottom"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+
+            android:duplicateParentState="true"
+            android:focusable="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:duplicateParentState="true"
+                android:focusable="false"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/map_extra_info_image"
+                    android:layout_width="100dp"
+                    android:layout_height="75dp"
+                    android:layout_marginRight="5dp"
+
+                    android:duplicateParentState="true"
+                    android:focusable="false" />
+
+                <TextView
+                    android:id="@+id/map_extra_info_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:duplicateParentState="true"
+                    android:focusable="false"
+                    android:gravity="bottom"
+                    android:text="0.0 mi" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:duplicateParentState="true"
+                android:focusable="false"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/map_extra_info_bathroom_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:duplicateParentState="true"
+                    android:focusable="false"
+                    android:text="Bathroom Name"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/map_extra_info_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:duplicateParentState="true"
+                    android:focusable="false"
+                    android:text="No data found" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:duplicateParentState="true"
+                    android:focusable="false"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/map_extra_info_stars"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+
+
+                        android:src="@drawable/one_star_90_15" />
+
+                    <TextView
+                        android:id="@+id/map_extra_info_review_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+
+                        android:gravity="bottom|right"
+                        android:text="0 reviews" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:duplicateParentState="true"
+                    android:focusable="false"
+                    android:gravity="right|bottom"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/map_extra_info_accesssible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/default_padding"
+
+
+                        android:src="@drawable/ic_accessibility_disabled_20" />
+
+                    <ImageView
+                        android:id="@+id/map_extra_info_free"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/default_padding"
+
+
+                        android:src="@drawable/ic_free_disabled_20" />
+
+                    <ImageView
+                        android:id="@+id/map_extra_info_keyless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/default_padding"
+
+
+                        android:src="@drawable/ic_keyless_disabled_20" />
+
+                    <ImageView
+                        android:id="@+id/map_extra_info_parking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/default_padding"
+
+
+                        android:src="@drawable/ic_parking_disabled_20" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

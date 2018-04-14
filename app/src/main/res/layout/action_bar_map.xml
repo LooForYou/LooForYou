@@ -37,6 +37,7 @@
             android:layout_weight="0"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_sort_24" />
+        
     </TableRow>
 
 </TableLayout>

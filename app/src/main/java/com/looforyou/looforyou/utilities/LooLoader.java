@@ -1,31 +1,27 @@
 package com.looforyou.looforyou.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import com.looforyou.looforyou.Manifest;
 import com.looforyou.looforyou.Models.Bathroom;
-import com.looforyou.looforyou.R;
 
-import org.json.JSONArray;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.looforyou.looforyou.Constants.*;
@@ -36,11 +32,12 @@ import static com.looforyou.looforyou.Constants.*;
 
 public class LooLoader {
     private static final String TAG = "TEST FEEDLIST LooLoader";
+
     //    private static final String API_URL = "http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/Bathrooms?access_token=pBWBnDboL5RSFunF6E08EZJGD1skk9kkX3xAKJwDK4VLhVgHg0nYdvUjz6Oh7401\n";
-    public static List<Bathroom> loadBathrooms(Context context){
-//    final String API_URL = context.getResources().getString(R.string.loopbacks_api_root)+"Bathrooms";
+    public static List<Bathroom> loadBathrooms(Context context, String... sortBy) {
+
         String API_URL = GET_BATHROOMS;
-        try{
+        try {
             List<Bathroom> bathroomList = new ArrayList<>();
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
@@ -50,11 +47,11 @@ public class LooLoader {
             String result;
             HttpGet getRequest = new HttpGet();
             result = getRequest.execute(API_URL).get();
-            Log.v("result_val",result);
+            Log.v("result_val", result);
             ArrayList<Bathroom> bathrooms;
-            if(!result.equals("")){
+            if (!result.equals("")) {
                 bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(result, Bathroom[].class)));
-            }else{
+            } else {
                 bathrooms = new ArrayList<Bathroom>();
                 Bathroom noBathroom = new Bathroom("");
                 noBathroom.setName("We weren't able to find bathrooms in the area");
@@ -63,11 +60,32 @@ public class LooLoader {
                 bathrooms.add(noBathroom);
             }
 
+            if (sortBy.length > 0) {
+                LocationManager locationManager = (LocationManager)
+                        context.getSystemService(Context.LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
 
-            for(Bathroom b : bathrooms){
-                Log.v(TAG,"Bathroom:\n "+b);
-                bathroomList.add(b);
+                //get current location
+                @SuppressLint("MissingPermission") final Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                if(String.valueOf(sortBy[0]).equalsIgnoreCase("distance")){
+
+                    Collections.sort(bathrooms, new Comparator<Bathroom>() {
+                        @Override
+                        public int compare(Bathroom b1, Bathroom b2) {
+                            double dist1 = MetricConverter.distanceBetweenInMiles(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),new LatLng(b1.getLatLng().latitude,b1.getLatLng().longitude));
+                            double dist2 = MetricConverter.distanceBetweenInMiles(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),new LatLng(b2.getLatLng().latitude,b2.getLatLng().longitude));
+                            return (int) (dist1 - dist2);
+                        }
+
+                    });
+                }
             }
+
+                for(Bathroom b : bathrooms){
+                    Log.v(TAG,"Bathroom:\n "+b);
+                    bathroomList.add(b);
+                }
+
 
             return bathroomList;
         }catch (Exception e){

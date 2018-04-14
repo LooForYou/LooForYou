@@ -2,7 +2,9 @@ package com.looforyou.looforyou.activities;
 
 import android.Manifest.permission;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -13,6 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +30,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -35,12 +43,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -59,15 +70,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.adapters.BathroomCardFragmentPagerAdapter;
+import com.looforyou.looforyou.adapters.MapCardFragmentPagerAdapter;
 import com.looforyou.looforyou.fragments.BathroomViewFragment;
+import com.looforyou.looforyou.utilities.GPSManager;
 import com.looforyou.looforyou.utilities.ImageConverter;
 import com.looforyou.looforyou.utilities.LooLoader;
 import com.looforyou.looforyou.utilities.MetricConverter;
+import com.looforyou.looforyou.utilities.ShadowTransformer;
 import com.looforyou.looforyou.utilities.TabControl;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
@@ -121,7 +138,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageView extraInfoKeyless;
     private ImageView extraInfoFree;
     private ImageView extraInfoParking;
+    private GoogleApiClient googleApiClient;
 
+    private HashMap<Marker, Integer> markerList = new HashMap<Marker, Integer>();
+    private int markerIndex;
+
+    private ViewPager viewPager;
+    private MapCardFragmentPagerAdapter pagerAdapter;
+    private int pagerCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,34 +167,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         TabControl tabb = new TabControl(this);
         tabb.tabs(MapActivity.this, R.id.tab_map);
 
-
         initializeComponents();
 
+    }
 
-        //Test add new FrameLayout to view programatically
-        /*===================================================================*/
-        /*FrameLayout layout = new FrameLayout(this);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM|Gravity.END);
-        layout.setLayoutParams(layoutParams);
-        ImageButton goTo = new ImageButton(this);
-        goTo.setImageDrawable(getResources().getDrawable(R.drawable.ic_toilet_directions_60));
-        goTo.setBackgroundColor(getResources().getColor(R.color.transparent));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            goTo.setForegroundGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
-        }
-        goTo.setMaxWidth((int) MetricConverter.dpToPx(this,100));
-        goTo.setMaxHeight((int) MetricConverter.dpToPx(this,100));
-
-        layout.addView(goTo);
-//        LayoutInflater inflater = LayoutInflater.from(MapActivity.this);
-//        View inflatedLayout = inflater.inflate(R.layout.activity_map,null,false);
-//        inflatedLayout.addView(layout);
-//        getLayoutInflater().inflate(R.layout.activity_map,layout);
-        RelativeLayout relativeLayout = findViewById(R.id.map_activity);
-        relativeLayout.addView(layout);*/
-        /*===================================================================*/
-
-
+    public void initializeComponents() {
+        mHandler = new Handler();
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        mGeoDataClient = Places.getGeoDataClient(this, null);
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
+        mFusedLocationProviderClient = getFusedLocationProviderClient(this);
+        bathroomList = LooLoader.loadBathrooms(this.getApplicationContext(),"distance");
         mapDirectionsButton = (ImageButton) findViewById(R.id.toilet_directions);
         mapDirectionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,55 +186,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 onMapDirectionsClick(v);
             }
         });
-    }
 
-    public void initializeComponents() {
-        mHandler = new Handler();
-        extraInfo = (LinearLayout) findViewById(R.id.map_extra_info);
-        extraInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v("Custom Tag","profile button clicked");
-                Toast.makeText(MapActivity.this,"pressed", Toast.LENGTH_SHORT).show();
-                loadBathroomView(((Bathroom)lastMarkerClicked.getTag()));
-            }
-        });
-        extraInfo.setClickable(true);
-        extraInfoBathroomName = (TextView) findViewById(R.id.map_extra_info_bathroom_name);
-        extraInfoImage = (ImageView) findViewById(R.id.map_extra_info_image);
-        extraInfoDistance = (TextView) findViewById(R.id.map_extra_info_distance);
-        extraInfoAddress = (TextView) findViewById(R.id.map_extra_info_address);
-        extraInfoStars = (ImageView) findViewById(R.id.map_extra_info_stars);
-        extraInfoReviewNumber = (TextView) findViewById(R.id.map_extra_info_review_number);
-        extraInfoAccessibility = (ImageView) findViewById(R.id.map_extra_info_accesssible);
-        extraInfoKeyless = (ImageView) findViewById(R.id.map_extra_info_keyless);
-        extraInfoFree = (ImageView) findViewById(R.id.map_extra_info_free);
-        extraInfoParking = (ImageView) findViewById(R.id.map_extra_info_parking);
-
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        mGeoDataClient = Places.getGeoDataClient(this, null);
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-        mFusedLocationProviderClient = getFusedLocationProviderClient(this);
-        bathroomList = LooLoader.loadBathrooms(this.getApplicationContext());
     }
     public void initializeMarkers(GoogleMap map, List<Bathroom> bathrooms) {
         map.clear();
-        for(Bathroom br : bathrooms){
-            map.addMarker(new MarkerOptions()
-                    .position(new LatLng(br.getCoordinates().latitude,br.getCoordinates().longitude))
-                    .title(br.getName())
+        for(int i=0; i< bathrooms.size(); i++){
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(bathrooms.get(i).getCoordinates().latitude,bathrooms.get(i).getCoordinates().longitude))
+                    .title(bathrooms.get(i).getName())
                     .anchor(0.5f, 0.5f)
-                    .snippet(br.getAddress())
-                    .icon(defaultMarker))
-                    .setTag(br);
+                    .snippet(bathrooms.get(i).getAddress())
+                    .icon(defaultMarker));
+                    marker.setTag(bathrooms.get(i));
+            markerList.put(marker, i);
         }
 
     }
 
     public void onMapDirectionsClick(View view){
         view.setVisibility(View.GONE);
-//        Uri markerUri = Uri.parse("geo:"+markerLatitude+","+markerLongitude);
         Uri markerUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+markerLatitude+","+markerLongitude);
         Intent directionsIntent = new Intent(Intent.ACTION_VIEW,markerUri);
         directionsIntent.setPackage("com.google.android.apps.maps");
@@ -252,7 +230,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.v("Custom Tag","profile button clicked");
                 Toast.makeText(MapActivity.this,"profile...", Toast.LENGTH_SHORT).show();
 
             }
@@ -279,7 +256,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         sortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.v("Custom Tag","sort clicked");
                 Toast.makeText(MapActivity.this,"sort by...", Toast.LENGTH_SHORT).show();
             }
         });
@@ -317,6 +293,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         defaultMarker = ImageConverter.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_23_36));
         initializeMarkers(googleMap,bathroomList);
+        initializePageViewer();
         //TODO override google dialog fragment to display more data
 
         mFusedLocationProviderClient.getLastLocation()
@@ -346,7 +323,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 Log.i(GMAPS_TAG, "Place:" + place.toString());
                 Log.i(GMAPS_TAG, "Place:" + place.getLatLng().latitude);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.getLatLng().latitude, place.getLatLng().longitude), DEFAULT_ZOOM));
+               googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.getLatLng().latitude, place.getLatLng().longitude), DEFAULT_ZOOM));
                 //clears map every time new location is inputted
 //                googleMap.clear();
                 mapDirectionsButton.setVisibility(View.GONE);
@@ -382,42 +359,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.v(GMAPS_TAG, "marker clicked");
-        if (lastMarkerClicked != null) {
-            lastMarkerClicked.setIcon(defaultMarker);
-        }
-        marker.setIcon(ImageConverter.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_36_55)));
+       viewPager.setVisibility(View.VISIBLE);
+
+
+        updateMarkerIcon(marker);
         lastMarkerClicked = marker;
 
-        setExtraInfo((Bathroom) marker.getTag());
+        markerIndex = markerList.get(marker);
+        setPagerInfo((Bathroom) marker.getTag());
 
         mapDirectionsButton.setVisibility(View.VISIBLE);
         markerLatitude = marker.getPosition().latitude;
         markerLongitude = marker.getPosition().longitude;
-        return false;
+//        googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(marker.getPosition().latitude-.009,marker.getPosition().longitude)), (int) DEFAULT_ZOOM, null);
+        return true;
     }
 
-    public void setExtraInfo(Bathroom bathroom) {
-        extraInfo.setVisibility(View.VISIBLE);
-        Picasso.get().load(bathroom.getImageURL()).into(extraInfoImage);
-        extraInfoBathroomName.setText(bathroom.getName());
+    public void updateMarkerIcon(Marker marker) {
+        if (lastMarkerClicked != null) {
+            lastMarkerClicked.setIcon(defaultMarker);
+        }
+        marker.setIcon(ImageConverter.drawableToBitmapDescriptor(getResources().getDrawable(R.drawable.ic_toilet_marker_36_55)));
+    }
+    public void setPagerInfo(Bathroom bathroom) {
+        viewPager.setCurrentItem(markerIndex,true);
+        updateCardDistance(bathroom);
+    }
 
+    public void updateCardDistance(Bathroom bathroom) {
         try {
+            extraInfoDistance = pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).findViewById(R.id.map_extra_info_distance);
             DecimalFormat df = new DecimalFormat("0.00");
             double dist = MetricConverter.distanceBetweenInMiles(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()),bathroom.getLatLng());
             extraInfoDistance.setText(df.format(dist) + " mi");
         }catch(Exception e) {
             Log.v("home exception",e.getMessage());
         }
-
-        extraInfoAddress.setText(bathroom.getAddress());
-        int rating  = (int) Math.round(bathroom.getRating());
-        extraInfoStars.setImageResource(getStarDrawableResource(rating));
-//        extraInfoReviewNumber
-        if(bathroom.getAmenities().contains("accessible")) extraInfoAccessibility.setImageResource(R.drawable.ic_accessibility_enabled_20);
-        if(bathroom.getAmenities().contains("free")) extraInfoFree.setImageResource(R.drawable.ic_free_enabled_20);
-        if(bathroom.getAmenities().contains("no key required")) extraInfoKeyless.setImageResource(R.drawable.ic_keyless_enabled_20);
-        if(bathroom.getAmenities().contains("parking available")) extraInfoParking.setImageResource(R.drawable.ic_parking_enabled_20);
     }
 
     private void updateLocationUI() {
@@ -455,9 +432,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (task.isSuccessful()) {
                         // Set the map's camera position to the current location of the device.
                         mLastKnownLocation = (Location) task.getResult();
-//                        Log.v(GMAPS_TAG,String.valueOf(getCurrentLocation().getLatitude())); //delete me
                         try {
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), (int) DEFAULT_ZOOM));
                         }catch (Exception e){
                             Log.v("GMAPS_TAG",e.getMessage());
                         }
@@ -504,7 +480,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Create LocationSettingsRequest object using location request
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
+        builder.setAlwaysShow(true);
         LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check to see if GPS is enabled
+        new GPSManager(this).checkGPS();
 
         // Check whether location settings are satisfied
         // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
@@ -529,9 +509,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void onLocationChanged(Location location) {
-        //what to do when location determined
         mLastKnownLocation = location;
-//        extraInfoBathroomName.setText("Testing purposes: \n\n\ncurrent location: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
     }
 
 
@@ -601,12 +579,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             };
         };
 
-
         // If mPendingRunnable is not null, then add to the message queue
         if (mPendingRunnable != null) {
             mHandler.post(mPendingRunnable);
         }
-
 
         // refresh toolbar menu
         invalidateOptionsMenu();
@@ -615,6 +591,86 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void updateMarkerFromPager(int pagerPage) {
+        Marker marker = null;
+        for (Marker key : markerList.keySet()){
+            Log.v("markerlist current: ", String.valueOf(bathroomList.get(viewPager.getCurrentItem())));
+            if(bathroomList.get(viewPager.getCurrentItem()).getId() == ((Bathroom)key.getTag()).getId()){
+                marker = key;
+                break;
+            }
+        }
+        updateMarkerIcon(marker);
+        lastMarkerClicked = marker;
+        marker.showInfoWindow();
+        LatLng newLatLng = new LatLng(marker.getPosition().latitude-.009,marker.getPosition().longitude);
+        CameraUpdate center = CameraUpdateFactory.newLatLng(newLatLng);
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(DEFAULT_ZOOM);
+        googleMap.moveCamera(zoom);
+        googleMap.animateCamera(center, 400,null);
+    }
+    /* ========================================================================pageviewer */
+    private void initializePageViewer() {
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        pagerAdapter = new MapCardFragmentPagerAdapter(getSupportFragmentManager(), MetricConverter.dpToPx(this, 2));
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setVisibility(View.GONE);
+        for (Bathroom b : bathroomList) {
+            pagerAdapter.addCardFragment(b);
+        }
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
+                updateCardDistance(bathroomList.get(position));
+
+
+                pagerAdapter.getCardViewAt(position).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MapActivity.this,bathroomList.get(position).getName()+" clicked", Toast.LENGTH_SHORT).show();
+                        loadBathroomView((Bathroom)lastMarkerClicked.getTag());
+                    }
+                });
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                updateMarkerFromPager(position);
+            }
+
+
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (ViewPager.SCROLL_STATE_IDLE == state) {
+                    if (state == ViewPager.SCROLL_STATE_IDLE) {
+                        int position = viewPager.getCurrentItem();
+                        int lastView = viewPager.getAdapter().getCount() - 1;
+
+                        if (position < lastView) {
+                            pagerCounter = 0;
+                        } else if (position == lastView) {
+                            pagerCounter++;
+                            if (pagerCounter == bathroomList.size() - 1) {
+                                viewPager.setOffscreenPageLimit(0);
+                                viewPager.setCurrentItem(0, true);
+                                pagerCounter = 0;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        });
+
 
     }
 }
