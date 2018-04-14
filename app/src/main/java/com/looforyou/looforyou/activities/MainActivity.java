@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     private TextView amenities;
     private TextView hoursOfOperation;
     private TextView maintenanceHours;
-    private final int UPDATE_INTERVAL = 10000; //10 sec
-    private final int FASTEST_INTERVAL = 2000; //2 sec
+    private final int UPDATE_INTERVAL = 60000; //60 sec
+    private final int FASTEST_INTERVAL = 10000; //10 sec
     private LocationRequest mLocationRequest;
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 100;
     private Location mLastKnownLocation = null;
@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         TabControl tabb = new TabControl(this);
         tabb.tabs(MainActivity.this, R.id.tab_home);
 
-        getDeviceLocation();
-        startLocationUpdates();
+        /*getDeviceLocation();*/
+        /*startLocationUpdates();*/
 
         initializePageViewer();
         initializeDisplayData();
@@ -132,17 +132,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     }
 
     private void setupView() {
-
         List<Bathroom> feedList = LooLoader.loadBathrooms(this.getApplicationContext());
-//        Log.d("DEBUG", "LoadMoreView.LOAD_VIEW_SET_COUNT " + LoadMoreView.LOAD_VIEW_SET_COUNT);
-//        for(int i = 0; i < LoadMoreView.LOAD_VIEW_SET_COUNT; i++){
-//            mLoadMoreView.addView(new MenuView.ItemView(this.getApplicationContext(), feedList.get(i)));
-//        }
-//        mLoadMoreView.setLoadMoreResolver(new LoadMoreView(mLoadMoreView, feedList));
-/*        Log.v("TEST FEEDLIST","feed size: "+feedList.size());
-        Log.v("TEST FEEDLIST",String.valueOf(feedList.get(0).getLatLng()));
-        Log.v("TEST FEEDLIST",feedList.get(1).getName());
-        Log.v("TEST FEEDLIST",feedList.get(2).getEndTime().toString());*/
         for (Bathroom b : feedList) {
             pagerAdapter.addCardFragment(b);
         }
@@ -150,119 +140,121 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     }
 
     /* ============================================================================================*/
-    private void getDeviceLocation() {
-    /*
-     * Get the best and most recent location of the device, which may be null in rare
-     * cases when a location is not available.
-     */
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return;
-        }
-        try {
-            mFusedLocationProviderClient = getFusedLocationProviderClient(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            Task locationResult = mFusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(this, new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        // Set the map's camera position to the current location of the device.
-                        mLastKnownLocation = (Location) task.getResult();
-//                        Log.v(GMAPS_TAG,String.valueOf(getCurrentLocation().getLatitude())); //delete me
-                    } else {
-                        Log.d(GMAPS_TAG, "Current location is null. Using defaults.");
-                        Log.e(GMAPS_TAG, "Exception: %s", task.getException());
-                    }
-                }
-            });
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }
+//    private void getDeviceLocation() {
+//    /*
+//     * Get the best and most recent location of the device, which may be null in rare
+//     * cases when a location is not available.
+//     */
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions();
+//            return;
+//        }
+//        try {
+//            mFusedLocationProviderClient = getFusedLocationProviderClient(this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            Task locationResult = mFusedLocationProviderClient.getLastLocation();
+//            locationResult.addOnCompleteListener(this, new OnCompleteListener() {
+//                @Override
+//                public void onComplete(@NonNull Task task) {
+//                    if (task.isSuccessful()) {
+//                        // Set the map's camera position to the current location of the device.
+//                        mLastKnownLocation = (Location) task.getResult();
+////                        Log.v(GMAPS_TAG,String.valueOf(getCurrentLocation().getLatitude())); //delete me
+//                    } else {
+//                        Log.d(GMAPS_TAG, "Current location is null. Using defaults.");
+//                        Log.e(GMAPS_TAG, "Exception: %s", task.getException());
+//                    }
+//                }
+//            });
+//        } catch (SecurityException e) {
+//            Log.e("Exception: %s", e.getMessage());
+//        }
+//    }
+//
+//    // Trigger new location updates at interval
+///*
+//    protected void startLocationUpdates() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions();
+//            return;
+//        }
+//*/
+//
+//        // Create the location request to start receiving updates
+////        mLocationRequest = new LocationRequest();
+//        mLocationRequest = LocationRequest.create();
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        mLocationRequest.setInterval(UPDATE_INTERVAL);
+//        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+//
+//        // Create LocationSettingsRequest object using location request
+//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+//        builder.addLocationRequest(mLocationRequest);
+//        LocationSettingsRequest locationSettingsRequest = builder.build();
+//
+//        // Check whether location settings are satisfied
+//        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+//        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
+//        settingsClient.checkLocationSettings(locationSettingsRequest);
+//
+//        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions();
+//            return;
+//        }
+//        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+//                    @Override
+//                    public void onLocationResult(LocationResult locationResult) {
+//                        // do work here
+//                        onLocationChanged(locationResult.getLastLocation());
+//                    }
+//                },
+//                Looper.myLooper());
+//
+//    }
 
-    // Trigger new location updates at interval
-    protected void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return;
-        }
+//    public void onLocationChanged(Location location) {
+//        //what to do when location determined
+//        mLastKnownLocation = location;
+//        Log.v("testLocation", "current location home: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+//        updateDistance();
+//    }
 
-        // Create the location request to start receiving updates
-//        mLocationRequest = new LocationRequest();
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return;
-        }
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        // do work here
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
-
-    }
-
-    public void onLocationChanged(Location location) {
-        //what to do when location determined
-        mLastKnownLocation = location;
-        Log.v("testLocation", "current location: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-        updateDistance();
-    }
-
-    public Location getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return null;
-        }
-        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                // GPS location can be null if GPS is switched off
-                if (location != null) {
-                    onLocationChanged(location);
-                    mLastKnownLocation = location;
-                } else {
-                    Log.v(GMAPS_TAG, "not ready");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(GMAPS_TAG, "Error trying to get last GPS location");
-                e.printStackTrace();
-            }
-        });
-        return mLastKnownLocation;
-    }
-
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
-    }
+//    public Location getLastLocation() {
+//        // Get last known recent location using new Google Play Services SDK (v11+)
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions();
+//            return null;
+//        }
+//        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                // GPS location can be null if GPS is switched off
+//                if (location != null) {
+//                    onLocationChanged(location);
+//                    mLastKnownLocation = location;
+//                } else {
+//                    Log.v(GMAPS_TAG, "not ready");
+//                }
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(GMAPS_TAG, "Error trying to get last GPS location");
+//                e.printStackTrace();
+//            }
+//        });
+//        return mLastKnownLocation;
+//    }
+//
+//    private void requestPermissions() {
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
+////        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
+//    }
     /* ============================================================================================*/
 
     private void refreshDisplay(int position) {
@@ -433,7 +425,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         DecimalFormat df = new DecimalFormat("0.0");
 
         try {
-            double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(), getLastLocation().getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+//            double dist = MetricConverter.distanceBetweenInMiles(new LatLng(getLastLocation().getLatitude(), getLastLocation().getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+            double dist = MetricConverter.distanceBetweenInMiles(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
             te.setText(df.format(dist) + " mi");
         }catch(Exception e) {
             Log.v("home exception",e.getMessage());

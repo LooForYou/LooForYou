@@ -52,6 +52,7 @@ public class TabControl {
                         if(!context.getClass().toString().trim().contains(packageDir + "MainActivity")) {
                             Intent homeIntent = new Intent(packageContext, MainActivity.class);
                             context.startActivity(homeIntent);
+                            ((Activity)context).finish();
                             //remove animation when activity is opened
                             activity.overridePendingTransition(0,0);
                             homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -61,6 +62,7 @@ public class TabControl {
                         if(!context.getClass().toString().trim().contains(packageDir + "ProfileActivity")) {
                             Intent profileIntent = new Intent(packageContext, ProfileActivity.class);
                             context.startActivity(profileIntent);
+                            ((Activity)context).finish();
                             //remove animation when activity is opened
                             activity.overridePendingTransition(0,0);
                             profileIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -70,6 +72,7 @@ public class TabControl {
                         if(!context.getClass().toString().trim().contains(packageDir + "AddABathroomActivity")) {
                             Intent AddIntent = new Intent(packageContext, AddABathroomActivity.class);
                             context.startActivity(AddIntent);
+                            ((Activity)context).finish();
                             //remove animation when activity is opened
                             activity.overridePendingTransition(0,0);
                             AddIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -79,6 +82,7 @@ public class TabControl {
                         if(!context.getClass().toString().trim().contains(packageDir + "MapActivity")) {
                             Intent mapIntent = new Intent(packageContext, MapActivity.class);
                             context.startActivity(mapIntent);
+                            ((Activity)context).finish();
                             //remove animation when activity is opened
                             activity.overridePendingTransition(0,0);
                             mapIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -88,6 +92,7 @@ public class TabControl {
                         if(!context.getClass().toString().trim().contains(packageDir + "BookmarkActivity")) {
                             Intent bookMarksIntent = new Intent(packageContext, BookmarkActivity.class);
                             context.startActivity(bookMarksIntent);
+                            ((Activity)context).finish();
                             //remove animation when activity is opened
                             activity.overridePendingTransition(0,0);
                             bookMarksIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

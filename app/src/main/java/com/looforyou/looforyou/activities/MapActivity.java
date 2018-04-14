@@ -98,8 +98,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 100;
 
-    private final int UPDATE_INTERVAL = 10000; //10 sec
-    private final int FASTEST_INTERVAL = 2000; //2 sec
+    private final int UPDATE_INTERVAL = 30000; //10 sec
+    private final int FASTEST_INTERVAL = 10000; //10 sec
     private GoogleMap googleMap;
     private final float DEFAULT_ZOOM = 14.0f;
     private LocationManager locationManager;
@@ -510,6 +510,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void onLocationChanged(Location location) {
         mLastKnownLocation = location;
+        Log.v("testLocation", "current location map: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
     }
 
 
@@ -597,7 +598,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void updateMarkerFromPager(int pagerPage) {
         Marker marker = null;
         for (Marker key : markerList.keySet()){
-            Log.v("markerlist current: ", String.valueOf(bathroomList.get(viewPager.getCurrentItem())));
             if(bathroomList.get(viewPager.getCurrentItem()).getId() == ((Bathroom)key.getTag()).getId()){
                 marker = key;
                 break;
