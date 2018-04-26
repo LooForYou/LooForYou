@@ -41,8 +41,6 @@
                     android:id="@+id/bathroom_image"
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
-                    android:layout_below="@+id/add_a_bathroom_title"
-                    android:layout_above="@+id/bathroom_image_link"
                     android:layout_alignParentStart="true"
                     android:layout_gravity="center"
                     android:src="@drawable/no_image_uploaded" >
@@ -56,9 +54,7 @@
                     android:layout_gravity="right"
                     android:text="Claick to upload Image"
                     android:textColor="@color/black"
-                    android:textSize="11sp"
-                    android:layout_below="@+id/bathroom_image"
-                    android:layout_above="@+id/editBathroomName" />
+                    android:textSize="11sp" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -174,25 +170,29 @@
                         android:id="@+id/bathroom_accessible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="2.5dp" />
+                        android:layout_marginRight="2.5dp"
+                        android:textOn="Disabled"
+                        android:textOff="Not Disabled" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_free"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="2.5dp" />
+                        android:layout_marginRight="2.5dp"
+                        android:textOn="Free"
+                        android:textOff="Not Free" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_keyless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
                         android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="5dp" />
+                        android:layout_marginRight="5dp"
+                        android:textOn="Unlocked"
+                        android:textOff="Locked" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -206,10 +206,11 @@
                         android:id="@+id/bathroom_parking"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="2.5dp" />
+                        android:layout_marginRight="2.5dp"
+                        android:textOn="Parking"
+                        android:textOff="No Parking" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_mirrors"
@@ -217,23 +218,25 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="2.5dp" />
+                        android:layout_marginRight="2.5dp"
+                        android:textOn="Mirrors"
+                        android:textOff="No Mirrors" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_baby_station"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bottomBar"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="5dp" />
+                        android:layout_marginRight="5dp"
+                        android:textOn="Diaper Table"
+                        android:textOff="No Diaper Table" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/submitBathroom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/bottomBar"
                     android:layout_marginTop="25dp"
                     android:background="@color/colorPrimaryLight"
                     android:textColor="@color/white"

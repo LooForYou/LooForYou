@@ -149,9 +149,9 @@ public class AddABathroomActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    bathroom_baby_station.setTextOn("Free");
+                    bathroom_baby_station.setTextOn("Diaper Table");
                 } else {
-                    bathroom_baby_station.setTextOff("Not Free");
+                    bathroom_baby_station.setTextOff("No Diaper Table");
                 }
             }
         });
