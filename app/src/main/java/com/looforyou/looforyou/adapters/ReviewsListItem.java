@@ -18,7 +18,8 @@ public class ReviewsListItem {
     public ReviewsListItem(String reviewer, String content, String profilePicture, int points, int rating) {
         this.reviewer = reviewer;
         this.content = content;
-        this.profilePicture = profilePicture;
+        setProfilePicture(profilePicture);
+        this.profilePicture = getprofilePicture();
         this.points = points;
         this.rating = rating;
     }
@@ -27,8 +28,13 @@ public class ReviewsListItem {
         return profilePicture;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setProfilePicture(String pp) {
+
+        if(pp == null || pp.contains("http://freedomappapk.com/best-whatsapp-dp/")) {
+            profilePicture = "http://pronksiapartments.ee/wp-content/uploads/2015/10/placeholder-face-big.png";
+        }else {
+            profilePicture = pp;
+        }
     }
 
     public String getReviewer() {
