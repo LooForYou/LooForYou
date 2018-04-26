@@ -87,6 +87,7 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import static com.looforyou.looforyou.Constants.SORT_BY_DISTANCE;
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
 
@@ -178,7 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGeoDataClient = Places.getGeoDataClient(this, null);
         mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
         mFusedLocationProviderClient = getFusedLocationProviderClient(this);
-        bathroomList = LooLoader.loadBathrooms(this.getApplicationContext(),"distance");
+        bathroomList = LooLoader.loadBathrooms(this.getApplicationContext(),SORT_BY_DISTANCE);
         mapDirectionsButton = (ImageButton) findViewById(R.id.toilet_directions);
         mapDirectionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -652,7 +653,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (state == ViewPager.SCROLL_STATE_IDLE) {
                         int position = viewPager.getCurrentItem();
                         int lastView = viewPager.getAdapter().getCount() - 1;
-
                         if (position < lastView) {
                             pagerCounter = 0;
                         } else if (position == lastView) {

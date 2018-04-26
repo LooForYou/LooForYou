@@ -22,19 +22,43 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.looforyou.looforyou.Models.Bathroom;
+import com.looforyou.looforyou.Models.Review;
+import com.looforyou.looforyou.Models.Reviewer;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.ReviewsAdapter;
 import com.looforyou.looforyou.adapters.ReviewsListItem;
+import com.looforyou.looforyou.utilities.BathroomDeserializer;
+import com.looforyou.looforyou.utilities.HttpGet;
+import com.looforyou.looforyou.utilities.HttpUtils;
 import com.looforyou.looforyou.utilities.MetricConverter;
+import com.looforyou.looforyou.utilities.ReviewDeserializer;
+import com.looforyou.looforyou.utilities.ReviewerDeserializer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
+import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
+import static com.looforyou.looforyou.Constants.GET_REVIEWS;
+import static com.looforyou.looforyou.Constants.REVIEWS_LIST;
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
 /**
@@ -100,12 +124,12 @@ public class BathroomViewFragment extends Fragment {
 //        String menu = getArguments().getString("Menu");
         Bathroom bathroom = getArguments().getParcelable("current bathroom");
 //        button.setText(menu);
-          button.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                  Toast.makeText(getContext(),"stuff", Toast.LENGTH_SHORT).show();
-              }
-          });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "stuff", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         TextView bathroomName = view.findViewById(R.id.bathroom_fragment_name);
         bathroomName.setText(bathroom.getName().toUpperCase());
@@ -127,7 +151,7 @@ public class BathroomViewFragment extends Fragment {
         bathroomDirectionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onDirectionsButtonClick(v,clickedBathroom);
+                onDirectionsButtonClick(v, clickedBathroom);
             }
         });
 
@@ -135,11 +159,11 @@ public class BathroomViewFragment extends Fragment {
         bathroomDirectionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onDirectionsButtonClick(v,clickedBathroom);
+                onDirectionsButtonClick(v, clickedBathroom);
             }
         });
         ImageView bathroomStars = view.findViewById(R.id.bathroom_fragment_stars);
-        int rating  = (int) Math.round(bathroom.getRating());
+        int rating = (int) Math.round(bathroom.getRating());
         bathroomStars.setImageResource(getStarDrawableResource(rating));
 
         TextView bathroomNumReviews = view.findViewById(R.id.bathroom_fragment_num_reviews);
@@ -147,25 +171,25 @@ public class BathroomViewFragment extends Fragment {
 
         ImageView bathroomAccessible = (ImageView) view.findViewById(R.id.bathroom_fragment_accessibility_icon);
         TextView bathroomAccessibleText = (TextView) view.findViewById(R.id.bathroom_fragment_accessibility_text);
-        if(bathroom.getAmenities().contains("accessible")) {
+        if (bathroom.getAmenities().contains("accessible")) {
             bathroomAccessible.setImageResource(R.drawable.ic_accessibility_enabled_20);
             bathroomAccessibleText.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
         ImageView bathroomFree = (ImageView) view.findViewById(R.id.bathroom_fragment_free_icon);
         TextView bathroomFreeText = (TextView) view.findViewById(R.id.bathroom_fragment_free_text);
-        if(bathroom.getAmenities().contains("free")) {
+        if (bathroom.getAmenities().contains("free")) {
             bathroomFree.setImageResource(R.drawable.ic_free_enabled_20);
             bathroomFreeText.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
         ImageView bathroomKeyless = (ImageView) view.findViewById(R.id.bathroom_fragment_keyless_icon);
         TextView bathroomKeylessText = (TextView) view.findViewById(R.id.bathroom_fragment_keyless_text);
-        if(bathroom.getAmenities().contains("no key required")) {
+        if (bathroom.getAmenities().contains("no key required")) {
             bathroomKeyless.setImageResource(R.drawable.ic_keyless_enabled_20);
             bathroomKeylessText.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
         ImageView bathroomParking = (ImageView) view.findViewById(R.id.bathroom_fragment_parking_icon);
         TextView bathroomParkingText = (TextView) view.findViewById(R.id.bathroom_fragment_parking_text);
-        if(bathroom.getAmenities().contains("parking available")) {
+        if (bathroom.getAmenities().contains("parking available")) {
             bathroomParking.setImageResource(R.drawable.ic_parking_enabled_20);
             bathroomParkingText.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
@@ -177,68 +201,133 @@ public class BathroomViewFragment extends Fragment {
         maintenanceString.setText(getMaintenanceHoursString(bathroom));
 
         WebView loadedImage = (WebView) view.findViewById(R.id.bathroom_fragment_webview);
-        loadWebviewFromURL(loadedImage,bathroom.getImageURL());
+        loadWebviewFromURL(loadedImage, bathroom.getImageURL());
         final ProgressBar Pbar = (ProgressBar) view.findViewById(R.id.bathroom_fragment_progress);
         loadedImage.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress)
-            {
-                if(progress < 100 && Pbar.getVisibility() == ProgressBar.GONE){
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress < 100 && Pbar.getVisibility() == ProgressBar.GONE) {
                     Pbar.setVisibility(ProgressBar.VISIBLE);
                 }
                 Pbar.setProgress(progress);
-                if(progress == 100) {
+                if (progress == 100) {
                     Pbar.setVisibility(ProgressBar.GONE);
                 }
             }
         });
 
-        loadReviews(view);
+        loadReviews(view, bathroom);
 
         return view;
     }
 
-    public void loadReviews(View v) {
+    public void loadReviews(View v, Bathroom bathroom) {
         recyclerView = (RecyclerView) v.findViewById(R.id.review_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         reviewsListItems = new ArrayList<>();
 
-        for(int i = 0; i<=10; i++) {
-            ReviewsListItem reviewsListItem = new ReviewsListItem("UserName "+(i+1),"blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah "+(i+1),"");
-            reviewsListItems.add(reviewsListItem);
+
+        ArrayList<Reviewer> reviewers = loadReviewersFromServer(bathroom);
+        ArrayList<Review> reviews = loadReviewsFromServer(bathroom);
+
+        for(Review review: reviews) {
+            review.setReviewerInfo(reviewers);
         }
 
-        adapter = new ReviewsAdapter(reviewsListItems,getActivity().getApplicationContext());
+        if (reviews.size() > 0) {
+            TextView noReviews = (TextView) v.findViewById(R.id.no_reviews);
+            noReviews.setVisibility(View.GONE);
+            for (Review review : reviews) {
+//                Log.v("testreviewerrr",review.getReviewerUserName());
+                ReviewsListItem reviewsListItem = new ReviewsListItem(
+                        review.getReviewerUserName(),
+                        review.getContent(),
+                        review.getReviewerImageUrl(),
+                        review.getLikes(),
+                        review.getRating());
+                reviewsListItems.add(reviewsListItem);
+            }
+        }
+
+
+        adapter = new ReviewsAdapter(reviewsListItems, getActivity().getApplicationContext());
         recyclerView.setAdapter(adapter);
         int maxScrollHeight = 360;
         LinearLayout sv = (LinearLayout) v.findViewById(R.id.review_scroll_container);
         sv.measure(0, 0);
-        if (MetricConverter.pxToDp(getActivity().getApplicationContext(),sv.getMeasuredHeight()) > maxScrollHeight) {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) MetricConverter.dpToPx(getActivity().getApplicationContext(),maxScrollHeight));
+        if (MetricConverter.pxToDp(getActivity().getApplicationContext(), sv.getMeasuredHeight()) > maxScrollHeight) {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) MetricConverter.dpToPx(getActivity().getApplicationContext(), maxScrollHeight));
             sv.setLayoutParams(lp);
         }
 
     }
 
-    public void loadWebviewFromURL(WebView webview,String url){
-        if(url == null || url.equals("")) {
+    public ArrayList<Reviewer> loadReviewersFromServer(Bathroom bathroom) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Reviewer.class, new ReviewerDeserializer());
+        Gson gson = gsonBuilder.create();
+        String result = "";
+        HttpGet getReviewers = new HttpGet();
+        try {
+            result = getReviewers.execute(GET_BATHROOMS + bathroom.getId() + REVIEWS_LIST).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        ArrayList<Reviewer> reviewers = new ArrayList<Reviewer>();
+        if (!result.equals("")) {
+            reviewers = new ArrayList<Reviewer>(Arrays.asList(gson.fromJson(result, Reviewer[].class)));
+        }
+        return reviewers;
+    }
+
+    public ArrayList<Review> loadReviewsFromServer(Bathroom bathroom) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Review.class, new ReviewDeserializer());
+        Gson gson = gsonBuilder.create();
+        String result = "";
+        ArrayList<Review> reviews = new ArrayList<Review>();
+        HttpGet getReviews = new HttpGet();
+        URL reviewRequest = null;
+        try {
+            reviewRequest = new URL(GET_REVIEWS + "?filter={\"where\":{\"bathroomId\": \"" + bathroom.getId() + "\"}}");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        reviewRequest = HttpUtils.encodeQuery(reviewRequest);
+        try {
+            result = getReviews.execute(reviewRequest.toString()).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if (!result.equals("")) {
+            reviews = new ArrayList<Review>(Arrays.asList(gson.fromJson(result, Review[].class)));
+        }
+        return reviews;
+    }
+
+    public void loadWebviewFromURL(WebView webview, String url) {
+        if (url == null || url.equals("")) {
             url = "no-image-uploaded.png";
         }
-        String css = "width:100%;height:100%;overflow:hidden;background:url("+url+");background-size:cover;background-position:center center;";
+        String css = "width:100%;height:100%;overflow:hidden;background:url(" + url + ");background-size:cover;background-position:center center;";
         String html = "<html><body style=\"height:100%;width:100%;margin:0;padding:0;overflow:hidden;\"><div style=\"" + css + "\"></div></body></html>";
         webview.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", null);
     }
 
-    public void onDirectionsButtonClick(View view, Bathroom bathroom){
-            Uri markerUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+bathroom.getLatLng().latitude+","+bathroom.getLatLng().longitude);
-            Intent directionsIntent = new Intent(Intent.ACTION_VIEW,markerUri);
-            directionsIntent.setPackage("com.google.android.apps.maps");
-            if(directionsIntent.resolveActivity(getActivity().getPackageManager()) != null){
-                startActivity(directionsIntent);
-            }else {
-                Toast.makeText(getActivity(),"Unable to route", Toast.LENGTH_SHORT).show();
-            }
+    public void onDirectionsButtonClick(View view, Bathroom bathroom) {
+        Uri markerUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + bathroom.getLatLng().latitude + "," + bathroom.getLatLng().longitude);
+        Intent directionsIntent = new Intent(Intent.ACTION_VIEW, markerUri);
+        directionsIntent.setPackage("com.google.android.apps.maps");
+        if (directionsIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(directionsIntent);
+        } else {
+            Toast.makeText(getActivity(), "Unable to route", Toast.LENGTH_SHORT).show();
         }
+    }
 
     public String getStringAmenities(Bathroom bathroom) {
         ArrayList<String> amenitiesList = bathroom.getAmenities();
@@ -247,11 +336,13 @@ public class BathroomViewFragment extends Fragment {
         formattedAmenities = "• " + formattedAmenities.substring(1, formattedAmenities.length() - 1);
         return formattedAmenities;
     }
-    public String getStringDescription(Bathroom bathroom){
+
+    public String getStringDescription(Bathroom bathroom) {
         String desc1 = bathroom.getDescriptions().size() > 0 ? bathroom.getDescriptions().get(0) : "";
         String desc2 = bathroom.getDescriptions().size() > 1 ? bathroom.getDescriptions().get(1) : "";
-        return desc1+"\n"+desc2;
+        return desc1 + "\n" + desc2;
     }
+
     public String getAmenitiesString(Bathroom bathroom) {
         ArrayList<String> amenitiesList = bathroom.getAmenities();
         Collections.sort(amenitiesList);
@@ -283,9 +374,9 @@ public class BathroomViewFragment extends Fragment {
         String maintenanceDays = bathroom.getMaintenanceDays().toString();
         if (maintenanceStartTime == null || maintenanceEndTime == null) {
             return "Unknown";
-        }else if (mStart.equals(mEnd)) {
-            return "24HR";}
-        else {
+        } else if (mStart.equals(mEnd)) {
+            return "24HR";
+        } else {
             return mStart + " to " + mEnd + "\n" + maintenanceDays;
         }
     }
@@ -315,7 +406,7 @@ public class BathroomViewFragment extends Fragment {
         } else if (start.equals(end)) {
             return "24HR";
         } else {
-           return start + " to " + end;
+            return start + " to " + end;
         }
     }
 

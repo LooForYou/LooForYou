@@ -11,17 +11,16 @@ import com.looforyou.looforyou.R;
 public class ReviewsListItem {
     private String reviewer;
     private String content;
-
-
     private String profilePicture;
+    private int points;
+    private int rating;
 
-//    public int getDefaultPicture() {
-//        return R.drawable.ic_profile;
-//    }
-    public ReviewsListItem(String reviewer, String content, String profilePicture) {
+    public ReviewsListItem(String reviewer, String content, String profilePicture, int points, int rating) {
         this.reviewer = reviewer;
         this.content = content;
         this.profilePicture = profilePicture;
+        this.points = points;
+        this.rating = rating;
     }
 
     public String getprofilePicture() {
@@ -42,5 +41,21 @@ public class ReviewsListItem {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

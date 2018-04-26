@@ -134,8 +134,9 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         //TODO refresh data
 //        viewPager.setSaveFromParentEnabled(false);
 //        pagerAdapter.clear();
-        List<Bathroom> feedList = LooLoader.loadBathrooms(this.getApplicationContext(),"distance");
+        List<Bathroom> feedList = LooLoader.loadBathrooms(this.getApplicationContext());
         for (Bathroom b : feedList) {
+            Log.v("feedlistcontent",b.getName());
             pagerAdapter.addCardFragment(b);
             pagerAdapter.notifyDataSetChanged();
         }
@@ -228,12 +229,12 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     private void initializePageViewer() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new BathroomCardFragmentPagerAdapter(getSupportFragmentManager(), MetricConverter.dpToPx(this, 2));
-        setUpPagerData();
 
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);
 
+        setUpPagerData();
 
         ShadowTransformer fragmentCardShadowTransformer = new ShadowTransformer(viewPager, pagerAdapter);
         fragmentCardShadowTransformer.enableScaling(true);

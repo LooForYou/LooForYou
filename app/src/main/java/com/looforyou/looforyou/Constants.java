@@ -21,37 +21,12 @@ public class Constants {
     public static final String BATHROOM_COUNT = GET_BATHROOMS + "count/";
     public static final String UPDATE_BATHROOM = GET_BATHROOMS + "update?where=";
     public static final String LOGIN = GET_USERS + "login";
+    public static final String REVIEWS_LIST = "/submittedReviews/";
+    public static final String GET_REVIEWS = API_ROOT + "Reviews/";
 
-    /* move this to a utility class later*/
-    public static URL encodeQuery(String query) {
-        String urlStr = query;
-        URL url = null;
-        try {
-            url = new URL(urlStr);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        URI uri = null;
-        try {
-            uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        try {
-            url = uri.toURL();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
+    /* sorting options */
+    public static final String SORT_BY_DISTANCE = "distance";
 
-    public static String decodeQuery(String query){
-        String url = null;
-        try {
-            url = URLDecoder.decode(query,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
+
+
 }

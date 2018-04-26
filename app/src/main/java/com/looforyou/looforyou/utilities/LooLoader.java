@@ -1,6 +1,7 @@
 package com.looforyou.looforyou.utilities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -66,7 +67,10 @@ public class LooLoader {
                 Criteria criteria = new Criteria();
 
                 //get current location
-                @SuppressLint("MissingPermission") final Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity)context, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+                }
+                final Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
                 if(String.valueOf(sortBy[0]).equalsIgnoreCase("distance")){
                     Log.v("looLoader","sorting by distance:");
                     Collections.sort(bathrooms, new Comparator<Bathroom>() {

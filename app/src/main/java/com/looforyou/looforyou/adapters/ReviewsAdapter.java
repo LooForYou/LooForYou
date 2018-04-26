@@ -2,6 +2,7 @@ package com.looforyou.looforyou.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
 /**
  * Created by ibreaker on 4/9/2018.
@@ -40,8 +43,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         ReviewsListItem reviewsListItem = reviewsListItems.get(position);
         holder.reviewer.setText(reviewsListItem.getReviewer());
         holder.content.setText(reviewsListItem.getContent());
-//        Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(holder.profileImage);
-        Picasso.get().load("https://www.telegraph.co.uk/content/dam/news/2017/11/22/TELEMMGLPICT000147365976_trans_NvBQzQNjv4Bq3XmyF3YIL3K1caQxZsZv2Ssm-UOV8_Q90I8_c5Af0yY.jpeg?imwidth=450").into(holder.profileImage);
+        Picasso.get().load(reviewsListItem.getprofilePicture()).fit().into(holder.profileImage);
+        holder.reviewPoints.setText(String.valueOf(reviewsListItem.getPoints())+" points");
+        holder.rating.setImageResource(getStarDrawableResource(reviewsListItem.getRating()));
+
     }
 
     @Override
@@ -53,6 +58,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         public TextView reviewer;
         public TextView content;
         public CircleImageView profileImage;
+        public TextView reviewPoints;
+        public ImageView rating;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -60,6 +67,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             reviewer = (TextView) itemView.findViewById(R.id.reviews_reviewer);
             content = (TextView) itemView.findViewById(R.id.reviews_content);
             profileImage = (CircleImageView) itemView.findViewById(R.id.reviews_profile_picture);
+            reviewPoints = (TextView) itemView.findViewById(R.id.reviews_points);
+            rating = (ImageView) itemView.findViewById(R.id.reviews_rating);
         }
     }
 }
