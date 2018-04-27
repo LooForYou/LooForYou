@@ -1,6 +1,7 @@
 package com.looforyou.looforyou.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -76,6 +77,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -84,7 +86,7 @@ import java.util.concurrent.ExecutionException;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 import static com.looforyou.looforyou.Constants.*;
 
-public class MainActivity extends AppCompatActivity implements BathroomViewFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements BathroomViewFragment.OnFragmentInteractionListener {
     private Toolbar toolbar;
     private ActionMenuView actionMenu;
     private final String GMAPS_TAG = "GException";
@@ -130,11 +132,24 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
 
     }
 
+    public Location getCurrentLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+            return null;
+        }
+        return locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+    }
     private void setUpPagerData() {
         //TODO refresh data
 //        viewPager.setSaveFromParentEnabled(false);
 //        pagerAdapter.clear();
         List<Bathroom> feedList = LooLoader.loadBathrooms(this.getApplicationContext());
+
+
+        sortByDistance(feedList);
+
         for (Bathroom b : feedList) {
             Log.v("feedlistcontent",b.getName());
             pagerAdapter.addCardFragment(b);
@@ -142,6 +157,21 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         }
         swipeContainer.setRefreshing(false);
     }
+
+    public void sortByDistance(List<Bathroom> list){
+        Collections.sort(list, new Comparator<Bathroom>() {
+            @Override
+            public int compare(Bathroom b1, Bathroom b2) {
+                Location location = getCurrentLocation();
+                double dist1 = MetricConverter.distanceBetweenInMiles(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(b1.getLatLng().latitude, b1.getLatLng().longitude));
+                double dist2 = MetricConverter.distanceBetweenInMiles(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(b2.getLatLng().latitude, b2.getLatLng().longitude));
+                if (dist2 < dist1) return 1;
+                else if (dist2 > dist1) return -1;
+                return 0;
+            }
+        });
+    }
+
 
     private void refreshDisplay(int position) {
         bathrooms = pagerAdapter.getBathrooms();
