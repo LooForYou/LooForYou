@@ -2,6 +2,7 @@ package com.looforyou.looforyou.adapters;
 
 import android.graphics.drawable.Drawable;
 
+import com.looforyou.looforyou.Models.Review;
 import com.looforyou.looforyou.R;
 
 /**
@@ -9,19 +10,21 @@ import com.looforyou.looforyou.R;
  */
 
 public class ReviewsListItem {
+    private Review review;
     private String reviewer;
     private String content;
     private String profilePicture;
     private int points;
     private int rating;
 
-    public ReviewsListItem(String reviewer, String content, String profilePicture, int points, int rating) {
+    public ReviewsListItem(Review review, String reviewer, String content, String profilePicture, int points, int rating) {
         this.reviewer = reviewer;
         this.content = content;
         setProfilePicture(profilePicture);
         this.profilePicture = getprofilePicture();
         this.points = points;
         this.rating = rating;
+        this.review = review;
     }
 
     public String getprofilePicture() {
@@ -35,6 +38,13 @@ public class ReviewsListItem {
         }else {
             profilePicture = pp;
         }
+    }
+
+    public void setReview(Review r) {
+        review = r;
+    }
+    public Review getReview() {
+        return review;
     }
 
     public String getReviewer() {

@@ -240,6 +240,7 @@ public class BathroomViewFragment extends Fragment {
             for (Review review : reviews) {
 //                Log.v("testreviewerrr",review.getReviewerUserName());
                 ReviewsListItem reviewsListItem = new ReviewsListItem(
+                        review,
                         review.getReviewerUserName(),
                         review.getContent(),
                         review.getReviewerImageUrl(),
