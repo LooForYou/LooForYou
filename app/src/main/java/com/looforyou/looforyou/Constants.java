@@ -24,6 +24,9 @@ public class Constants {
     public static final String REVIEWS_LIST = "/submittedReviews/";
     public static final String GET_REVIEWS = API_ROOT + "Reviews/";
     public static final String UPVOTE = "/increment-likes/";
+    public static final String DOWNVOTE = "/decrement-likes/";
+    public static final String TOKEN_QUERY = "?access_token=";
+    public static final int ONE_YEAR = 60 * 60 * 24 * 365;
 
     /* sorting options */
     public static final String SORT_BY_DISTANCE = "distance";

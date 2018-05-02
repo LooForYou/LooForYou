@@ -619,6 +619,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         pagerAdapter = new MapCardFragmentPagerAdapter(getSupportFragmentManager(), MetricConverter.dpToPx(this, 2));
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);
+//        viewPager.setPageMargin(5);
         viewPager.setVisibility(View.GONE);
         for (Bathroom b : bathroomList) {
             pagerAdapter.addCardFragment(b);

@@ -3,6 +3,7 @@ package com.looforyou.looforyou.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.looforyou.looforyou.Constants.DOWNVOTE;
 import static com.looforyou.looforyou.Constants.GET_REVIEWS;
 import static com.looforyou.looforyou.Constants.UPVOTE;
 import static com.looforyou.looforyou.R.drawable.ic_helpful_icon_active;
@@ -57,36 +59,109 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         Picasso.get().load(reviewsListItem.getprofilePicture()).fit().into(holder.profileImage);
         holder.reviewPoints.setText(String.valueOf(reviewsListItem.getPoints())+" points");
         holder.rating.setImageResource(getStarDrawableResource(reviewsListItem.getRating()));
+        final String id = reviewsListItem.getReview().getId();
+        final SharedPreferences upvoteSharedPref = context.getSharedPreferences(context.getString(R.string.saved_upvote)+id,Context.MODE_PRIVATE);
+        final SharedPreferences.Editor upvoteSharedPrefEditor = upvoteSharedPref.edit();
+        final SharedPreferences downvoteSharedPref = context.getSharedPreferences(context.getString(R.string.saved_downvote)+id,Context.MODE_PRIVATE);
+        final SharedPreferences.Editor downvoteSharedPrefEditor = downvoteSharedPref.edit();
+        final String defaultValue = "";
+
+        String upvoted = upvoteSharedPref.getString(context.getString(R.string.saved_upvote)+id, defaultValue);
+        String downvoted = downvoteSharedPref.getString(context.getString(R.string.saved_downvote)+id, defaultValue);
+        if(upvoted.equals(id)) {
+            holder.upvote.setImageResource(R.drawable.ic_helpful_icon_active);
+        }
+        if(downvoted.equals(id)) {
+            holder.downvote.setImageResource(R.drawable.ic_not_helpful_icon_active);
+        }
+        if(reviewsListItem.getReview().getLikes()>0){
+            holder.reviewPoints.setTextColor(Color.parseColor("#FF5ACC77"));
+        }else{
+            holder.reviewPoints.setTextColor(Color.parseColor("#FFEA6455"));
+        }
 
         holder.upvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"upvote", Toast.LENGTH_SHORT).show();
-                holder.upvote.setImageResource(R.drawable.ic_helpful_icon_active);
-                String id = reviewsListItem.getReview().getId();
-                HttpPut put = new HttpPut(new JSONObject());
-//                SharedPreferences sharedPref = ((Activity)context).getPreferences(Context.MODE_PRIVATE);
-//                String defaultValue = context.getResources().getString(R.string.saved_upvote);
-//                String upvoted = sharedPref.getString(context.getString(R.string.saved_upvote), defaultValue);
-//                Log.v("sharedpreference defaul",defaultValue);
-//                Log.v("sharedpreference u",upvoted);
+
                 try {
-                    put.execute(GET_REVIEWS+id+UPVOTE);
-//                    SharedPreferences.Editor editor = sharedPref.edit();
-//                    editor.putString(context.getString(R.string.saved_upvote), reviewsListItem.getReview().getId());
-//                    editor.commit();
+                    HttpPut put = new HttpPut(new JSONObject());
+                    String upvoted = upvoteSharedPref.getString(context.getString(R.string.saved_upvote)+id, defaultValue);
+                    if(!upvoted.equals(id)) {
+                        holder.upvote.setImageResource(R.drawable.ic_helpful_icon_active);
+                        put.execute(GET_REVIEWS + id + UPVOTE);
+                        upvoteSharedPrefEditor.putString(context.getString(R.string.saved_upvote)+id, reviewsListItem.getReview().getId());
+                        upvoteSharedPrefEditor.commit();
+                        reviewsListItem.getReview().setLikes(reviewsListItem.getReview().getLikes()+1);
+                        holder.reviewPoints.setText(reviewsListItem.getReview().getLikes()+" points");
+                        if(reviewsListItem.getReview().getLikes()>0){
+                            holder.reviewPoints.setTextColor(Color.parseColor("#FF5ACC77"));
+                        }else{
+                            holder.reviewPoints.setTextColor(Color.parseColor("#FFEA6455"));
+                        }
+
+                        String downvoted = downvoteSharedPref.getString(context.getString(R.string.saved_downvote)+id, defaultValue);
+                        if(downvoted.equals(id)) {
+                            holder.downvote.setImageResource(R.drawable.ic_not_helpful_icon);
+                            downvoteSharedPrefEditor.putString(context.getString(R.string.saved_downvote) + id, defaultValue);
+                            downvoteSharedPrefEditor.commit();
+                        }
+
+                    }else {
+                        holder.upvote.setImageResource(R.drawable.ic_helpful_icon);
+                        put.execute(GET_REVIEWS + id + DOWNVOTE);
+                        upvoteSharedPrefEditor.putString(context.getString(R.string.saved_upvote)+id, defaultValue);
+                        upvoteSharedPrefEditor.commit();
+                        reviewsListItem.getReview().setLikes(reviewsListItem.getReview().getLikes()-1);
+                        holder.reviewPoints.setText(reviewsListItem.getReview().getLikes()+" points");
+                        if(reviewsListItem.getReview().getLikes()>0){
+                            holder.reviewPoints.setTextColor(Color.parseColor("#FF5ACC77"));
+                        }else{
+                            holder.reviewPoints.setTextColor(Color.parseColor("#FFEA6455"));
+                        }
+                    }
+
                 }  catch (Exception e) {
                     e.printStackTrace();
                 }
-                reviewsListItem.getReview().setLikes(reviewsListItem.getReview().getLikes()+1);
-                holder.reviewPoints.setText(reviewsListItem.getReview().getLikes()+" points");
             }
         });
 
         holder.downvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"downvote", Toast.LENGTH_SHORT).show();
+                holder.downvote.setImageResource(R.drawable.ic_not_helpful_icon_active);
+                String id = reviewsListItem.getReview().getId();
+
+                try {
+                    HttpPut put = new HttpPut(new JSONObject());
+                    String downvoted = downvoteSharedPref.getString(context.getString(R.string.saved_downvote)+id, defaultValue);
+                    if(!downvoted.equals(id)) {
+                        holder.downvote.setImageResource(R.drawable.ic_not_helpful_icon_active);
+                        put.execute(GET_REVIEWS + id + DOWNVOTE);
+                        downvoteSharedPrefEditor.putString(context.getString(R.string.saved_downvote)+id, reviewsListItem.getReview().getId());
+                        downvoteSharedPrefEditor.commit();
+                        reviewsListItem.getReview().setLikes(reviewsListItem.getReview().getLikes()-1);
+                        holder.reviewPoints.setText(reviewsListItem.getReview().getLikes()+" points");
+
+                        String upvoted = upvoteSharedPref.getString(context.getString(R.string.saved_upvote)+id, defaultValue);
+                        if(upvoted.equals(id)) {
+                            holder.upvote.setImageResource(R.drawable.ic_helpful_icon);
+                            upvoteSharedPrefEditor.putString(context.getString(R.string.saved_upvote) + id, defaultValue);
+                            upvoteSharedPrefEditor.commit();
+                        }
+
+                    }else {
+                        holder.downvote.setImageResource(R.drawable.ic_not_helpful_icon);
+                        put.execute(GET_REVIEWS + id + UPVOTE);
+                        downvoteSharedPrefEditor.putString(context.getString(R.string.saved_downvote)+id, defaultValue);
+                        downvoteSharedPrefEditor.commit();
+                        reviewsListItem.getReview().setLikes(reviewsListItem.getReview().getLikes()+1);
+                        holder.reviewPoints.setText(reviewsListItem.getReview().getLikes()+" points");
+                    }
+                }  catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
