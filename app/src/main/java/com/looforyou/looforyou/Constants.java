@@ -17,10 +17,11 @@ public class Constants {
 
     /* bathrooms */
     public static final String GET_BATHROOMS = API_ROOT + "Bathrooms/";
-    public static final String GET_USERS = API_ROOT + "Users/";
+    public static final String GET_USERS = API_ROOT + "Accounts/";
     public static final String BATHROOM_COUNT = GET_BATHROOMS + "count/";
     public static final String UPDATE_BATHROOM = GET_BATHROOMS + "update?where=";
     public static final String LOGIN = GET_USERS + "login";
+    public static final String LOGOUT = GET_USERS + "logout";
     public static final String REVIEWS_LIST = "/submittedReviews/";
     public static final String GET_REVIEWS = API_ROOT + "Reviews/";
     public static final String UPVOTE = "/increment-likes/";

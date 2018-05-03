@@ -20,5 +20,8 @@
     <!-- preferences headers -->
     <string name="saved_upvote">saved_upvote</string>
     <string name="saved_downvote">saved_downvote</string>
+    <string name="saved_userID">saved_userID</string>
+    <string name="saved_userToken">saved_userToken</string>
+
     <!--<string name="loopbacks_api_root">http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/</string>-->
 </resources>

@@ -11,8 +11,8 @@ import java.io.Serializable;
 
 @JsonAdapter(TokenDeserializer.class)
 public class Token implements Serializable {
-    private String id;
-    private String userID;
+    private static String id;
+    private static String userID;
 
     public Token(){
         id = "";
@@ -24,11 +24,11 @@ public class Token implements Serializable {
         this.userID = userID;
     }
 
-    public String getID(){
-        return this.id;
+    public static String getID(){
+        return id;
     }
 
-    public String getUserID(){
+    public static String getUserID(){
         return userID;
     }
 
@@ -55,6 +55,6 @@ public class Token implements Serializable {
     @Override
     //Add to end of request url that requires authorization
     public String toString() {
-        return "access_token=" + this.id;
+        return "access_token=" + id;
     }
 }
