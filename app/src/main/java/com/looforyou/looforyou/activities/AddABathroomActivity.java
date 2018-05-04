@@ -1,6 +1,8 @@
 package com.looforyou.looforyou.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -101,10 +103,10 @@ public class AddABathroomActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_accessible.setTextOn("Disabled");
-                    bathroom_accessible.getBackground().setAlpha(255);
+                    bathroom_accessible.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_accessible.setTextOff("Not Disabled");
-                    bathroom_accessible.getBackground().setAlpha(0);
+                    bathroom_accessible.getBackground().mutate().setAlpha(25);
                 }
             }
         });
@@ -115,56 +117,67 @@ public class AddABathroomActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_free.setTextOn("Free");
+                    bathroom_free.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_free.setTextOff("Not Free");
+                    bathroom_free.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_keyless = (ToggleButton)findViewById(R.id.bathroom_keyless);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_keyless.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_keyless.setTextOn("Unlocked");
+                    bathroom_keyless.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_keyless.setTextOff("Locked");
+                    bathroom_keyless.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_parking = (ToggleButton)findViewById(R.id.bathroom_parking);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_parking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_parking.setTextOn("Parking");
+                    bathroom_parking.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_parking.setTextOff("No Parking");
+                    bathroom_parking.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_mirrors = (ToggleButton)findViewById(R.id.bathroom_mirrors);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_mirrors.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_mirrors.setTextOn("Mirrors");
+                    bathroom_mirrors.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_mirrors.setTextOff("No Mirrors");
+                    bathroom_mirrors.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_baby_station = (ToggleButton)findViewById(R.id.bathroom_baby_station);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_baby_station.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_baby_station.setTextOn("Diaper Table");
+                    bathroom_baby_station.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_baby_station.setTextOff("No Diaper Table");
+                    bathroom_baby_station.getBackground().mutate().setAlpha(25);
                 }
             }
         });
@@ -187,7 +200,10 @@ public class AddABathroomActivity extends AppCompatActivity {
 
 
     }
+    private void uploadImage(View v) {
 
+
+    }
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.bathroom_image:
@@ -220,10 +236,7 @@ public class AddABathroomActivity extends AppCompatActivity {
         String bathroomInfo = editBathroomInfo.getText().toString();
     }
 */
-    private void uploadImage(View v) {
 
-
-    }
 
     public void submitBathroom(View v) {
 
