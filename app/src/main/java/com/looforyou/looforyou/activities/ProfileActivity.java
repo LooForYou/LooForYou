@@ -82,6 +82,7 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
             @Override
             public void onClick(View view) {
                 finish();
+                new UserUtil(ProfileActivity.this).LogOut();
                 startActivity(getIntent());
             }
         });
