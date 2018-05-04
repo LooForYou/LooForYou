@@ -1,9 +1,12 @@
 package com.looforyou.looforyou.activities;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -51,10 +54,12 @@ public class AddABathroomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_a_bathroom);
 
         getSupportActionBar().setTitle("Add a New Bathroom");
+        
+        //prevents keyboard from popping up on first load
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         final ImageView bathroom_image = (ImageView) findViewById(R.id.bathroom_image);
 
-        final TextView add_a_bathroom = (TextView) findViewById(R.id.add_a_bathroom_title);
         final TextView bathroom_image_link = (TextView) findViewById(R.id.bathroom_image_link);
         final TextView bathroom_attributes = (TextView) findViewById(R.id.bathroom_attributes);
         final TextView bathroom_type = (TextView) findViewById(R.id.bathroom_type);
@@ -173,6 +178,8 @@ public class AddABathroomActivity extends AppCompatActivity {
         final TabControl tabb = new TabControl(this);
         tabb.tabs(AddABathroomActivity.this,R.id.tab_add_bathroom);
         //test comment
+
+
     }
 
     private void rbCheck(View view) {
@@ -194,4 +201,6 @@ public class AddABathroomActivity extends AppCompatActivity {
     public void submitBathroom(View v) {
 
     }
+
+
 }
