@@ -1,5 +1,8 @@
 package com.looforyou.looforyou.activities;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,10 +20,13 @@ import android.widget.ToggleButton;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.TabControl;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 public class AddABathroomActivity extends AppCompatActivity {
 
     private TextView add_a_bathroom;
     private ImageView bathroom_image;
+    private static final int RESULT_LOAD_IMAGE = 1;
     private TextView bathroom_image_link;
 
     private EditText editBathroomName;
@@ -78,6 +84,7 @@ public class AddABathroomActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
                     case R.id.radioNeutral:
                         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
+
                 }
             }
         });
@@ -173,6 +180,26 @@ public class AddABathroomActivity extends AppCompatActivity {
         //test comment
     }
 
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.bathroom_image:
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+            case R.id.bathroom_image_link:
+                galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+            Uri selectedImage = data.getData();
+            bathroom_image.setImageURI(selectedImage);
+        }
+    }
+
     private void rbCheck(View view) {
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
         final RadioButton radioButton = (RadioButton)findViewById(radioButtonID);
@@ -185,7 +212,8 @@ public class AddABathroomActivity extends AppCompatActivity {
         String bathroomInfo = editBathroomInfo.getText().toString();
     }
 */
-    private void uploadImage() {
+    private void uploadImage(View v) {
+
 
     }
 
