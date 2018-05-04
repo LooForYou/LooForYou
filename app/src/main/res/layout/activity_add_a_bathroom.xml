@@ -156,6 +156,7 @@
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
                     <ToggleButton
@@ -165,8 +166,10 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="2.5dp"
-                        android:textOn="Disabled"
-                        android:textOff="Not Disabled" />
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/colorPrimaryLight"
+                        android:textOn="Not Disabled"
+                        android:textOff="Disabled" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_free"
@@ -174,8 +177,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2.5dp"
                         android:layout_marginRight="2.5dp"
-                        android:textOn="Free"
-                        android:textOff="Not Free" />
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/colorPrimaryLight"
+                        android:textOn="Not Free"
+                        android:textOff="Free" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_keyless"
@@ -183,8 +188,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2.5dp"
                         android:layout_marginRight="5dp"
-                        android:textOn="Unlocked"
-                        android:textOff="Locked" />
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/colorPrimaryLight"
+                        android:textOn="Locked"
+                        android:textOff="Unlocked" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -201,8 +208,9 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="2.5dp"
-                        android:textOn="Parking"
-                        android:textOff="No Parking" />
+                        android:background="@color/colorPrimaryLight"
+                        android:textOn="No Parking"
+                        android:textOff="Parking" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_mirrors"
@@ -211,8 +219,9 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="2.5dp"
                         android:layout_marginRight="2.5dp"
-                        android:textOn="Mirrors"
-                        android:textOff="No Mirrors" />
+                        android:background="@color/colorPrimaryLight"
+                        android:textOn="No Mirrors"
+                        android:textOff="Mirrors" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_baby_station"
@@ -221,8 +230,9 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="2.5dp"
                         android:layout_marginRight="5dp"
-                        android:textOn="Diaper Table"
-                        android:textOff="No Diaper Table" />
+                        android:background="@color/colorPrimaryLight"
+                        android:textOn="No Diaper Table"
+                        android:textOff="Diaper Table" />
                 </LinearLayout>
 
                 <Button
@@ -230,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
-                    android:background="@color/colorPrimaryLight"
+                    android:background="@color/colorPrimary"
                     android:textColor="@color/white"
                     android:layout_gravity="right"
                     android:text="SUBMIT" />

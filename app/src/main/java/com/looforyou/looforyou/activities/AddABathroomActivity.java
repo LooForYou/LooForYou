@@ -1,6 +1,10 @@
 package com.looforyou.looforyou.activities;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,14 +20,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
+import android.content.Context;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.TabControl;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 public class AddABathroomActivity extends AppCompatActivity {
 
     private TextView add_a_bathroom;
     private ImageView bathroom_image;
+    private static final int RESULT_LOAD_IMAGE = 1;
     private TextView bathroom_image_link;
 
     private EditText editBathroomName;
@@ -85,6 +92,7 @@ public class AddABathroomActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
                     case R.id.radioNeutral:
                         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
+
                 }
             }
         });
@@ -95,10 +103,10 @@ public class AddABathroomActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_accessible.setTextOn("Disabled");
-                    bathroom_accessible.getBackground().setAlpha(255);
+                    bathroom_accessible.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_accessible.setTextOff("Not Disabled");
-                    bathroom_accessible.getBackground().setAlpha(0);
+                    bathroom_accessible.getBackground().mutate().setAlpha(25);
                 }
             }
         });
@@ -109,56 +117,67 @@ public class AddABathroomActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_free.setTextOn("Free");
+                    bathroom_free.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_free.setTextOff("Not Free");
+                    bathroom_free.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_keyless = (ToggleButton)findViewById(R.id.bathroom_keyless);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_keyless.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_keyless.setTextOn("Unlocked");
+                    bathroom_keyless.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_keyless.setTextOff("Locked");
+                    bathroom_keyless.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_parking = (ToggleButton)findViewById(R.id.bathroom_parking);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_parking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_parking.setTextOn("Parking");
+                    bathroom_parking.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_parking.setTextOff("No Parking");
+                    bathroom_parking.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_mirrors = (ToggleButton)findViewById(R.id.bathroom_mirrors);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_mirrors.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_mirrors.setTextOn("Mirrors");
+                    bathroom_mirrors.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_mirrors.setTextOff("No Mirrors");
+                    bathroom_mirrors.getBackground().mutate().setAlpha(25);
                 }
             }
         });
 
         final ToggleButton bathroom_baby_station = (ToggleButton)findViewById(R.id.bathroom_baby_station);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        bathroom_baby_station.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     bathroom_baby_station.setTextOn("Diaper Table");
+                    bathroom_baby_station.getBackground().mutate().setAlpha(255);
                 } else {
                     bathroom_baby_station.setTextOff("No Diaper Table");
+                    bathroom_baby_station.getBackground().mutate().setAlpha(25);
                 }
             }
         });
@@ -181,6 +200,29 @@ public class AddABathroomActivity extends AppCompatActivity {
 
 
     }
+    private void uploadImage(View v) {
+
+
+    }
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.bathroom_image:
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+            case R.id.bathroom_image_link:
+                galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+            Uri selectedImage = data.getData();
+            bathroom_image.setImageURI(selectedImage);
+        }
+    }
 
     private void rbCheck(View view) {
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
@@ -194,9 +236,7 @@ public class AddABathroomActivity extends AppCompatActivity {
         String bathroomInfo = editBathroomInfo.getText().toString();
     }
 */
-    private void uploadImage() {
 
-    }
 
     public void submitBathroom(View v) {
 
