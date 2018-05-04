@@ -82,7 +82,6 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
             @Override
             public void onClick(View view) {
                 finish();
-                userUtil.LogOut();
                 startActivity(getIntent());
             }
         });
@@ -94,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
         try {
             UserUtil userUtil2 = new UserUtil(this);
             accountInfo = get.execute(GET_USERS+userUtil2.getUserID()+TOKEN_QUERY+userUtil2.getUserToken()).get();
+            if(accountInfo.isEmpty()) return;
             JsonObject jsonObject = new JsonParser().parse(accountInfo).getAsJsonObject();
             try {
                 name.setText(jsonObject.get("first_name").getAsString()+" "+jsonObject.get("last_name").getAsString());

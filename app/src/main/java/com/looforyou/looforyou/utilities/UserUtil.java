@@ -2,14 +2,18 @@ package com.looforyou.looforyou.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.looforyou.looforyou.R;
 
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
+import static com.looforyou.looforyou.Constants.GET_USERS;
 import static com.looforyou.looforyou.Constants.LOGIN;
 import static com.looforyou.looforyou.Constants.LOGOUT;
 import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
@@ -52,7 +56,23 @@ public class UserUtil {
     }
 
     public static boolean isLoggedIn() {
-        return !userToken.isEmpty();
+        HttpGet getAuthenticatedUser = new HttpGet();
+        String result = null;
+        try {
+            result = getAuthenticatedUser.execute(GET_USERS + userID +TOKEN_QUERY+userToken).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if(result.isEmpty()) return false;
+        String id = "";
+        JsonObject jsonObject = new JsonParser().parse(result).getAsJsonObject();
+        try {
+            id = jsonObject.get("id").getAsString();
+
+        }catch(Exception e){}
+        return id.equals(userID);
     }
 
     public static String getUserID() {
