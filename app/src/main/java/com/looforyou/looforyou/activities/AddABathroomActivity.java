@@ -66,8 +66,15 @@ public class AddABathroomActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         final ImageView bathroom_image = (ImageView) findViewById(R.id.bathroom_image);
+        bathroom_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
 
         final TextView bathroom_image_link = (TextView) findViewById(R.id.bathroom_image_link);
+
         final TextView bathroom_attributes = (TextView) findViewById(R.id.bathroom_attributes);
         final TextView bathroom_type = (TextView) findViewById(R.id.bathroom_type);
 
@@ -92,7 +99,6 @@ public class AddABathroomActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
                     case R.id.radioNeutral:
                         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
-
                 }
             }
         });
@@ -104,9 +110,11 @@ public class AddABathroomActivity extends AppCompatActivity {
                 if (isChecked) {
                     bathroom_accessible.setTextOn("Disabled");
                     bathroom_accessible.getBackground().mutate().setAlpha(255);
+                    bathroom_accessible.setTextColor(Color.WHITE);
                 } else {
                     bathroom_accessible.setTextOff("Not Disabled");
                     bathroom_accessible.getBackground().mutate().setAlpha(25);
+                    bathroom_accessible.setTextColor(Color.BLACK);
                 }
             }
         });
@@ -118,9 +126,11 @@ public class AddABathroomActivity extends AppCompatActivity {
                 if (isChecked) {
                     bathroom_free.setTextOn("Free");
                     bathroom_free.getBackground().mutate().setAlpha(255);
+                    bathroom_free.setTextColor(Color.WHITE);
                 } else {
                     bathroom_free.setTextOff("Not Free");
                     bathroom_free.getBackground().mutate().setAlpha(25);
+                    bathroom_free.setTextColor(Color.BLACK);
                 }
             }
         });
@@ -133,9 +143,11 @@ public class AddABathroomActivity extends AppCompatActivity {
                 if (isChecked) {
                     bathroom_keyless.setTextOn("Unlocked");
                     bathroom_keyless.getBackground().mutate().setAlpha(255);
+                    bathroom_keyless.setTextColor(Color.WHITE);
                 } else {
                     bathroom_keyless.setTextOff("Locked");
                     bathroom_keyless.getBackground().mutate().setAlpha(25);
+                    bathroom_keyless.setTextColor(Color.BLACK);
                 }
             }
         });
@@ -147,9 +159,11 @@ public class AddABathroomActivity extends AppCompatActivity {
                 if (isChecked) {
                     bathroom_parking.setTextOn("Parking");
                     bathroom_parking.getBackground().mutate().setAlpha(255);
+                    bathroom_parking.setTextColor(Color.WHITE);
                 } else {
                     bathroom_parking.setTextOff("No Parking");
                     bathroom_parking.getBackground().mutate().setAlpha(25);
+                    bathroom_parking.setTextColor(Color.BLACK);
                 }
             }
         });
@@ -161,9 +175,11 @@ public class AddABathroomActivity extends AppCompatActivity {
                 if (isChecked) {
                     bathroom_mirrors.setTextOn("Mirrors");
                     bathroom_mirrors.getBackground().mutate().setAlpha(255);
+                    bathroom_mirrors.setTextColor(Color.WHITE);
                 } else {
                     bathroom_mirrors.setTextOff("No Mirrors");
                     bathroom_mirrors.getBackground().mutate().setAlpha(25);
+                    bathroom_mirrors.setTextColor(Color.BLACK);
                 }
             }
         });
@@ -175,9 +191,11 @@ public class AddABathroomActivity extends AppCompatActivity {
                 if (isChecked) {
                     bathroom_baby_station.setTextOn("Diaper Table");
                     bathroom_baby_station.getBackground().mutate().setAlpha(255);
+                    bathroom_baby_station.setTextColor(Color.WHITE);
                 } else {
-                    bathroom_baby_station.setTextOff("No Diaper Table");
+                    bathroom_baby_station.setTextOff("No Table");
                     bathroom_baby_station.getBackground().mutate().setAlpha(25);
+                    bathroom_baby_station.setTextColor(Color.BLACK);
                 }
             }
         });
@@ -200,19 +218,10 @@ public class AddABathroomActivity extends AppCompatActivity {
 
 
     }
-    private void uploadImage(View v) {
 
-
-    }
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.bathroom_image:
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-            case R.id.bathroom_image_link:
-                galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-        }
+    private void openGallery(){
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
 
     @Override
@@ -223,6 +232,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             bathroom_image.setImageURI(selectedImage);
         }
     }
+
 
     private void rbCheck(View view) {
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
@@ -236,7 +246,10 @@ public class AddABathroomActivity extends AppCompatActivity {
         String bathroomInfo = editBathroomInfo.getText().toString();
     }
 */
+    private void uploadImage(View v) {
 
+
+    }
 
     public void submitBathroom(View v) {
 

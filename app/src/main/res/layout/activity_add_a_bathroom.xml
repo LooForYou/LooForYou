@@ -161,14 +161,14 @@
 
                     <ToggleButton
                         android:id="@+id/bathroom_accessible"
-                        android:layout_width="wrap_content"
+                        android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="2.5dp"
                         android:layout_marginBottom="5dp"
                         android:background="@color/colorPrimaryLight"
-                        android:textOn="Not Disabled"
+                        android:textColor="@color/white"
                         android:textOff="Disabled" />
 
                     <ToggleButton
@@ -179,7 +179,7 @@
                         android:layout_marginRight="2.5dp"
                         android:layout_marginBottom="5dp"
                         android:background="@color/colorPrimaryLight"
-                        android:textOn="Not Free"
+                        android:textColor="@color/white"
                         android:textOff="Free" />
 
                     <ToggleButton
@@ -190,7 +190,7 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginBottom="5dp"
                         android:background="@color/colorPrimaryLight"
-                        android:textOn="Locked"
+                        android:textColor="@color/white"
                         android:textOff="Unlocked" />
                 </LinearLayout>
 
@@ -209,7 +209,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="2.5dp"
                         android:background="@color/colorPrimaryLight"
-                        android:textOn="No Parking"
+                        android:textColor="@color/white"
                         android:textOff="Parking" />
 
                     <ToggleButton
@@ -220,18 +220,18 @@
                         android:layout_marginLeft="2.5dp"
                         android:layout_marginRight="2.5dp"
                         android:background="@color/colorPrimaryLight"
-                        android:textOn="No Mirrors"
+                        android:textColor="@color/white"
                         android:textOff="Mirrors" />
 
                     <ToggleButton
                         android:id="@+id/bathroom_baby_station"
-                        android:layout_width="wrap_content"
+                        android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="2.5dp"
                         android:layout_marginRight="5dp"
                         android:background="@color/colorPrimaryLight"
-                        android:textOn="No Diaper Table"
+                        android:textColor="@color/white"
                         android:textOff="Diaper Table" />
                 </LinearLayout>
 
@@ -240,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorPrimaryLight"
                     android:textColor="@color/white"
                     android:layout_gravity="right"
                     android:text="SUBMIT" />
