@@ -26,16 +26,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_padding"
                 android:layout_marginStart="@dimen/default_padding"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/add_a_bathroom_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Add a Bathroom"
-                    android:textColor="@color/black"
-                    android:textSize="21sp" />
-
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
 
                 <ImageView
                     android:id="@+id/bathroom_image"
@@ -246,7 +238,11 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
     <!--bottombar tabs-->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
