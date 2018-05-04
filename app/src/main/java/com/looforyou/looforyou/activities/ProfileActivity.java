@@ -62,8 +62,6 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
 
         mHandler = new Handler();
         view = getSupportActionBar().getCustomView();
-        myDialog = new Dialog(this);
-        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         TabControl tabb = new TabControl(this);
         tabb.tabs(ProfileActivity.this, R.id.tab_profile);

@@ -25,6 +25,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.looforyou.looforyou.Models.Token;
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.activities.AddABathroomActivity;
+import com.looforyou.looforyou.activities.BookmarkActivity;
 import com.looforyou.looforyou.activities.ProfileActivity;
 import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.TokenDeserializer;
@@ -144,16 +146,30 @@ public class LoginFragment extends Fragment {
 
                     userUtil.setUserToken(token.getID());
                     userUtil.setUserID(token.getUserID());
-                    ((ProfileActivity)getActivity()).onLoggedIn();
+                    try {
+                        ((ProfileActivity) getActivity()).onLoggedIn();
+                    }catch(Exception e){}
+//                    try {
+//                        ((AddABathroomActivity) getActivity()).onLoggedIn();
+//                    }catch(Exception e){}
+                    try {
+                        ((BookmarkActivity) getActivity()).onLoggedIn();
+                    }catch(Exception e){}
 
                     InputMethodManager imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                     //Reset title
-                    ((ProfileActivity) getActivity()).getSupportActionBar().setTitle("My Profile");
+                    try {
+                        ((ProfileActivity) getActivity()).getSupportActionBar().setTitle("My Profile");
+                    }catch(Exception e){}
+                    try {
+                        ((BookmarkActivity) getActivity()).getSupportActionBar().setTitle("My Bookmarks");
+                    }catch(Exception e){}
                     getActivity().onBackPressed();
                     return;
                 }
+                //hides keyboard
                 InputMethodManager imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
