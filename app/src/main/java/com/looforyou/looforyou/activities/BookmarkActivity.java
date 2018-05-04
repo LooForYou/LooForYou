@@ -11,17 +11,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.fragments.LoginFragment;
+import com.looforyou.looforyou.utilities.BathroomDeserializer;
 import com.looforyou.looforyou.utilities.HttpGet;
 import com.looforyou.looforyou.utilities.TabControl;
 import com.looforyou.looforyou.utilities.UserUtil;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
+import static com.looforyou.looforyou.Constants.ALL_BOOKMARKS;
 import static com.looforyou.looforyou.Constants.GET_USERS;
 import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
 
@@ -47,24 +55,29 @@ public class BookmarkActivity extends AppCompatActivity implements LoginFragment
 
 
     public void onLoggedIn() {
-        /*
         HttpGet get = new HttpGet();
-        String accountInfo = null;
+        String bookmarkedBathrooms = null;
         try {
             UserUtil userUtil = new UserUtil(this);
-           accountInfo = get.execute(GET_USERS+userUtil.getUserID()+TOKEN_QUERY+userUtil.getUserToken()).get();
-            if(accountInfo.isEmpty()) return;
-            JsonObject jsonObject = new JsonParser().parse(accountInfo).getAsJsonObject();
+           bookmarkedBathrooms = get.execute(GET_USERS+userUtil.getUserID()+ALL_BOOKMARKS+TOKEN_QUERY+userUtil.getUserToken()).get();
+            if(bookmarkedBathrooms.isEmpty()) return;
+            JsonArray jsonObject = new JsonParser().parse(bookmarkedBathrooms).getAsJsonArray();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
+            Gson gson = gsonBuilder.create();
+            ArrayList<Bathroom> bathrooms = null;
             try {
-                name.setText(jsonObject.get("first_name").getAsString()+" "+jsonObject.get("last_name").getAsString());
+                bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(jsonObject, Bathroom[].class)));
             }catch(Exception e){}
-
+                if(bathrooms == null || bathrooms.isEmpty()) return;
+            for(Bathroom b : bathrooms){
+                Log.v("bookmarkedd bathroom",b.getName());
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        */
     }
 
 
