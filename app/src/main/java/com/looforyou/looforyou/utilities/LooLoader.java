@@ -14,7 +14,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.looforyou.looforyou.Manifest;
+//import com.looforyou.looforyou.Manifest;
 import com.looforyou.looforyou.Models.Bathroom;
 
 import java.io.IOException;
