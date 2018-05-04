@@ -17,6 +17,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="bathroomType">Bathroom Type: </string>
 
+    <string name="facebook_app_id">2048662355414501</string>
+    <string name="fb_login_protocol_scheme">fb2048662355414501</string>
+
     <!-- preferences headers -->
     <string name="saved_upvote">saved_upvote</string>
     <string name="saved_downvote">saved_downvote</string>

@@ -98,14 +98,22 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp">
 
-        <Button
+        <TextView
+            android:id="@+id/tvFBstatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login Status"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginLeft="50dp"
+            android:layout_above="@id/bFBLogin"/>
+
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/bFBLogin"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_above="@id/bGoogleLogin"
-            android:background="@color/colorPrimary"
-            android:text="Continue with Facebook" />
+            android:layout_above="@id/bGoogleLogin"/>
 
         <Button
             android:id="@+id/bGoogleLogin"
