@@ -18,23 +18,9 @@ public class BookmarkActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bookmark);
         TabControl tabb = new TabControl(this);
         tabb.tabs(BookmarkActivity.this,R.id.tab_bookmarks);
-        //hey all
-        showActionBar();
-        bindActionBar();
+
+        getSupportActionBar().setTitle("My Bookmarks");
     }
 
-
-
-    private void showActionBar() {
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        getSupportActionBar().setCustomView(R.layout.action_bar_main);
-//        view =getSupportActionBar().getCustomView();
-    }
-
-    public void bindActionBar(){
-
-    }
 
 }

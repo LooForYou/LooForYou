@@ -58,6 +58,8 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        getSupportActionBar().setTitle("My Profile");
+
         mHandler = new Handler();
         view = getSupportActionBar().getCustomView();
         myDialog = new Dialog(this);
@@ -72,8 +74,7 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
         Button logout = (Button) findViewById(R.id.logout);
         Picasso.get().load(R.drawable.no_image_uploaded_3).fit().centerCrop().into(profilePic);
 
-        final UserUtil userUtil = new UserUtil(this);
-        if(!userUtil.isLoggedIn()) {
+        if(!new UserUtil(this).isLoggedIn()) {
             loadLoginFragment();
         }else {
             onLoggedIn();
@@ -92,8 +93,8 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
         HttpGet get = new HttpGet();
         String accountInfo = null;
         try {
-            UserUtil userUtil2 = new UserUtil(this);
-            accountInfo = get.execute(GET_USERS+userUtil2.getUserID()+TOKEN_QUERY+userUtil2.getUserToken()).get();
+            UserUtil userUtil = new UserUtil(this);
+            accountInfo = get.execute(GET_USERS+userUtil.getUserID()+TOKEN_QUERY+userUtil.getUserToken()).get();
             if(accountInfo.isEmpty()) return;
             JsonObject jsonObject = new JsonParser().parse(accountInfo).getAsJsonObject();
             try {
@@ -134,23 +135,7 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
-
-
                 fragmentTransaction.commitAllowingStateLoss();
-
-                getSupportActionBar().setCustomView(R.layout.action_bar_back);
-                view = getSupportActionBar().getCustomView();
-
-                ImageButton backButton = (ImageButton) view.findViewById(R.id.action_bar_back_button);
-                backButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ProfileActivity.super.onBackPressed();
-                        showActionBar();
-                        bindActionBar();
-                    }
-                });
-
             }
 
             ;
@@ -170,55 +155,6 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    //when options in toolbar menu are created
-    private void showActionBar() {
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setCustomView(R.layout.action_bar_main);
-        view = getSupportActionBar().getCustomView();
-    }
-
-    public void bindActionBar() {
-        ImageButton profileButton = (ImageButton) view.findViewById(R.id.action_bar_profile_main);
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView txtclose;
-                Button bSignUp;
-                Button bLogin;
-                myDialog.setContentView(R.layout.activity_login);
-                txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
-                txtclose.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myDialog.dismiss();
-                    }
-                });
-
-                bLogin = (Button) myDialog.findViewById(R.id.bLogin);
-                bLogin.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myDialog.dismiss();
-                        Intent login = new Intent(v.getContext(), ProfileActivity.class);
-                        startActivity(login);
-                    }
-                });
-                bSignUp = (Button) myDialog.findViewById(R.id.bRegister);
-                bSignUp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myDialog.dismiss();
-                        Intent signup = new Intent(v.getContext(), ProfileActivity.class);
-                        startActivity(signup);
-                    }
-                });
-                myDialog.show();
-            }
-        });
     }
 }
 

@@ -50,6 +50,8 @@ public class AddABathroomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_a_bathroom);
 
+        getSupportActionBar().setTitle("Add a New Bathroom");
+
         final ImageView bathroom_image = (ImageView) findViewById(R.id.bathroom_image);
 
         final TextView add_a_bathroom = (TextView) findViewById(R.id.add_a_bathroom_title);

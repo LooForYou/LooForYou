@@ -148,6 +148,9 @@ public class LoginFragment extends Fragment {
 
                     InputMethodManager imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                    //Reset title
+                    ((ProfileActivity) getActivity()).getSupportActionBar().setTitle("My Profile");
                     getActivity().onBackPressed();
                     return;
                 }
