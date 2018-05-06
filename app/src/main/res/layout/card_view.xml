@@ -26,12 +26,18 @@
                 android:paddingBottom="8dp"
                 android:paddingEnd="8dp"
                 android:paddingStart="8dp"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                android:clickable="false"
+                android:focusable="false"
+                >
 
                 <WebView
                     android:id="@+id/bathroom_webview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:focusable="false"
+                    >
 
                 </WebView>
 

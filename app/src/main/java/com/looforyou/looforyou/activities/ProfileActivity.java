@@ -48,7 +48,6 @@ import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
 public class ProfileActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener {
     private Handler mHandler = null;
     private View view = null;
-    private Dialog myDialog = null;
     ImageView profilePic = null;
     TextView name = null;
     TextView username = null;
