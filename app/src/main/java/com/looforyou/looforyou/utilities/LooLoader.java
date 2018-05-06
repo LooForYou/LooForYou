@@ -1,5 +1,6 @@
 package com.looforyou.looforyou.utilities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static android.content.Context.LOCATION_SERVICE;
 import static com.looforyou.looforyou.Constants.*;
 
 /**
@@ -33,10 +35,10 @@ import static com.looforyou.looforyou.Constants.*;
 
 public class LooLoader {
     private static final String TAG = "TEST FEEDLIST LooLoader";
-
+    private static Context appContext;
     //    private static final String API_URL = "http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/Bathrooms?access_token=pBWBnDboL5RSFunF6E08EZJGD1skk9kkX3xAKJwDK4VLhVgHg0nYdvUjz6Oh7401\n";
     public static List<Bathroom> loadBathrooms(Context context, String... sortBy) {
-
+        appContext = context;
         String API_URL = GET_BATHROOMS;
         try {
             List<Bathroom> bathroomList = new ArrayList<>();
@@ -62,15 +64,7 @@ public class LooLoader {
             }
 
             if (sortBy.length > 0) {
-                LocationManager locationManager = (LocationManager)
-                        context.getSystemService(Context.LOCATION_SERVICE);
-                Criteria criteria = new Criteria();
-
-                //get current location
-                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions((Activity)context, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-                }
-                final Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                final Location currentLocation = getCurrentLocation();
                 if(String.valueOf(sortBy[0]).equalsIgnoreCase("distance")){
                     Log.v("looLoader","sorting by distance:");
                     Collections.sort(bathrooms, new Comparator<Bathroom>() {
@@ -101,6 +95,27 @@ public class LooLoader {
         }
     }
 
+    /**
+     * This method looks for best location provider by checking availablility of gps or network location
+     * */
+    public static Location getCurrentLocation() {
+        LocationManager mLocationManager = (LocationManager) appContext.getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String p : providers) {
+            if (ActivityCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return null;
+            }
+            Location location = mLocationManager.getLastKnownLocation(p);
+            if (location == null) {
+                continue;
+            }
+            if (bestLocation == null || location.getAccuracy() < bestLocation.getAccuracy()) {
+                bestLocation = location;
+            }
+        }
+        return bestLocation;
+    }
     /* helper function to load json file from assets folder */
     private static String loadJSONFromAsset(Context context, String jsonFileName) {
         String json = null;
