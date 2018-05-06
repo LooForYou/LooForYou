@@ -59,7 +59,6 @@ public class BookmarksUtil {
     }
 
     public ArrayList<String> getBookmarkedBathroomIds() {
-
         ArrayList<Bathroom> bathrooms = getBookmarkedBathrooms();
         ArrayList<String> bathroomIds = new ArrayList<String>();
         for(Bathroom b : bathrooms) {

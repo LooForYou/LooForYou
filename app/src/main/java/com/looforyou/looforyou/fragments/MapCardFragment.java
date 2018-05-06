@@ -9,32 +9,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.BathroomCardAdapter;
-import com.looforyou.looforyou.utilities.MetricConverter;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
+/**
+ * This is a fragment for Bathroom Cards on map
+ *
+ * @author: mingtau li
+ */
 
-public class MapCardFragment extends Fragment implements Serializable{
-
+public class MapCardFragment extends Fragment implements Serializable {
+    /* Cardview for bathroom */
     private CardView cardView;
+    /* transient Bathroom object so data is not mutated by Serialization */
     private transient Bathroom bathroom;
-
+    /* views for bathroom data display */
     private LinearLayout extraInfo;
     private TextView extraInfoBathroomName;
     private ImageView extraInfoImage;
@@ -47,6 +46,13 @@ public class MapCardFragment extends Fragment implements Serializable{
     private ImageView extraInfoFree;
     private ImageView extraInfoParking;
 
+    /**
+     * new instance of bathroom fragment
+     *
+     * @param position: current position
+     * @param bathroom  bathroom object
+     * @return instantiated bathroom Fragment
+     */
     public static Fragment getInstance(int position, Bathroom bathroom) {
         MapCardFragment bathroomFragment = new MapCardFragment();
         Bundle args = new Bundle();
@@ -58,20 +64,28 @@ public class MapCardFragment extends Fragment implements Serializable{
 
     }
 
+    /**
+     * OnCreate functions when inflating fragment
+     *
+     * @param container          ViewGroup container
+     * @param savedInstanceState bundle savedInstance state
+     * @retun View inflated View
+     */
     @SuppressLint("DefaultLocale")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        /* inflate card layout */
         View view = inflater.inflate(R.layout.map_card_view, container, false);
 
+        /* get arguments from bundle */
         bathroom = (Bathroom) getArguments().getSerializable("bathroom");
-        Log.v("bathroomcardfragment", "bathroom string: "+String.valueOf(bathroom.getName()));
 
-
+        /* set up cardview */
         cardView = (CardView) view.findViewById(R.id.map_card_view);
         cardView.setMaxCardElevation(cardView.getCardElevation() * BathroomCardAdapter.MAX_ELEVATION_FACTOR);
 
-
+        /* initaialize components */
         extraInfoBathroomName = (TextView) view.findViewById(R.id.map_extra_info_bathroom_name);
         extraInfoImage = (ImageView) view.findViewById(R.id.map_extra_info_image);
         extraInfoDistance = (TextView) view.findViewById(R.id.map_extra_info_distance);
@@ -83,23 +97,34 @@ public class MapCardFragment extends Fragment implements Serializable{
         extraInfoFree = (ImageView) view.findViewById(R.id.map_extra_info_free);
         extraInfoParking = (ImageView) view.findViewById(R.id.map_extra_info_parking);
 
-
+        /* load image into bathroom card  */
         Picasso.get().load(bathroom.getImageURL()).fit().into(extraInfoImage);
+        /* load name into bathroom card  */
         extraInfoBathroomName.setText(bathroom.getName());
+        /* load address into bathroom card  */
         extraInfoAddress.setText(bathroom.getAddress());
-        int rating  = (int) Math.round(bathroom.getRating());
+        /* load rating into bathroom card  */
+        int rating = (int) Math.round(bathroom.getRating());
         extraInfoStars.setImageResource(getStarDrawableResource(rating));
+        //TODO implement extra info review number
 //        extraInfoReviewNumber
-        if(bathroom.getAmenities().contains("accessible")) extraInfoAccessibility.setImageResource(R.drawable.ic_accessibility_enabled_20);
-        if(bathroom.getAmenities().contains("free")) extraInfoFree.setImageResource(R.drawable.ic_free_enabled_20);
-        if(bathroom.getAmenities().contains("no key required")) extraInfoKeyless.setImageResource(R.drawable.ic_keyless_enabled_20);
-        if(bathroom.getAmenities().contains("parking available")) extraInfoParking.setImageResource(R.drawable.ic_parking_enabled_20);
-
+        /* load primary amenities images */
+        if (bathroom.getAmenities().contains("accessible"))
+            extraInfoAccessibility.setImageResource(R.drawable.ic_accessibility_enabled_20);
+        if (bathroom.getAmenities().contains("free"))
+            extraInfoFree.setImageResource(R.drawable.ic_free_enabled_20);
+        if (bathroom.getAmenities().contains("no key required"))
+            extraInfoKeyless.setImageResource(R.drawable.ic_keyless_enabled_20);
+        if (bathroom.getAmenities().contains("parking available"))
+            extraInfoParking.setImageResource(R.drawable.ic_parking_enabled_20);
 
 
         return view;
     }
 
+    /* getter for cardview
+    * @return cardView bathroom cardView
+    * */
     public CardView getCardView() {
         return cardView;
     }

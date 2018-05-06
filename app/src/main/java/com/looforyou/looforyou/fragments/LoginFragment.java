@@ -1,15 +1,12 @@
 package com.looforyou.looforyou.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.Circle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.looforyou.looforyou.Models.Token;
 import com.looforyou.looforyou.R;
-import com.looforyou.looforyou.activities.AddABathroomActivity;
 import com.looforyou.looforyou.activities.BookmarkActivity;
 import com.looforyou.looforyou.activities.ProfileActivity;
 import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.TokenDeserializer;
 import com.looforyou.looforyou.utilities.UserUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,20 +37,15 @@ import static com.looforyou.looforyou.Constants.LOGIN;
 import static com.looforyou.looforyou.Constants.ONE_YEAR;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LoginFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This is a fragment for Login/Signups
+ *
+ * @author: mingtau li
  */
+
 public class LoginFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /* boilerplace params */
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -97,13 +84,16 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        /* Inflate the layout for this fragment */
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        /* instantiate views*/
         final EditText username = (EditText) view.findViewById(R.id.fragment_login_name);
         final TextInputEditText password = (TextInputEditText) view.findViewById(R.id.fragment_login_password);
         Button loginBtn = (Button) view.findViewById(R.id.fragment_login_btn);
         Button signupBtn = (Button) view.findViewById(R.id.fragment_signup_btn);
         final TextView backToLogin = (TextView) view.findViewById(R.id.fragment_login_back_to_login);
-        backToLogin.setPaintFlags(backToLogin.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        backToLogin.setPaintFlags(backToLogin.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         final TextView loginSignUpTitle = (TextView) view.findViewById(R.id.fragment_login_title);
         final CircleImageView uploadImage = (CircleImageView) view.findViewById(R.id.fragment_login_image);
         final EditText firstName = (EditText) view.findViewById(R.id.fragment_login_first_name);
@@ -112,21 +102,24 @@ public class LoginFragment extends Fragment {
         final TextInputLayout confirmPassword = (TextInputLayout) view.findViewById(R.id.fragment_login_confirm_password_layout);
         final Button largeSignUpButton = (Button) view.findViewById(R.id.fragment_signup_btn_large);
         final LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.fragment_login_linear_layout);
-
         final UserUtil userUtil = new UserUtil(getContext());
+
+        /* bind clicklistener for logging in */
         loginBtn.setOnClickListener(new View.OnClickListener(
         ) {
             @Override
             public void onClick(View view) {
+               /* set up arguments for server call */
                 Map<String, String> credentials = new HashMap<String, String>();
-                if(username.getText().toString().toLowerCase().contains("@")){
+                if (username.getText().toString().toLowerCase().contains("@")) {
                     credentials.put("email", username.getText().toString().toLowerCase().trim());
-                }else {
+                } else {
                     credentials.put("username", username.getText().toString().toLowerCase().trim());
                 }
                 credentials.put("password", password.getText().toString());
                 credentials.put("ttl", String.valueOf(ONE_YEAR));
 
+                 /* log in via server call */
                 HttpPost post = new HttpPost(credentials);
                 String result = null;
                 try {
@@ -136,46 +129,56 @@ public class LoginFragment extends Fragment {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-                if(result.isEmpty()){
-                    Toast.makeText(getContext(),"invalid username or password", Toast.LENGTH_SHORT).show();
-                }else {
+                if (result.isEmpty()) {
+                    Toast.makeText(getContext(), "invalid username or password", Toast.LENGTH_SHORT).show();
+                } else {
                     GsonBuilder gsonBuilder = new GsonBuilder();
                     gsonBuilder.registerTypeAdapter(Token.class, new TokenDeserializer());
                     Gson gson = gsonBuilder.create();
                     Token token = gson.fromJson(result, Token.class);
 
+                    /* set userToken and ID to shared preferences */
                     userUtil.setUserToken(token.getID());
                     userUtil.setUserID(token.getUserID());
+
+                    /* triger logged in activity for profile activity, if available */
                     try {
                         ((ProfileActivity) getActivity()).onLoggedIn();
-                    }catch(Exception e){}
+                    } catch (Exception e) {
+                    }
+                    /* triger logged in activity for add a bathroom activity, if available */
 //                    try {
 //                        ((AddABathroomActivity) getActivity()).onLoggedIn();
 //                    }catch(Exception e){}
+                    /* triger logged in activity for bookmark activity, if available */
                     try {
                         ((BookmarkActivity) getActivity()).onLoggedIn();
-                    }catch(Exception e){}
+                    } catch (Exception e) {
+                    }
 
-                    InputMethodManager imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    /* hide keyboard oncreate */
+                    InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-                    //Reset title
+                   /* Reset title */
                     try {
                         ((ProfileActivity) getActivity()).getSupportActionBar().setTitle("My Profile");
-                    }catch(Exception e){}
+                    } catch (Exception e) {
+                    }
                     try {
                         ((BookmarkActivity) getActivity()).getSupportActionBar().setTitle("My Bookmarks");
-                    }catch(Exception e){}
+                    } catch (Exception e) {
+                    }
                     getActivity().onBackPressed();
                     return;
                 }
-                //hides keyboard
-                InputMethodManager imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                /* hides keyboard */
+                InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
 
-
+        /* bind clicklistener to sign up button */
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,6 +195,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        /* bind clicklistener to "back to login" button */
         backToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

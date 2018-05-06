@@ -1,6 +1,7 @@
 package com.looforyou.looforyou.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -35,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.BathroomCardFragmentPagerAdapter;
+import com.looforyou.looforyou.fragments.BathroomCardFragment;
 import com.looforyou.looforyou.fragments.BathroomViewFragment;
 import com.looforyou.looforyou.utilities.LooLoader;
 import com.looforyou.looforyou.utilities.MetricConverter;
@@ -83,9 +86,13 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     private ArrayList<Bathroom> bathrooms;
     /* handler used for loading fragments */
     private Handler mHandler = null;
+    /* displays list of amenities*/
     private TextView amenities;
+    /* displays hours of operation */
     private TextView hoursOfOperation;
+    /* displays hours of maintenance */
     private TextView maintenanceHours;
+    /* Dialog object to display new dialog */
     private Dialog myDialog;
 
     @Override
@@ -93,12 +100,14 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* initialize new dialog */
         myDialog = new Dialog(this);
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        /* initialize handler */
         mHandler = new Handler();
 
-        /* define custom actionbar */
+        /* set up custom actionbar */
         showActionBar();
         bindActionBar();
 
@@ -106,13 +115,19 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         TabControl tabb = new TabControl(this);
         tabb.tabs(MainActivity.this, R.id.tab_home);
 
+        /* make sure User has GPS enabled */
         askForGPS();
+
+        /* initialize all UI components */
         initializeComponents();
         initializePageViewer();
         refreshDisplay(0);
 
     }
 
+    /**
+     * asks for permission to use GPS if not enabled
+     * */
     public void askForGPS() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions();
@@ -120,25 +135,33 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         }
     }
 
+    /**
+     * requests GPS usage permission
+     * */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
     }
 
     /**
      * This method looks for best location provider by checking availablility of gps or network location
+     * @return location closest location to user
      */
     public Location getCurrentLocation() {
-        LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        List<String> providers = mLocationManager.getProviders(true);
+        LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
+        /* iterate through all providers to check for non-null location */
         for (String p : providers) {
+            /* permission check */
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions();
             }
-            Location location = mLocationManager.getLastKnownLocation(p);
+            /* skip if location returned is null */
+            Location location = locationManager.getLastKnownLocation(p);
             if (location == null) {
                 continue;
             }
+            /* obtain most accurate location*/
             if (bestLocation == null || location.getAccuracy() < bestLocation.getAccuracy()) {
                 bestLocation = location;
             }
@@ -146,39 +169,52 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         return bestLocation;
     }
 
+    /**
+     * sets up pagerData in order to display bathroom cards
+     * */
     private void setUpPagerData() {
+        /* load bathrooms from server */
         feedList = LooLoader.loadBathrooms(this.getApplicationContext());
 
-        Location currentLocation = getCurrentLocation();
-        sortByDistance(currentLocation, feedList);
+        /* sort by distance by default */
+        sortByDistance(getCurrentLocation(), feedList);
 
-        for (Bathroom b : feedList) {
-            Log.v("feedlistcontent", b.getName());
-            pagerAdapter.addCardFragment(b);
-            pagerAdapter.notifyDataSetChanged();
-        }
-
+        /* add bathrooms from retrieved list */
         reloadViewPagerData(feedList);
+
+        /* stop refreshing animation once page is loaded */
         swipeContainer.setRefreshing(false);
     }
 
-
+    /**
+     * clears pagerAdapter and loads new list of bathrooms as needed
+     * @param newBathrooms a list of bathroom  objects to display
+     * */
     public void reloadViewPagerData(List<Bathroom> newBathrooms) {
         pagerAdapter.clear();
         viewPager.removeAllViews();
+
+        /* add bathrooms to pagerAdapter */
         for (Bathroom b : newBathrooms) {
             pagerAdapter.addCardFragment(b);
             pagerAdapter.notifyDataSetChanged();
         }
-        // force card views to refresh
+         /* force card views to refresh */
         viewPager.setAdapter(pagerAdapter);
     }
 
+    /**
+     * sorts a list of bathrooms by distance
+     * @param location source location on which to apply sort
+     * @param list a list of bathroom objects to sort
+     * */
     public void sortByDistance(final Location location, List<Bathroom> list) {
+        /* permission check */
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions();
             return;
         }
+        /* sort bathroom list using custom comparator */
         Collections.sort(list, new Comparator<Bathroom>() {
             @Override
             public int compare(Bathroom b1, Bathroom b2) {
@@ -191,16 +227,22 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         });
     }
 
-
+    /**
+     * populates bathroom card with latest data
+     * @param position current position of active bathroom card
+     * */
     private void refreshDisplay(int position) {
+        /* get list of bathrooms currently in viewPager */
         bathrooms = pagerAdapter.getBathrooms();
         if (bathrooms.size() > 0) {
+            /* populate bathroom amenities for display */
             ArrayList<String> amenitiesList = bathrooms.get(position).getAmenities();
             Collections.sort(amenitiesList);
             String formattedAmenities = amenitiesList.toString().replaceAll(", ", "\n• ");
             formattedAmenities = "• " + formattedAmenities.substring(1, formattedAmenities.length() - 1);
             amenities.setText(formattedAmenities);
 
+            /* format start time of operation hours */
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
             Date startTime = bathrooms.get(position).getStartTime();
             String start = null;
@@ -211,6 +253,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                     e.printStackTrace();
                 }
             }
+
+            /* format end time of operation hours */
             Date endTime = bathrooms.get(position).getEndTime();
             String end = null;
             if (endTime != null) {
@@ -220,6 +264,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                     e.printStackTrace();
                 }
             }
+
+            /* set hours of operation for display */
             if (startTime == null || endTime == null) {
                 hoursOfOperation.setText("Unknown");
             } else if (start.equals(end)) {
@@ -228,6 +274,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                 hoursOfOperation.setText(start + " to " + end);
             }
 
+            /* format maintenance start time */
             Date maintenanceStartTime = bathrooms.get(position).getMaintenanceStart();
             String mStart = null;
             if (maintenanceStartTime != null) {
@@ -237,6 +284,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                     e.printStackTrace();
                 }
             }
+
+            /* format maintenance end time */
             Date maintenanceEndTime = bathrooms.get(position).getMaintenanceEnd();
             String mEnd = null;
             if (maintenanceEndTime != null) {
@@ -246,8 +295,11 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                     e.printStackTrace();
                 }
             }
+
+            /* format maintenance days */
             String maintenanceDays = bathrooms.get(position).getMaintenanceDays().toString();
 
+            /* set hours of maintenance for display */
             if (maintenanceStartTime == null || maintenanceEndTime == null) {
                 maintenanceHours.setText("Unknown");
             } else {
@@ -256,12 +308,15 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         }
     }
 
+    /**
+     * initializes Views
+     * */
     private void initializeComponents() {
         amenities = (TextView) findViewById(R.id.bathroom_amenities);
         hoursOfOperation = (TextView) findViewById(R.id.hours_of_operation);
         maintenanceHours = (TextView) findViewById(R.id.maintenance_hours);
 
-        // Setup refresh listener which triggers new data loading
+        /* Setup refresh listener which triggers new data loading */
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         swipeContainer.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -274,14 +329,19 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         });
     }
 
+    /**
+     * initializes pageerviewer and sets up initial data for bathroom cards
+     * */
     private void initializePageViewer() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new BathroomCardFragmentPagerAdapter(getSupportFragmentManager(), MetricConverter.dpToPx(this, 2));
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);
 
+        /* set up initial data */
         setUpPagerData();
 
+        /* add UI tweaks to bathroom cards */
         ShadowTransformer fragmentCardShadowTransformer = new ShadowTransformer(viewPager, pagerAdapter);
         fragmentCardShadowTransformer.enableScaling(true);
         viewPager.setPageTransformer(false, fragmentCardShadowTransformer);
@@ -290,35 +350,35 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             @Override
             public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
                 updateDistance();
+                /* load new fragments for bathroom views on click */
                 pagerAdapter.getCardViewAt(position).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.v("webviewview rootview", String.valueOf(pagerAdapter.getCardViewAt(position).findViewById(R.id.bathroom_webview)));
                         loadBathroomView();
                     }
                 });
-                pagerAdapter.getCardViewAt(position).findViewById(R.id.bathroom_webview).setOnClickListener(new View.OnClickListener() {
+
+                /* TODO webView consumes click events, need to customize */
+/*                pagerAdapter.getCardViewAt(position).findViewById(R.id.bathroom_webview).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Log.v("webviewview", "clicked");
                         loadBathroomView();
                     }
-                });
+                });*/
             }
 
             @Override
             public void onPageSelected(int position) {
                 refreshDisplay(position);
 
-
+                /* TODO load more bathrooms if available if users is at end of cards list */
                 if (position == pagerAdapter.getCount() - 1) {
-
 /*                            for(int i = 0; i< 100; i++) {
-                                //test add new items:
+                                // test add new items:
                                 pagerAdapter.addCardFragment(new Bathroom()); //delete me
-                                tempPics.add(BitmapGenerator.DrawableFromAsset(MainActivity.this, "no-image-uploaded.png"));
                             }*/
-
+                                // test scroll to specified position
 //                            viewPager.setCurrentItem(15,true);
                 }
             }
@@ -326,26 +386,26 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (ViewPager.SCROLL_STATE_IDLE == state) {
-//                        Log.v("scrollchange","end of cards "+state);
-                    Log.v("scrollchange", "end of cards " + state + " position " + String.valueOf(viewPager.getVerticalScrollbarPosition()));
-
+//                    Log.v("scrollchange", "end of cards " + state + " position " + String.valueOf(viewPager.getVerticalScrollbarPosition()));
                 }
             }
         });
 
     }
 
+    /**
+     * updates distance from source to target bathroom */
     public void updateDistance() {
-        Log.v("updating distance", "updating distance...");
         TextView te = (TextView) pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).findViewById(R.id.bathroom_distance);
         if (mLastKnownLocation == null) {
-
-            //retrieve lastKnown location if it does not exist
+            /* retrieve lastKnown location if it does not exist */
             mLastKnownLocation = getCurrentLocation();
         }
-        DecimalFormat df = new DecimalFormat("0.0");
+        DecimalFormat df = new DecimalFormat("0.00");
 
         try {
+            /* format distance based on target location */
+            //TODO extend to custom google places results location
             double dist = MetricConverter.distanceBetweenInMiles(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
             te.setText(df.format(dist) + " mi");
         } catch (Exception e) {
@@ -355,7 +415,9 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         swipeContainer.setRefreshing(false);
     }
 
-    //when options in toolbar menu are created
+    /**
+     * setup custom actionbar
+     * */
     private void showActionBar() {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -364,8 +426,12 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         view = getSupportActionBar().getCustomView();
     }
 
+    /**
+     * bind listeners to custom views in actionbar
+     * */
     public void bindActionBar() {
         ImageButton profileButton = (ImageButton) view.findViewById(R.id.action_bar_profile_main);
+        /* bind clicklistener to profile button*/
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -382,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                 });
 
                 bLogin = (Button) myDialog.findViewById(R.id.bLogin);
+                /* bind clicklistener to login button in dialog */
                 bLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -391,6 +458,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                     }
                 });
                 bSignUp = (Button) myDialog.findViewById(R.id.bRegister);
+                /* bind clicklistener to signup button in dialog */
                 bSignUp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -404,23 +472,24 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         });
 
         final LinearLayout searchBar = (LinearLayout) view.findViewById(R.id.action_bar_search_main);
+        /* bind clicklistener to google places search bar */
         searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    //start autoplaces search
+                    /* start autoplaces search */
                     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(MainActivity.this);
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.v(LOGTAG, "repairableException " + e);
                 } catch (GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
                     Log.v(LOGTAG, "notAvailableException " + e);
                 }
             }
         });
 
         ImageButton sortButton = (ImageButton) view.findViewById(R.id.action_bar_sort_main);
+        /* bind clicklistener to sort button */
         sortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -430,6 +499,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         });
 
         ImageButton listViewButton = (ImageButton) view.findViewById(R.id.action_bar_list_view_main);
+        /* bind clicklistener to list view button */
+        // TODO change list viewbutton to getCurrentLocation button instead
         listViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -438,7 +509,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         });
     }
 
-    /* results from google search*/
+    /* results from google search */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -448,6 +519,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                 newLocation = new Location("");
                 newLocation.setLatitude(place.getLatLng().latitude);
                 newLocation.setLongitude(place.getLatLng().longitude);
+                /* reload bathroom cards sorted by location */
+                //TODO add option to sort by rating and name as well
                 sortByDistance(newLocation, feedList);
                 reloadViewPagerData(feedList);
                 TextView searchHint = (TextView) findViewById(R.id.custom_search_layout);
@@ -460,8 +533,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         }
     }
 
-    /***
-     * Returns respected fragment that user
+    /**
+     * Returns respective fragment that user
      * selected from navigation menu
      */
     private void loadBathroomView() {
@@ -472,23 +545,30 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
             @Override
             public void run() {
                 swipeContainer.setEnabled(false);
-                // update the main content by replacing fragments
+                /* update the main content by replacing fragments */
                 final Fragment fragment = new BathroomViewFragment();
                 final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
 
+                /* send messges to fragment */
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("current bathroom", bathrooms.get(viewPager.getCurrentItem()));
                 bundle.putParcelable("current location", getCurrentLocation());
                 fragment.setArguments(bundle);
-                fragmentTransaction.commitAllowingStateLoss();
-                pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).setClickable(false); //disable pagerAdapter touch event temporarily
 
+                /* commit fragment transaction */
+                fragmentTransaction.commitAllowingStateLoss();
+
+                /* temporarily disable pagerAdapter touch event so it doesn't interfere with fragment events */
+                pagerAdapter.getCardViewAt(viewPager.getCurrentItem()).setClickable(false);
+
+                /* set up custom actionbar */
                 getSupportActionBar().setCustomView(R.layout.action_bar_back);
                 view = getSupportActionBar().getCustomView();
 
+                /* bind clicklistener to actionbar back button */
                 ImageButton backButton = (ImageButton) view.findViewById(R.id.action_bar_back_button);
                 backButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -507,13 +587,13 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         };
 
 
-        // If mPendingRunnable is not null, then add to the message queue
+         /* If mPendingRunnable is not null, then add to the message queue */
         if (mPendingRunnable != null) {
             mHandler.post(mPendingRunnable);
         }
 
 
-        // refresh toolbar menu
+        /* refresh toolbar menu */
         invalidateOptionsMenu();
     }
 
