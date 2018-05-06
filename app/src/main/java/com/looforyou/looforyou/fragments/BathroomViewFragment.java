@@ -2,6 +2,7 @@ package com.looforyou.looforyou.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -35,6 +37,7 @@ import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.ReviewsAdapter;
 import com.looforyou.looforyou.adapters.ReviewsListItem;
 import com.looforyou.looforyou.utilities.BathroomDeserializer;
+import com.looforyou.looforyou.utilities.BookmarksUtil;
 import com.looforyou.looforyou.utilities.HttpGet;
 import com.looforyou.looforyou.utilities.HttpUtils;
 import com.looforyou.looforyou.utilities.MetricConverter;
@@ -46,6 +49,7 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +81,10 @@ public class BathroomViewFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<ReviewsListItem> reviewsListItems;
+    private ArrayList<String> bookmarkedIds;
+    private ImageButton bathroomBookmarkButton;
+    private TextView bathroomBookmarkText;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -113,16 +121,19 @@ public class BathroomViewFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_bathroom_view, container, false);
         View view = inflater.inflate(R.layout.fragment_bathroom_view, container, false);
+        bookmarkedIds = new BookmarksUtil(getContext()).getBookmarkedBathroomIds();
         Button button = (Button) view.findViewById(R.id.bathroom_fragment_button);
 //        String menu = getArguments().getString("Menu");
         Bathroom bathroom = getArguments().getParcelable("current bathroom");
+        Location location = getArguments().getParcelable("current location");
+
 //        button.setText(menu);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +149,13 @@ public class BathroomViewFragment extends Fragment {
         bathroomAddress.setText(bathroom.getAddress());
 
         TextView bathroomDistance = view.findViewById(R.id.bathroom_fragment_distance);
-        //TODO get distance
+        try {
+            DecimalFormat df = new DecimalFormat("0.00");
+            double dist = MetricConverter.distanceBetweenInMiles(new LatLng(location.getLatitude(), location.getLongitude()),bathroom.getLatLng());
+            bathroomDistance.setText(df.format(dist) + " mi");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
 
         TextView bathroomHours = view.findViewById(R.id.bathroom_fragment_operation_time);
         bathroomHours.setText(getHoursString(bathroom));
@@ -147,7 +164,9 @@ public class BathroomViewFragment extends Fragment {
         bathroomDescription.setText(getStringDescription(bathroom));
 
         final Bathroom clickedBathroom = bathroom;
-        ImageButton bathroomDirectionsButton = view.findViewById(R.id.bathroom_fragment_directions_button);
+
+
+        ImageButton bathroomDirectionsButton = (ImageButton) view.findViewById(R.id.bathroom_fragment_directions_button);
         bathroomDirectionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,12 +175,35 @@ public class BathroomViewFragment extends Fragment {
         });
 
         TextView bathroomDirectionsText = view.findViewById(R.id.bathroom_fragment_directions_text);
-        bathroomDirectionsButton.setOnClickListener(new View.OnClickListener() {
+        bathroomDirectionsText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onDirectionsButtonClick(v, clickedBathroom);
             }
         });
+
+        bathroomBookmarkButton = (ImageButton) view.findViewById(R.id.bathroom_fragment_toggle_bookmark_button);
+        if(bookmarkedIds.contains(bathroom.getId())){
+            bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_enabled_45);
+        }else {
+            bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_disabled_45);
+        }
+
+        bathroomBookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBookmarkButtonClick(v, clickedBathroom);
+            }
+        });
+
+        bathroomBookmarkText = view.findViewById(R.id.bathroom_fragment_toggle_bookmark_text);
+        bathroomBookmarkText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBookmarkButtonClick(v, clickedBathroom);
+            }
+        });
+
         ImageView bathroomStars = view.findViewById(R.id.bathroom_fragment_stars);
         int rating = (int) Math.round(bathroom.getRating());
         bathroomStars.setImageResource(getStarDrawableResource(rating));
@@ -215,6 +257,8 @@ public class BathroomViewFragment extends Fragment {
             }
         });
 
+
+
         loadReviews(view, bathroom);
 
         return view;
@@ -238,7 +282,6 @@ public class BathroomViewFragment extends Fragment {
             TextView noReviews = (TextView) v.findViewById(R.id.no_reviews);
             noReviews.setVisibility(View.GONE);
             for (Review review : reviews) {
-//                Log.v("testreviewerrr",review.getReviewerUserName());
                 ReviewsListItem reviewsListItem = new ReviewsListItem(
                         review,
                         review.getReviewerUserName(),
@@ -327,6 +370,14 @@ public class BathroomViewFragment extends Fragment {
             startActivity(directionsIntent);
         } else {
             Toast.makeText(getActivity(), "Unable to route", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onBookmarkButtonClick(View view, Bathroom bathroom) {
+        if(bookmarkedIds.contains(bathroom.getId())){
+            bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_disabled_45);
+        }else {
+            bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_enabled_45);
         }
     }
 

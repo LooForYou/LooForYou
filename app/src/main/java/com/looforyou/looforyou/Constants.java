@@ -27,6 +27,9 @@ public class Constants {
     public static final String UPVOTE = "/increment-likes/";
     public static final String DOWNVOTE = "/decrement-likes/";
     public static final String TOKEN_QUERY = "?access_token=";
+    public static final String ALL_BOOKMARKS = "/bookmarks";
+    public static final String BOOKMARKS = "/bookmarks/";
+    public static final String BOOKMARKS_REL = "/bookmarks/rel/";
     public static final int ONE_YEAR = 60 * 60 * 24 * 365;
 
     /* sorting options */

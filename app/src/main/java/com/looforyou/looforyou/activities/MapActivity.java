@@ -73,7 +73,6 @@ import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.BathroomCardFragmentPagerAdapter;
 import com.looforyou.looforyou.adapters.MapCardFragmentPagerAdapter;
 import com.looforyou.looforyou.fragments.BathroomViewFragment;
-import com.looforyou.looforyou.utilities.GPSManager;
 import com.looforyou.looforyou.utilities.ImageConverter;
 import com.looforyou.looforyou.utilities.LooLoader;
 import com.looforyou.looforyou.utilities.MetricConverter;
@@ -462,7 +461,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_ACCESS_FINE_LOCATION);
     }
 
     // Trigger new location updates at interval
@@ -484,11 +482,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         builder.setAlwaysShow(true);
         LocationSettingsRequest locationSettingsRequest = builder.build();
 
-        // Check to see if GPS is enabled
-        new GPSManager(this).checkGPS();
-
         // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 

@@ -99,13 +99,31 @@
                         android:layout_weight="1"
                         android:text="  Bookmark Information \n  will display here: \n  • rating:    *****\n • Bathroom Status- " />
                     />
+
                 </LinearLayout>
+
             </LinearLayout>
             <!--placeholder details 2-->
 
 
         </RelativeLayout>
+
     </ScrollView>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bookmarks_scroll_container"
+        android:paddingBottom="59dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/bookmarks_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        </android.support.v7.widget.RecyclerView>
+    </FrameLayout>
     <FrameLayout
         android:id="@+id/frame"
         android:layout_width="match_parent"

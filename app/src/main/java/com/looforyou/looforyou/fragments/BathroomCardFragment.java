@@ -19,8 +19,10 @@ import android.widget.Toast;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.BathroomCardAdapter;
+import com.looforyou.looforyou.utilities.BookmarksUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
@@ -54,7 +56,7 @@ public class BathroomCardFragment extends Fragment implements Serializable{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.card_view, container, false);
+        final View view = inflater.inflate(R.layout.card_view, container, false);
 
         bathroom = (Bathroom) getArguments().getSerializable("bathroom");
         Log.v("bathroomcardfragment", "bathroom string: "+String.valueOf(bathroom.getName()));
@@ -78,7 +80,6 @@ public class BathroomCardFragment extends Fragment implements Serializable{
                 }
             }
         });
-
 
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(bathroom.getName());
@@ -104,18 +105,24 @@ public class BathroomCardFragment extends Fragment implements Serializable{
         ImageView parking = (ImageView) view.findViewById(R.id.bathroom_parking);
         if(bathroom.getAmenities().contains("parking available")) parking.setImageResource(R.drawable.ic_parking_enabled_20);
 
-
+        final BookmarksUtil bookmarksUtil = new BookmarksUtil(getContext());
+        final ArrayList<String> bookmarkIds = bookmarksUtil.getBookmarkedBathroomIds();
         final ImageView bookmark = (ImageView) view.findViewById(R.id.main_card_bookmark);
+        if(bookmarkIds.contains(bathroom.getId())){
+            bookmark.setImageResource(R.drawable.ic_bookmark_enabled_20);
+        }
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bathroom.isBookmarked()){
-                    bathroom.setBookmarked(false);
-                    bookmark.setImageResource(R.drawable.ic_bookmark_disabled_20);
+                if(bookmarkIds.contains(bathroom.getId())){
+                    if(bookmarksUtil.unBookmarkBathroom(bathroom.getId())) {
+                        bookmark.setImageResource(R.drawable.ic_bookmark_disabled_20);
+                    }
                 }else{
-                    bathroom.setBookmarked(true);
-                    bookmark.setImageResource(R.drawable.ic_bookmark_enabled_20);
-                    Toast.makeText(getActivity(), "Bookmarked " + bathroom.getName(), Toast.LENGTH_SHORT).show();
+                    if(bookmarksUtil.bookmarkBathroom(bathroom.getId())) {
+                        bookmark.setImageResource(R.drawable.ic_bookmark_enabled_20);
+                        Toast.makeText(getActivity(), "Bookmarked " + bathroom.getName(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 

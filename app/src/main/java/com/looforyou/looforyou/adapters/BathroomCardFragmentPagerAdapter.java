@@ -83,4 +83,13 @@ public class BathroomCardFragmentPagerAdapter extends FragmentStatePagerAdapter 
         fragments.clear();
         notifyDataSetChanged();
     }
+
+    // Removes the page from the container for the given position.
+/*    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container,position,object);
+//        super.destroyItem(container);
+        container.removeView((View) object);
+    }*/
+
 }
