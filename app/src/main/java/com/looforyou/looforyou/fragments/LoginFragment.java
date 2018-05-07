@@ -17,6 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.looforyou.looforyou.Models.Token;
@@ -27,6 +32,7 @@ import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.TokenDeserializer;
 import com.looforyou.looforyou.utilities.UserUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -40,12 +46,19 @@ import static com.looforyou.looforyou.Constants.ONE_YEAR;
  * This is a fragment for Login/Signups
  *
  * @author: mingtau li
+ * @author: phoenix grimmett
  */
 
 public class LoginFragment extends Fragment {
-    /* boilerplace params */
+
+    CallbackManager callbackManager;
+
+    //* boilerplace params */
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private static final String EMAIL = "email";
+
     private String mParam1;
     private String mParam2;
 
@@ -84,6 +97,7 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        callbackManager = CallbackManager.Factory.create();
         /* Inflate the layout for this fragment */
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -92,6 +106,12 @@ public class LoginFragment extends Fragment {
         final TextInputEditText password = (TextInputEditText) view.findViewById(R.id.fragment_login_password);
         Button loginBtn = (Button) view.findViewById(R.id.fragment_login_btn);
         Button signupBtn = (Button) view.findViewById(R.id.fragment_signup_btn);
+
+        //LoginButton used with Facebook Sign In
+        LoginButton fbLogin = (LoginButton) view.findViewById(R.id.bFBLogin);
+        fbLogin.setReadPermissions(Arrays.asList(EMAIL));
+        fbLogin.setFragment(this);
+
         final TextView backToLogin = (TextView) view.findViewById(R.id.fragment_login_back_to_login);
         backToLogin.setPaintFlags(backToLogin.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         final TextView loginSignUpTitle = (TextView) view.findViewById(R.id.fragment_login_title);
@@ -209,6 +229,46 @@ public class LoginFragment extends Fragment {
                 confirmPassword.setVisibility(View.GONE);
                 largeSignUpButton.setVisibility(View.GONE);
                 buttonLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        fbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                //Grabs UserID of the Facebook account
+                username.setText(loginResult.getAccessToken().getUserId());
+
+                /*
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try{
+                            Log.i("Response", response.toString());
+
+                            String FBemail = response.getJSONObject().getString("email");
+                            String fName = response.getJSONObject().getString("first_name");
+                            String lName = response.getJSONObject().getString("last_name");
+
+                            email.setText(FBemail);
+                            firstName.setText(fName);
+                            lastName.setText(lName);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }); */
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
             }
         });
         return view;
