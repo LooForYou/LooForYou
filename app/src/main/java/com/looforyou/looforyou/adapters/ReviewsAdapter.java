@@ -28,7 +28,7 @@ import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 /**
  * This is the adapter for displaying reviews
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {

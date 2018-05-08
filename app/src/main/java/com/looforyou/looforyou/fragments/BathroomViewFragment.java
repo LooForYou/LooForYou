@@ -57,7 +57,7 @@ import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 /**
  * This is a fragment for Bathroom Data
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class BathroomViewFragment extends Fragment {
@@ -216,7 +216,9 @@ public class BathroomViewFragment extends Fragment {
 
         /* count number of reviews */
         TextView bathroomNumReviews = view.findViewById(R.id.bathroom_fragment_num_reviews);
-        bathroomNumReviews.setText(reviewsListItems.size()+(reviewsListItems.size() == 1 ? " review" : "reviews"));
+        if(reviewsListItems != null) {
+            bathroomNumReviews.setText(reviewsListItems.size() + (reviewsListItems.size() == 1 ? " review" : "reviews"));
+        }
 
         /* load images of primary amenities */
         ImageView bathroomAccessible = (ImageView) view.findViewById(R.id.bathroom_fragment_accessibility_icon);

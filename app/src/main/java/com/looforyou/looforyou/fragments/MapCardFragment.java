@@ -25,7 +25,7 @@ import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 /**
  * This is a fragment for Bathroom Cards on map
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class MapCardFragment extends Fragment implements Serializable {

@@ -45,8 +45,8 @@ import static com.looforyou.looforyou.Constants.ONE_YEAR;
 /**
  * This is a fragment for Login/Signups
  *
- * @author: mingtau li
- * @author: phoenix grimmett
+ * @author mingtau li
+ * @author phoenix grimmett
  */
 
 public class LoginFragment extends Fragment {

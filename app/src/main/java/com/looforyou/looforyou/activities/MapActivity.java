@@ -71,7 +71,7 @@ import static com.looforyou.looforyou.Constants.SORT_BY_DISTANCE;
  * This is the map view that displays custom location markers
  * and cards for bathrooms in the area
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,

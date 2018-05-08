@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * This is the activity class for viewing bookmarked bathrooms
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class BookmarkActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener {

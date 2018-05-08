@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * This is the adapter for displaying bathroom card fragments
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class BathroomCardFragmentPagerAdapter extends FragmentStatePagerAdapter implements BathroomCardAdapter {

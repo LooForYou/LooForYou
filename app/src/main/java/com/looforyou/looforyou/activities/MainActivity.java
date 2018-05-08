@@ -57,8 +57,8 @@ import java.util.Locale;
  * This is the home screen that displays initial bathroom info to the user
  * It contains at-a-glance information about the bathrooms
  *
- * @author: mingtau li
- * @author: phoenix grimmett
+ * @author mingtau li
+ * @author phoenix grimmett
  */
 
 public class MainActivity extends AppCompatActivity implements BathroomViewFragment.OnFragmentInteractionListener {

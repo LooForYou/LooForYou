@@ -28,7 +28,7 @@ import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 /**
  * This is the adapter for displaying bookmarks
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.ViewHolder> {

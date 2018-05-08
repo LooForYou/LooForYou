@@ -5,7 +5,7 @@ import com.looforyou.looforyou.Models.Review;
 /**
  * This is the recycler view list item for reviews
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class ReviewsListItem {

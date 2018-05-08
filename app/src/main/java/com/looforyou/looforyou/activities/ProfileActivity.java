@@ -28,7 +28,7 @@ import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
 /**
  * This is activity for displaying user profile information
  *
- * @author: mingtau li
+ * @author mingtau li
  * @author Peter Bouris
  * @author Phoenix Grimmett
  */

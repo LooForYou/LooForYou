@@ -1,11 +1,5 @@
 package com.looforyou.looforyou.Models;
 
-import android.util.Log;
-
-import com.looforyou.looforyou.R;
-
-import org.apache.commons.lang3.text.WordUtils;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -90,10 +84,8 @@ public class Review {
     }
 
     public void setReviewerInfo(ArrayList<Reviewer> reviewers) {
-        for(Reviewer r: reviewers){
-            Log.v("testresultid reviewerID",r.getId());
-            Log.v("testresultid reviewID",getId());
-            if(r.getId().equals(getSubmitedById())){
+        for (Reviewer r : reviewers) {
+            if (r.getId().equals(getSubmitedById())) {
                 try {
                     setReviewerFirstName(r.getFirstName());
                 } catch (Exception e) {
@@ -109,7 +101,6 @@ public class Review {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.v("testreviewer reviewobj",r.getUserName());
                 try {
                     setReviewerImageUrl(r.getImageUrl());
                 } catch (Exception e) {

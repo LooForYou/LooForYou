@@ -2,7 +2,7 @@ package com.looforyou.looforyou.adapters;
 /**
  * Interface for Bathroom Card View Adapter
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 import android.support.v7.widget.CardView;

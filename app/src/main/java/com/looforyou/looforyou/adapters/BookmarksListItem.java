@@ -15,7 +15,7 @@ import java.text.DecimalFormat;
 /**
  * This is the recycler view list item for bookmarks
  *
- * @author: mingtau li
+ * @author mingtau li
  */
 
 public class BookmarksListItem {
