@@ -253,6 +253,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         /* display number of days elapsed */
         holder.daysAgo.setText(reviewsListItem.getDaysAgo() + (reviewsListItem.getDaysAgo() == 1 ? "day ago" : " days ago"));
 
+        /* expand/collapse viewswitcher when changing views */
+        holder.editSwitcher.setMeasureAllChildren(false);
+
         /* display custom options unique to a user */
         if (reviewsListItem.getReviewerId().equals(new UserUtil(context).getUserID())) {
             holder.deleteReview.setVisibility(View.VISIBLE);
