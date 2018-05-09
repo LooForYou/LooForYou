@@ -13,13 +13,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.looforyou.looforyou.Models.Bathroom;
+import com.looforyou.looforyou.Models.Review;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.adapters.BathroomCardAdapter;
+import com.looforyou.looforyou.utilities.HttpGet;
+import com.looforyou.looforyou.utilities.HttpUtils;
+import com.looforyou.looforyou.utilities.ReviewDeserializer;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
+import static com.looforyou.looforyou.Constants.GET_REVIEWS;
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
 /**
@@ -106,8 +118,9 @@ public class MapCardFragment extends Fragment implements Serializable {
         /* load rating into bathroom card  */
         int rating = (int) Math.round(bathroom.getRating());
         extraInfoStars.setImageResource(getStarDrawableResource(rating));
-        //TODO implement extra info review number
-//        extraInfoReviewNumber
+        int reviewNum = loadReviewsFromServer(bathroom).size();
+        extraInfoReviewNumber.setText(reviewNum+(reviewNum == 1 ? " review" : " reviews"));
+
         /* load primary amenities images */
         if (bathroom.getAmenities().contains("accessible"))
             extraInfoAccessibility.setImageResource(R.drawable.ic_accessibility_enabled_20);
@@ -129,5 +142,38 @@ public class MapCardFragment extends Fragment implements Serializable {
         return cardView;
     }
 
+    /**
+     * method to load reviews from server
+     *
+     * @param bathroom current bathroom
+     * @return ArrayList<Review> list of reviews
+     */
+    public ArrayList<Review> loadReviewsFromServer(Bathroom bathroom) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Review.class, new ReviewDeserializer());
+        Gson gson = gsonBuilder.create();
+        String result = "";
+        ArrayList<Review> reviews = new ArrayList<Review>();
+        HttpGet getReviews = new HttpGet();
+        URL reviewRequest = null;
+        try {
+            /* make get request for reviews via server call */
+            reviewRequest = new URL(GET_REVIEWS + "?filter={\"where\":{\"bathroomId\": \"" + bathroom.getId() + "\"}}");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        reviewRequest = HttpUtils.encodeQuery(reviewRequest);
+        try {
+            result = getReviews.execute(reviewRequest.toString()).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if (!result.equals("")) {
+            reviews = new ArrayList<Review>(Arrays.asList(gson.fromJson(result, Review[].class)));
+        }
+        return reviews;
+    }
 
 }
