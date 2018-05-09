@@ -110,10 +110,14 @@
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/bFBLogin"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingTop="15dp"
+            android:textAllCaps="true"
+            android:paddingBottom="15dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_above="@id/bGoogleLogin"/>
+            android:layout_above="@id/bGoogleLogin"
+            />
 
         <Button
             android:id="@+id/bGoogleLogin"
