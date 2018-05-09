@@ -239,8 +239,13 @@ public class BathroomViewFragment extends Fragment {
 
         /* count number of reviews */
         TextView bathroomNumReviews = view.findViewById(R.id.bathroom_fragment_num_reviews);
+
+        /* load reviews */
+        loadReviews(view, bathroom);
+
+        /* load number of reviews */
         if (reviewsListItems != null) {
-            bathroomNumReviews.setText(reviewsListItems.size() + (reviewsListItems.size() == 1 ? " review" : "reviews"));
+            bathroomNumReviews.setText(reviewsListItems.size() + (reviewsListItems.size() == 1 ? " review" : " reviews"));
         }
 
         /* load images of primary amenities */
@@ -432,9 +437,6 @@ public class BathroomViewFragment extends Fragment {
             }
 
         });
-
-        /* load reviews */
-        loadReviews(view, bathroom);
 
         return view;
     }

@@ -229,6 +229,41 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     }
 
     /**
+     * sorts a list of bathrooms by name
+     * @param list a list of bathroom objects to sort
+     * */
+    public void sortByName(List<Bathroom> list) {
+        /* sort bathroom list using custom comparator */
+        Collections.sort(list, new Comparator<Bathroom>() {
+            @Override
+            public int compare(Bathroom b1, Bathroom b2) {
+                String name1 = b1.getName();
+                String name2 = b2.getName();
+                return name1.compareTo(name2);
+            }
+        });
+    }
+
+    /**
+     * sorts a list of bathrooms by rating
+     * @param list a list of bathroom objects to sort
+     * */
+    public void sortByRating(List<Bathroom> list) {
+        /* sort bathroom list using custom comparator */
+        Collections.sort(list, new Comparator<Bathroom>() {
+            @Override
+            public int compare(Bathroom b1, Bathroom b2) {
+                double rating1 = b1.getRating();
+                double rating2 = b2.getRating();
+                if (rating1 < rating2) return 1;
+                else if (rating1 > rating2) return -1;
+                return 0;
+            }
+        });
+    }
+
+
+    /**
      * populates bathroom card with latest data
      * @param position current position of active bathroom card
      * */
@@ -407,7 +442,12 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         try {
             /* format distance based on target location */
             //TODO extend to custom google places results location
-            double dist = MetricConverter.distanceBetweenInMiles(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+            double dist = 0.0;
+            if(newLocation!=null){
+                dist = MetricConverter.distanceBetweenInMiles(new LatLng(newLocation.getLatitude(), newLocation.getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+            }else {
+                dist = MetricConverter.distanceBetweenInMiles(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());
+            }
             te.setText(df.format(dist) + " mi");
         } catch (Exception e) {
             swipeContainer.setRefreshing(false);
@@ -494,18 +534,56 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
         sortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "sort by...", Toast.LENGTH_SHORT).show();
+                final Dialog newFilterDialog = new Dialog(MainActivity.this);
+                newFilterDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                newFilterDialog.setContentView(R.layout.dialog_sort_by);
+                newFilterDialog.show();
+
+                newFilterDialog.findViewById(R.id.sort_by_distance).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(newLocation == null){
+                            sortByDistance(mLastKnownLocation, feedList);
+                        }else {
+                            sortByDistance(newLocation, feedList);
+                        }
+                            reloadViewPagerData(feedList);
+                            newFilterDialog.dismiss();
+                    }
+                });
+
+                newFilterDialog.findViewById(R.id.sort_by_name).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sortByName(feedList);
+                        reloadViewPagerData(feedList);
+                        newFilterDialog.dismiss();
+                    }
+                });
+
+                newFilterDialog.findViewById(R.id.sort_by_rating).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sortByRating(feedList);
+                        reloadViewPagerData(feedList);
+                        newFilterDialog.dismiss();
+                    }
+                });
+
 
             }
         });
 
-        ImageButton listViewButton = (ImageButton) view.findViewById(R.id.action_bar_list_view_main);
+        ImageButton myLocationButton = (ImageButton) view.findViewById(R.id.action_bar_my_location_main);
         /* bind clicklistener to list view button */
-        // TODO change list viewbutton to getCurrentLocation button instead
-        listViewButton.setOnClickListener(new View.OnClickListener() {
+        myLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "view list...", Toast.LENGTH_SHORT).show();
+                newLocation = null;
+                sortByDistance(mLastKnownLocation, feedList);
+                reloadViewPagerData(feedList);
+                TextView searchHint = (TextView) findViewById(R.id.custom_search_layout);
+                searchHint.setText("Current Location");
             }
         });
     }
@@ -520,8 +598,8 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                 newLocation = new Location("");
                 newLocation.setLatitude(place.getLatLng().latitude);
                 newLocation.setLongitude(place.getLatLng().longitude);
+
                 /* reload bathroom cards sorted by location */
-                //TODO add option to sort by rating and name as well
                 sortByDistance(newLocation, feedList);
                 reloadViewPagerData(feedList);
                 TextView searchHint = (TextView) findViewById(R.id.custom_search_layout);
