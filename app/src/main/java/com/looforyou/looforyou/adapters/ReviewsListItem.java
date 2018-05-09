@@ -207,4 +207,12 @@ public class ReviewsListItem {
     public void setReviewerId(String reviewerId) {
         this.reviewerId = reviewerId;
     }
+
+    /**
+     * getter for review id
+     * @return String unique id of review
+     * */
+    public String getReviewId() {
+        return review.getId();
+    }
 }

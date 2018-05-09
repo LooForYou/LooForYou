@@ -519,7 +519,6 @@ public class BathroomViewFragment extends Fragment {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) MetricConverter.dpToPx(getActivity().getApplicationContext(), maxScrollHeight));
             sv.setLayoutParams(lp);
         }
-
     }
 
     /**

@@ -31,6 +31,7 @@ public class Constants {
     public static final String BOOKMARKS = "/bookmarks/";
     public static final String BOOKMARKS_REL = "/bookmarks/rel/";
     public static final int ONE_YEAR = 60 * 60 * 24 * 365;
+    public static final String UPDATE_REVIEW = GET_REVIEWS+"update";
 
     /* sorting options */
     public static final String SORT_BY_DISTANCE = "distance";

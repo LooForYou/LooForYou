@@ -1,6 +1,5 @@
 package com.looforyou.looforyou.adapters;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,25 +10,37 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.HttpDelete;
+import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.HttpPut;
+import com.looforyou.looforyou.utilities.HttpUtils;
 import com.looforyou.looforyou.utilities.UserUtil;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.looforyou.looforyou.Constants.DOWNVOTE;
 import static com.looforyou.looforyou.Constants.GET_REVIEWS;
 import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
+import static com.looforyou.looforyou.Constants.UPDATE_REVIEW;
 import static com.looforyou.looforyou.Constants.UPVOTE;
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
@@ -83,10 +94,16 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.reviewer.setText(reviewsListItem.getReviewer());
         /* load review */
         holder.content.setText(reviewsListItem.getContent());
+        holder.content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         /* load reviewer profile picture */
         Picasso.get().load(reviewsListItem.getprofilePicture()).fit().into(holder.profileImage);
         /* load review points */
-        holder.reviewPoints.setText(String.valueOf(reviewsListItem.getPoints()) + " points");
+        holder.reviewPoints.setText(String.valueOf(reviewsListItem.getPoints()) + (reviewsListItem.getPoints() == 1 ? " point" : " points"));
         /* load review review rating */
         holder.rating.setImageResource(getStarDrawableResource(reviewsListItem.getRating()));
         /* initialize review id */
@@ -234,40 +251,98 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         });
 
         /* display number of days elapsed */
-        holder.daysAgo.setText(reviewsListItem.getDaysAgo()+ (reviewsListItem.getDaysAgo() == 1 ? "day ago" : " days ago"));
+        holder.daysAgo.setText(reviewsListItem.getDaysAgo() + (reviewsListItem.getDaysAgo() == 1 ? "day ago" : " days ago"));
 
         /* display custom options unique to a user */
-        if(reviewsListItem.getReviewerId().equals(new UserUtil(context).getUserID())){
-           holder.deleteReview.setVisibility(View.VISIBLE);
-            holder.reviewer.setText(reviewsListItem.getReviewer()+" (you)");
+        if (reviewsListItem.getReviewerId().equals(new UserUtil(context).getUserID())) {
+            holder.deleteReview.setVisibility(View.VISIBLE);
+            holder.reviewer.setText(reviewsListItem.getReviewer() + " (you)");
+            holder.voteContainer.setVisibility(View.GONE);
+            holder.editButton.setVisibility(View.VISIBLE);
+            holder.editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.editSwitcher.showNext(); //or switcher.showPrevious();
+//                    holder.editText.setText(holder.content.getText());
+                    if (holder.editButton.getText().equals("Edit Review")) {
+                        holder.editButton.setText("Done Editing");
+                        holder.editText.setText(holder.content.getText());
+
+                    } else {
+                        holder.editButton.setText("Edit Review");
+                        InputMethodManager imm = (InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        Map<String, String> updateData = new HashMap<String, String>();
+                        updateData.put("content", holder.editText.getText().toString());
+                        HttpPost updateReview = new HttpPost(updateData);
+                        String result = "";
+                        URL query = null;
+                        URL rawQuery = null;
+                        String testString = UPDATE_REVIEW + "?where={\"id\":\"" + reviewsListItems.get(position).getReviewId() + "\"}" + TOKEN_QUERY + (new UserUtil(context).getUserToken());
+                        try {
+                            rawQuery = new URL(UPDATE_REVIEW + "?where={\"id\":\"" + reviewsListItems.get(position).getReviewId() + "\"}&" + TOKEN_QUERY + (new UserUtil(context).getUserToken()));
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            query = HttpUtils.encodeQuery(rawQuery);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            result = updateReview.execute(query.toString()).get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                        if(!result.isEmpty()){
+                            holder.content.setText(holder.editText.getText().toString());
+                        }else {
+                            Toast.makeText(context,"something has gone wrong. please try again later", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+
         }
 
+        /* set click listener for deleting a review */
         holder.deleteReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /* set up dialog for confirming review deletion */
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext())
-                    .setTitle("Confirm Deletion")
-                    .setMessage("Are you sure you want to delete your review?");
+                        .setTitle("Confirm Deletion")
+                        .setMessage("Are you sure you want to delete your review?");
+
+                /* dismiss dialog if user cancels */
                 alertDialog.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
+
+                /* delete reviews if user confirms */
                 alertDialog.setNegativeButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         HttpDelete delete = new HttpDelete();
-                        String query = GET_REVIEWS+reviewsListItem.getReview().getId()+TOKEN_QUERY+(new UserUtil(context).getUserToken());
+                        String query = GET_REVIEWS + reviewsListItem.getReview().getId() + TOKEN_QUERY + (new UserUtil(context).getUserToken());
                         try {
                             delete.execute(query);
-                        }catch(Exception e) {
-                            Toast.makeText(context,"oops, something went wrong with the request", Toast.LENGTH_SHORT);
+                        } catch (Exception e) {
+                            Toast.makeText(context, "oops, something went wrong with the request. Please try again later.", Toast.LENGTH_SHORT);
                         }
                         reviewsListItems.remove(position);
                         notifyItemRemoved(position);
                     }
                 });
+
+                /* create and  open dialog */
                 AlertDialog dialog = alertDialog.create();
                 dialog.show();
 
@@ -300,6 +375,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         public ImageView downvote;
         public TextView daysAgo;
         public TextView deleteReview;
+        public LinearLayout voteContainer;
+        public TextView editButton;
+        public ViewSwitcher editSwitcher;
+        public EditText editText;
 
         /**
          * Constructor for ViewHolder
@@ -316,6 +395,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             downvote = (ImageView) itemView.findViewById(R.id.reviews_not_helpful);
             daysAgo = (TextView) itemView.findViewById(R.id.reviews_days_ago);
             deleteReview = (TextView) itemView.findViewById(R.id.reviews_delete_review);
+            voteContainer = (LinearLayout) itemView.findViewById(R.id.reviews_vote_container);
+            editButton = (TextView) itemView.findViewById(R.id.reviews_edit_button);
+            editSwitcher = (ViewSwitcher) itemView.findViewById(R.id.reviews_content_switcher);
+            editText = (EditText) itemView.findViewById(R.id.reviews_edit);
+
         }
     }
 }
