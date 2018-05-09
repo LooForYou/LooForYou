@@ -87,10 +87,13 @@ public class BathroomViewFragment extends Fragment {
     private int userRating;
     private Bathroom bathroom;
     private View view;
+    private LinearLayout newReviewContainer;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private boolean hasReview;
 
     private OnFragmentInteractionListener mListener;
 
@@ -130,7 +133,7 @@ public class BathroomViewFragment extends Fragment {
         newReviewDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         userRating = 1;
-
+        hasReview = false;
     }
 
     @Override
@@ -139,6 +142,8 @@ public class BathroomViewFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_bathroom_view, container, false);
         /* instantiate bathroom fragment button */
         Button button = (Button) view.findViewById(R.id.bathroom_fragment_button);
+
+        newReviewContainer = (LinearLayout) view.findViewById(R.id.bathroom_fragment_review_container);
 
         /* get arguments from bundle */
         bathroom = getArguments().getParcelable("current bathroom");
@@ -298,11 +303,10 @@ public class BathroomViewFragment extends Fragment {
             }
         });
 
-        LinearLayout newReviewContainer = (LinearLayout) view.findViewById(R.id.bathroom_fragment_review_container);
 
         newReviewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (!new UserUtil(getContext()).isLoggedIn()) {
                     newReviewDialog.dismiss();
                     Intent notLoggedInIntent = new Intent(getContext(), ProfileActivity.class);
@@ -378,7 +382,7 @@ public class BathroomViewFragment extends Fragment {
                     });
 
                     Button submit = (Button) newReviewDialog.findViewById(R.id.submit);
-                    Button cancel = (Button) newReviewDialog.findViewById(R.id.cancel);
+                    final Button cancel = (Button) newReviewDialog.findViewById(R.id.cancel);
                     final EditText reviewContent = (EditText) newReviewDialog.findViewById(R.id.review_content);
 
                     submit.setOnClickListener(new View.OnClickListener() {
@@ -420,6 +424,7 @@ public class BathroomViewFragment extends Fragment {
 
                             } else {
                                 Toast.makeText(getContext(), "Thank you for submitting your review", Toast.LENGTH_SHORT).show();
+                                newReviewContainer.setVisibility(View.GONE);
                             /* refresh list reviews list view */
                                 loadReviews(view, bathroom);
                                 newReviewDialog.dismiss();
@@ -457,39 +462,43 @@ public class BathroomViewFragment extends Fragment {
         /* load list of review and reviews from server */
         ArrayList<Reviewer> reviewers = loadReviewersFromServer(bathroom);
         ArrayList<Review> reviews = loadReviewsFromServer(bathroom);
-
+        UserUtil userUtil = new UserUtil(getContext());
+        String currentUserID = userUtil.getUserID();
         /* match reviewer to reviews */
         for (Review review : reviews) {
             review.setReviewerInfo(reviewers);
+            if(review.getReviewerId().equals(userUtil.getUserID())){
+                hasReview = true;
+            }
+            ReviewsListItem reviewsListItem = new ReviewsListItem(
+                    review,
+                    review.getReviewerId(),
+                    review.getReviewerUserName(),
+                    review.getContent(),
+                    review.getReviewerImageUrl(),
+                    review.getLikes(),
+                    review.getRating(),
+                    review.getTimeCreated(),
+                    review.getTimeUpdated());
+            if (!currentUserID.isEmpty() && review.getReviewerId().equals(currentUserID)) {
+                    /* put current user's review on top */
+                reviewsListItems.add(0, reviewsListItem);
+            } else {
+                reviewsListItems.add(reviewsListItem);
+            }
         }
 
         /*  load review list items to list */
         if (reviews.size() > 0) {
             TextView noReviews = (TextView) v.findViewById(R.id.no_reviews);
             noReviews.setVisibility(View.GONE);
-            UserUtil userUtil = new UserUtil(getContext());
-            String currentUserID = userUtil.getUserID();
-            for (Review review : reviews) {
-                ReviewsListItem reviewsListItem = new ReviewsListItem(
-                        review,
-                        review.getReviewerId(),
-                        review.getReviewerUserName(),
-                        review.getContent(),
-                        review.getReviewerImageUrl(),
-                        review.getLikes(),
-                        review.getRating(),
-                        review.getTimeCreated(),
-                        review.getTimeUpdated());
-                if (!currentUserID.isEmpty() && review.getReviewerId().equals(currentUserID)) {
-                    /* put current user's review on top */
-                    reviewsListItems.add(0, reviewsListItem);
-                } else {
-                    reviewsListItems.add(reviewsListItem);
-                }
+            if(hasReview){
+                newReviewContainer.setVisibility(View.GONE);
             }
             ReviewsListItem userItem = null;
-            if (userUtil.isLoggedIn()) {
+            if (userUtil.isLoggedIn() && hasReview) {
                 userItem = reviewsListItems.remove(0);
+
             }
             /* sort reviews list by popularity using custom comparator */
             Collections.sort(reviewsListItems, new Comparator<ReviewsListItem>() {
@@ -504,7 +513,7 @@ public class BathroomViewFragment extends Fragment {
                 }
             });
 
-            if (userUtil.isLoggedIn()) {
+            if (userUtil.isLoggedIn() && hasReview) {
                 reviewsListItems.add(0,userItem);
             }
         }

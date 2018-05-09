@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/default_padding">
+            >
+            <!--android:paddingBottom="@dimen/default_padding"-->
 
             <RelativeLayout
                 android:id="@+id/bathroom_fragment_webview_container"
@@ -197,7 +198,7 @@
                             android:id="@+id/bathroom_fragment_stars"
                             android:layout_width="115dp"
                             android:layout_height="30dp"
-                            android:src="@drawable/five_stars" />
+                            android:src="@drawable/five_stars_90_15" />
 
                         <TextView
                             android:id="@+id/bathroom_fragment_num_reviews"
@@ -441,22 +442,22 @@
             <!--</LinearLayout>-->
 
             <include layout="@layout/divider" />
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_padding"
+                android:text="Reviews"
+                android:paddingStart="@dimen/default_padding"
+                android:textColor="@color/black"
+                android:textSize="21sp" />
             <LinearLayout
                 android:id="@+id/bathroom_fragment_review_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/default_padding"
-                android:paddingStart="@dimen/default_padding">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_padding"
-                    android:text="Reviews"
-                    android:textColor="@color/black"
-                    android:textSize="21sp" />
+                android:paddingStart="@dimen/default_padding"
+                android:layout_marginBottom="@dimen/default_padding">
 
                 <ImageView
                     android:layout_width="120dp"
@@ -485,11 +486,11 @@
                     android:text="START YOUR REVIEW"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
-
+            </LinearLayout>
                 <TextView
+                    android:paddingStart="@dimen/default_padding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_padding"
                     android:text="Top Reviews"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
@@ -506,20 +507,22 @@
                     android:id="@+id/no_reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="There are currently no reviews for this location" />
+                    android:paddingStart="@dimen/default_padding"
+                    android:text="There are currently no reviews for this location"
+                    android:layout_marginBottom="@dimen/default_padding"/>
 
                 <LinearLayout
                     android:id="@+id/review_scroll_container"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:paddingBottom="30dp">
+                    android:layout_height="wrap_content"
+                    >
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/review_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
-            </LinearLayout>
+
 
             <Button
                 android:id="@+id/bathroom_fragment_button"

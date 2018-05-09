@@ -55,6 +55,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     private List<ReviewsListItem> reviewsListItems;
     /* activity context*/
     private Context context;
+    /* global rating */
+    private int ratingNum;
 
     /**
      * Constructor for Reviews Adapter
@@ -90,6 +92,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         /* get current review list item*/
         final ReviewsListItem reviewsListItem = reviewsListItems.get(position);
+        /* initialize rating */
+        if(reviewsListItem.getReview().getReviewerId().equals(new UserUtil(context).getUserID())){
+            ratingNum = reviewsListItem.getRating();
+        }
         /* load reviewer name */
         holder.reviewer.setText(reviewsListItem.getReviewer());
         /* load review */
@@ -265,18 +271,40 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             holder.editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.editSwitcher.showNext(); //or switcher.showPrevious();
-//                    holder.editText.setText(holder.content.getText());
+                    holder.editSwitcher.showNext();
+                    holder.ratingSwitcher.showNext();
+
                     if (holder.editButton.getText().equals("Edit Review")) {
                         holder.editButton.setText("Done Editing");
                         holder.editText.setText(holder.content.getText());
+                        Toast.makeText(context,"rating: "+ratingNum, Toast.LENGTH_SHORT).show();
+                        if(ratingNum == 1){
+                            holder.rating.setImageResource(R.drawable.one_star_90_15);
+                            setEditStars(holder,1);
+                        }else if(ratingNum == 2){
+                            holder.rating.setImageResource(R.drawable.two_stars_90_15);
+                            setEditStars(holder,2);
+                        }else if(ratingNum == 3){
+                            holder.rating.setImageResource(R.drawable.three_stars_90_15);
+                            setEditStars(holder,3);
+                        }else if(ratingNum == 4){
+                            holder.rating.setImageResource(R.drawable.four_stars_90_15);
+                            setEditStars(holder,4);
+                        }else if(ratingNum == 5){
+                            holder.rating.setImageResource(R.drawable.five_stars_90_15);
+                            setEditStars(holder,5);
+                        }
+
 
                     } else {
                         holder.editButton.setText("Edit Review");
                         InputMethodManager imm = (InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                        /* start edit content */
                         Map<String, String> updateData = new HashMap<String, String>();
                         updateData.put("content", holder.editText.getText().toString());
+                        updateData.put("rating", String.valueOf(ratingNum));
                         HttpPost updateReview = new HttpPost(updateData);
                         String result = "";
                         URL query = null;
@@ -303,14 +331,71 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                         }
                         if(!result.isEmpty()){
                             holder.content.setText(holder.editText.getText().toString());
+                            reviewsListItem.getReview().setRating(ratingNum);
+                            if(ratingNum == 1){
+                                holder.rating.setImageResource(R.drawable.one_star_90_15);
+                            }else if(ratingNum == 2) {
+                                holder.rating.setImageResource(R.drawable.two_stars_90_15);
+                            }else if(ratingNum == 3) {
+                                holder.rating.setImageResource(R.drawable.three_stars_90_15);
+                            }else if(ratingNum == 4) {
+                                holder.rating.setImageResource(R.drawable.four_stars_90_15);
+                            }else if(ratingNum == 5) {
+                                holder.rating.setImageResource(R.drawable.five_stars_90_15);
+                            }
+
+
                         }else {
                             Toast.makeText(context,"something has gone wrong. please try again later", Toast.LENGTH_SHORT).show();
                         }
+                        /* end edit content */
+
                     }
                 }
             });
 
         }
+
+        holder.star1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEditStars(holder,1);
+                ratingNum = 1;
+            }
+        });
+
+        holder.star2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEditStars(holder,2);
+                ratingNum = 2;
+            }
+        });
+
+        holder.star3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEditStars(holder,3);
+                ratingNum = 3;
+            }
+        });
+
+        holder.star4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEditStars(holder,4);
+                ratingNum = 4;
+            }
+        });
+
+        holder.star5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEditStars(holder,5);
+                ratingNum = 5;
+                Toast.makeText(context,"5: "+ratingNum, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         /* set click listener for deleting a review */
         holder.deleteReview.setOnClickListener(new View.OnClickListener() {
@@ -353,6 +438,43 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         });
 
     }
+    /**
+     * helper method for changing image resources when editing stars
+     * */
+    public void setEditStars(ViewHolder holder, int newRating){
+        if(newRating == 1){
+            holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star2.setImageResource(R.drawable.ic_star_expanded_empty_15);
+            holder.star3.setImageResource(R.drawable.ic_star_expanded_empty_15);
+            holder.star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
+            holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+        }else if(newRating == 2){
+            holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star3.setImageResource(R.drawable.ic_star_expanded_empty_15);
+            holder.star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
+            holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+        }else if(newRating == 3){
+            holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star3.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
+            holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+        }else if(newRating == 4){
+            holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star3.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star4.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+        }else if(newRating == 5){
+            holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star3.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star4.setImageResource(R.drawable.ic_star_expanded_full_15);
+            holder.star5.setImageResource(R.drawable.ic_star_expanded_full_15);
+        }
+    }
+
 
     /**
      * gets number of review list items
@@ -381,7 +503,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         public LinearLayout voteContainer;
         public TextView editButton;
         public ViewSwitcher editSwitcher;
+        public ViewSwitcher ratingSwitcher;
         public EditText editText;
+        public ImageView star1;
+        public ImageView star2;
+        public ImageView star3;
+        public ImageView star4;
+        public ImageView star5;
 
         /**
          * Constructor for ViewHolder
@@ -401,7 +529,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             voteContainer = (LinearLayout) itemView.findViewById(R.id.reviews_vote_container);
             editButton = (TextView) itemView.findViewById(R.id.reviews_edit_button);
             editSwitcher = (ViewSwitcher) itemView.findViewById(R.id.reviews_content_switcher);
+            ratingSwitcher = (ViewSwitcher) itemView.findViewById(R.id.reviews_rating_switcher);
             editText = (EditText) itemView.findViewById(R.id.reviews_edit);
+            star1 = (ImageView) itemView.findViewById(R.id.reviews_star1);
+            star2 = (ImageView) itemView.findViewById(R.id.reviews_star2);
+            star3 = (ImageView) itemView.findViewById(R.id.reviews_star3);
+            star4 = (ImageView) itemView.findViewById(R.id.reviews_star4);
+            star5 = (ImageView) itemView.findViewById(R.id.reviews_star5);
 
         }
     }
