@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_padding"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:text="Write a Review!"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/star_1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/border"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:src="@drawable/ic_star_expanded_full_15" />
+
+            <ImageView
+                android:id="@+id/star_2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/border"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:src="@drawable/ic_star_expanded_empty_15" />
+
+            <ImageView
+                android:id="@+id/star_3"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/border"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:src="@drawable/ic_star_expanded_empty_15" />
+
+            <ImageView
+                android:id="@+id/star_4"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/border"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:src="@drawable/ic_star_expanded_empty_15" />
+
+            <ImageView
+                android:id="@+id/star_5"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/border"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:src="@drawable/ic_star_expanded_empty_15" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/review_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/border_rounded"
+            android:gravity="top"
+            android:hint="Say something about this location."
+            android:lines="6"
+            android:padding="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryLight"
+                android:text="Submit"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryLight"
+                android:text="Cancel"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

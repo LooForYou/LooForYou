@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -549,7 +550,7 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
                 final Fragment fragment = new BathroomViewFragment();
                 final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.frame, fragment);
+                fragmentTransaction.replace(R.id.frame, fragment,"frag_tag");
                 fragmentTransaction.addToBackStack(null);
 
                 /* send messges to fragment */
@@ -600,6 +601,16 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+
+
+    public void testFragRefresh(){
+        android.app.Fragment currentFragment = getFragmentManager().findFragmentByTag("frag_tag");
+        android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//        fragmentTransaction.detach(currentFragment);
+        fragmentTransaction.attach(currentFragment);
+        fragmentTransaction.commit();
     }
 }
 

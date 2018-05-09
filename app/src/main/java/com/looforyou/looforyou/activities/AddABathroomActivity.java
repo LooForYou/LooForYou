@@ -189,7 +189,6 @@ public class AddABathroomActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("Custom Tag","New Bathroom Added");
                 Toast.makeText(AddABathroomActivity.this,"Bathroom Added", Toast.LENGTH_LONG).show();
             }
         });

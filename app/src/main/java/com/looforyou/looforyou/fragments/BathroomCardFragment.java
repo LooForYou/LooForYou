@@ -153,8 +153,12 @@ public class BathroomCardFragment extends Fragment implements Serializable {
 
         /* load bookmarks and set bookmark button accordingly */
         bookmark = (ImageView) view.findViewById(R.id.main_card_bookmark);
-        if (bookmarksUtil.getBookmarkedBathroomIds().contains(bathroom.getId())) {
-            bookmark.setImageResource(R.drawable.ic_bookmark_enabled_20);
+        try{
+            if (bookmarksUtil.getBookmarkedBathroomIds().contains(bathroom.getId())) {
+                bookmark.setImageResource(R.drawable.ic_bookmark_enabled_20);
+            }
+        }catch(Exception e){
+
         }
 
         /* set listener on bookmark button */

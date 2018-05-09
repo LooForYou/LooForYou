@@ -58,11 +58,22 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/reviews_days_ago"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="top|right"
                         android:text="0 days ago"
                         android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:id="@+id/reviews_delete_review"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|right"
+                        android:text="Delete Review"
+                        android:textColor="#df7070"
+                        android:paddingTop="10dp"
+                        android:visibility="gone"
                         />
                 </LinearLayout>
 

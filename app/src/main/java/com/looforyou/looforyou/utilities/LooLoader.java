@@ -49,7 +49,6 @@ public class LooLoader {
             String result;
             HttpGet getRequest = new HttpGet();
             result = getRequest.execute(API_URL).get();
-            Log.v("result_val", result);
             ArrayList<Bathroom> bathrooms;
             if (!result.equals("")) {
                 bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(result, Bathroom[].class)));

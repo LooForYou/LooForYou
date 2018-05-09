@@ -1,5 +1,6 @@
 package com.looforyou.looforyou.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -11,9 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,14 +31,17 @@ import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.Models.Review;
 import com.looforyou.looforyou.Models.Reviewer;
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.activities.ProfileActivity;
 import com.looforyou.looforyou.adapters.ReviewsAdapter;
 import com.looforyou.looforyou.adapters.ReviewsListItem;
 import com.looforyou.looforyou.utilities.BookmarksUtil;
 import com.looforyou.looforyou.utilities.HttpGet;
+import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.HttpUtils;
 import com.looforyou.looforyou.utilities.MetricConverter;
 import com.looforyou.looforyou.utilities.ReviewDeserializer;
 import com.looforyou.looforyou.utilities.ReviewerDeserializer;
+import com.looforyou.looforyou.utilities.UserUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,15 +49,20 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
 import static com.looforyou.looforyou.Constants.GET_REVIEWS;
 import static com.looforyou.looforyou.Constants.REVIEWS_LIST;
+import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
 /**
@@ -72,7 +83,10 @@ public class BathroomViewFragment extends Fragment {
     private BookmarksUtil bookmarksUtil;
     private ImageButton bathroomBookmarkButton;
     private TextView bathroomBookmarkText;
-
+    private Dialog newReviewDialog;
+    private int userRating;
+    private Bathroom bathroom;
+    private View view;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -111,23 +125,29 @@ public class BathroomViewFragment extends Fragment {
         }
         /* instantiate bookmarksUtil object */
         bookmarksUtil = new BookmarksUtil(getContext());
+         /* initialize new dialog */
+        newReviewDialog = new Dialog(getContext());
+        newReviewDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        userRating = 1;
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         /* Inflate the layout for this fragment */
-        View view = inflater.inflate(R.layout.fragment_bathroom_view, container, false);
+        view = inflater.inflate(R.layout.fragment_bathroom_view, container, false);
         /* instantiate bathroom fragment button */
         Button button = (Button) view.findViewById(R.id.bathroom_fragment_button);
 
         /* get arguments from bundle */
-        Bathroom bathroom = getArguments().getParcelable("current bathroom");
-        Location location = getArguments().getParcelable("current location");
+        bathroom = getArguments().getParcelable("current bathroom");
+        final Location location = getArguments().getParcelable("current location");
 
         /* bind clicklistener to bathroom fragment button */
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Toast.makeText(getContext(), "bathroom fragment clicked ", Toast.LENGTH_SHORT).show();
             }
         });
@@ -181,16 +201,19 @@ public class BathroomViewFragment extends Fragment {
 
         /* bind clicklistener to bathroom directions button to open navigation */
         bathroomBookmarkButton = (ImageButton) view.findViewById(R.id.bathroom_fragment_toggle_bookmark_button);
-        if (bookmarksUtil.getBookmarkedBathroomIds().contains(bathroom.getId())) {
-            if (bookmarksUtil.bookmarkBathroom(bathroom.getId())) {
-                bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_enabled_45);
-                //TODO update bookmark on cardview in Main Activity (do not let it affect MapActivity)
-               // ((MainActivity)getActivity()).refreshBookmarkData();
+        try {
+            if (bookmarksUtil.getBookmarkedBathroomIds().contains(bathroom.getId())) {
+                if (bookmarksUtil.bookmarkBathroom(bathroom.getId())) {
+                    bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_enabled_45);
+                    //TODO update bookmark on cardview in Main Activity (do not let it affect MapActivity)
+                    // ((MainActivity)getActivity()).refreshBookmarkData();
+                }
+            } else {
+                if (bookmarksUtil.unBookmarkBathroom(bathroom.getId())) {
+                    bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_disabled_45);
+                }
             }
-        } else {
-            if (bookmarksUtil.unBookmarkBathroom(bathroom.getId())) {
-                bathroomBookmarkButton.setImageResource(R.drawable.ic_bookmark_button_disabled_45);
-            }
+        } catch (Exception e) {
         }
         /* bind clicklistener to bookmark button in order to bookmark bathroom */
         bathroomBookmarkButton.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +239,7 @@ public class BathroomViewFragment extends Fragment {
 
         /* count number of reviews */
         TextView bathroomNumReviews = view.findViewById(R.id.bathroom_fragment_num_reviews);
-        if(reviewsListItems != null) {
+        if (reviewsListItems != null) {
             bathroomNumReviews.setText(reviewsListItems.size() + (reviewsListItems.size() == 1 ? " review" : "reviews"));
         }
 
@@ -259,7 +282,7 @@ public class BathroomViewFragment extends Fragment {
         loadWebviewFromURL(loadedImage, bathroom.getImageURL());
         final ProgressBar Pbar = (ProgressBar) view.findViewById(R.id.bathroom_fragment_progress);
         loadedImage.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress) {
+            public void onProgressChanged(WebView webview, int progress) {
                 if (progress < 100 && Pbar.getVisibility() == ProgressBar.GONE) {
                     Pbar.setVisibility(ProgressBar.VISIBLE);
                 }
@@ -270,6 +293,146 @@ public class BathroomViewFragment extends Fragment {
             }
         });
 
+        LinearLayout newReviewContainer = (LinearLayout) view.findViewById(R.id.bathroom_fragment_review_container);
+
+        newReviewContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!new UserUtil(getContext()).isLoggedIn()) {
+                    newReviewDialog.dismiss();
+                    Intent notLoggedInIntent = new Intent(getContext(), ProfileActivity.class);
+                    getContext().startActivity(notLoggedInIntent);
+                } else {
+                    newReviewDialog.setContentView(R.layout.dialog_new_review);
+                    newReviewDialog.show();
+
+                    final ImageView star1 = (ImageView) newReviewDialog.findViewById(R.id.star_1);
+                    final ImageView star2 = (ImageView) newReviewDialog.findViewById(R.id.star_2);
+                    final ImageView star3 = (ImageView) newReviewDialog.findViewById(R.id.star_3);
+                    final ImageView star4 = (ImageView) newReviewDialog.findViewById(R.id.star_4);
+                    final ImageView star5 = (ImageView) newReviewDialog.findViewById(R.id.star_5);
+
+                    star1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star2.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            star3.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            userRating = 1;
+                        }
+                    });
+
+                    star2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star3.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            userRating = 2;
+                        }
+                    });
+
+                    star3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star3.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            userRating = 3;
+                        }
+                    });
+
+                    star4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star3.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star4.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
+                            userRating = 4;
+                        }
+                    });
+
+                    star5.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            star1.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star2.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star3.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star4.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            star5.setImageResource(R.drawable.ic_star_expanded_full_15);
+                            userRating = 5;
+                        }
+                    });
+
+                    Button submit = (Button) newReviewDialog.findViewById(R.id.submit);
+                    Button cancel = (Button) newReviewDialog.findViewById(R.id.cancel);
+                    final EditText reviewContent = (EditText) newReviewDialog.findViewById(R.id.review_content);
+
+                    submit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Date timeNow = Calendar.getInstance().getTime();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); //pattern for date parsing from string to time
+                            String nowString = "";
+                            UserUtil userUtil = new UserUtil(getContext());
+                            if (reviewContent.getText().toString().trim().isEmpty()) {
+                                Toast.makeText(getContext(), "Please say something about this bathroom first", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            try {
+                                nowString = dateFormat.format(timeNow).toString();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Map<String, String> reviewData = new HashMap<String, String>();
+                            reviewData.put("rating", String.valueOf(userRating));
+                            reviewData.put("content", reviewContent.getText().toString());
+                            reviewData.put("time_created", nowString);
+                            reviewData.put("time_updated", nowString);
+                            reviewData.put("likes", "0");
+                            reviewData.put("bathroomId", bathroom.getId());
+                            reviewData.put("accountId", userUtil.getUserID());
+                            String reviewPostResult = "";
+                            HttpPost reviewPost = new HttpPost(reviewData);
+                            try {
+                                reviewPostResult = reviewPost.execute(GET_REVIEWS + TOKEN_QUERY + userUtil.getUserToken()).get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (reviewPostResult.isEmpty()) {
+                                Toast.makeText(getContext(), "Something has gone wrong", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Toast.makeText(getContext(), "Thank you for submitting your review", Toast.LENGTH_SHORT).show();
+                            /* refresh list reviews list view */
+                                loadReviews(view, bathroom);
+                                newReviewDialog.dismiss();
+                            }
+                        }
+                    });
+
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            newReviewDialog.dismiss();
+                        }
+                    });
+                }
+            }
+
+        });
+
         /* load reviews */
         loadReviews(view, bathroom);
 
@@ -278,9 +441,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * load reviews from server
-     * @param v parent View
+     *
+     * @param v        parent View
      * @param bathroom current Bathroom
-     * */
+     */
     public void loadReviews(View v, Bathroom bathroom) {
         /* define recycler view*/
         recyclerView = (RecyclerView) v.findViewById(R.id.review_recycler_view);
@@ -301,15 +465,45 @@ public class BathroomViewFragment extends Fragment {
         if (reviews.size() > 0) {
             TextView noReviews = (TextView) v.findViewById(R.id.no_reviews);
             noReviews.setVisibility(View.GONE);
+            UserUtil userUtil = new UserUtil(getContext());
+            String currentUserID = userUtil.getUserID();
             for (Review review : reviews) {
                 ReviewsListItem reviewsListItem = new ReviewsListItem(
                         review,
+                        review.getReviewerId(),
                         review.getReviewerUserName(),
                         review.getContent(),
                         review.getReviewerImageUrl(),
                         review.getLikes(),
-                        review.getRating());
-                reviewsListItems.add(reviewsListItem);
+                        review.getRating(),
+                        review.getTimeCreated(),
+                        review.getTimeUpdated());
+                if (!currentUserID.isEmpty() && review.getReviewerId().equals(currentUserID)) {
+                    /* put current user's review on top */
+                    reviewsListItems.add(0, reviewsListItem);
+                } else {
+                    reviewsListItems.add(reviewsListItem);
+                }
+            }
+            ReviewsListItem userItem = null;
+            if (userUtil.isLoggedIn()) {
+                userItem = reviewsListItems.remove(0);
+            }
+            /* sort reviews list by popularity using custom comparator */
+            Collections.sort(reviewsListItems, new Comparator<ReviewsListItem>() {
+                @Override
+                public int compare(ReviewsListItem t1, ReviewsListItem t2) {
+                    if (t1.getPoints() < t2.getPoints()) {
+                        return 1;
+                    } else if (t1.getPoints() > t2.getPoints()) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
+
+            if (userUtil.isLoggedIn()) {
+                reviewsListItems.add(0,userItem);
             }
         }
 
@@ -330,8 +524,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * method to load reviewers from server
+     *
      * @param bathroom current bathroom
-     * @return ArrayList<Reviewer> list of reviewers*/
+     * @return ArrayList<Reviewer> list of reviewers
+     */
     public ArrayList<Reviewer> loadReviewersFromServer(Bathroom bathroom) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Reviewer.class, new ReviewerDeserializer());
@@ -355,8 +551,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * method to load reviews from server
+     *
      * @param bathroom current bathroom
-     * @return ArrayList<Review> list of reviews*/
+     * @return ArrayList<Review> list of reviews
+     */
     public ArrayList<Review> loadReviewsFromServer(Bathroom bathroom) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Review.class, new ReviewDeserializer());
@@ -387,9 +585,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * load image url into webview
+     *
      * @param webview webview object
-     * @param url string url of image
-     * */
+     * @param url     string url of image
+     */
     public void loadWebviewFromURL(WebView webview, String url) {
         if (url == null || url.equals("")) {
             url = "no-image-uploaded.png";
@@ -401,8 +600,9 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * handler for directions button for navigation
+     *
      * @param bathroom current bathroom
-     * */
+     */
     public void onDirectionsButtonClick(Bathroom bathroom) {
         Uri markerUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + bathroom.getLatLng().latitude + "," + bathroom.getLatLng().longitude);
         Intent directionsIntent = new Intent(Intent.ACTION_VIEW, markerUri);
@@ -417,6 +617,7 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * handler for bookmark button bookmarking bathrooms
+     *
      * @param bathroom current bathroom
      **/
     public void onBookmarkButtonClick(Bathroom bathroom) {
@@ -431,8 +632,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * getter for bathroom amenities
+     *
      * @param bathroom current bathroom
-     * @return String formatted amenities string */
+     * @return String formatted amenities string
+     */
     public String getStringAmenities(Bathroom bathroom) {
         ArrayList<String> amenitiesList = bathroom.getAmenities();
         Collections.sort(amenitiesList);
@@ -442,10 +645,11 @@ public class BathroomViewFragment extends Fragment {
     }
 
     /**
-     *  getter for bathroom description
+     * getter for bathroom description
+     *
      * @param bathroom current bathroom
      * @return String formatted bathroom description
-     * */
+     */
     public String getStringDescription(Bathroom bathroom) {
         String desc1 = bathroom.getDescriptions().size() > 0 ? bathroom.getDescriptions().get(0) : "";
         String desc2 = bathroom.getDescriptions().size() > 1 ? bathroom.getDescriptions().get(1) : "";
@@ -454,9 +658,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * getter for bathroom amenities
+     *
      * @param bathroom current bathroom
      * @return String formatted anemities string
-     * */
+     */
     public String getAmenitiesString(Bathroom bathroom) {
         ArrayList<String> amenitiesList = bathroom.getAmenities();
         Collections.sort(amenitiesList);
@@ -467,9 +672,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * getter for bathroom maintenance hours
+     *
      * @param bathroom current bathroom
      * @return formatted maintenance hours string
-     * */
+     */
     public String getMaintenanceHoursString(Bathroom bathroom) {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
         String mStart = null;
@@ -502,9 +708,10 @@ public class BathroomViewFragment extends Fragment {
 
     /**
      * getter for bathroom hours
+     *
      * @param bathroom current bathroom
      * @return formatted operation hours string
-     * */
+     */
     public String getHoursString(Bathroom bathroom) {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
         Date startTime = bathroom.getStartTime();

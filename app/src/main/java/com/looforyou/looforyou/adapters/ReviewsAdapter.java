@@ -1,17 +1,24 @@
 package com.looforyou.looforyou.adapters;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.utilities.HttpDelete;
 import com.looforyou.looforyou.utilities.HttpPut;
+import com.looforyou.looforyou.utilities.UserUtil;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -22,6 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.looforyou.looforyou.Constants.DOWNVOTE;
 import static com.looforyou.looforyou.Constants.GET_REVIEWS;
+import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
 import static com.looforyou.looforyou.Constants.UPVOTE;
 import static com.looforyou.looforyou.utilities.Stars.getStarDrawableResource;
 
@@ -68,7 +76,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
      * @param position current position
      */
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         /* get current review list item*/
         final ReviewsListItem reviewsListItem = reviewsListItems.get(position);
         /* load reviewer name */
@@ -224,6 +232,48 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                 }
             }
         });
+
+        /* display number of days elapsed */
+        holder.daysAgo.setText(reviewsListItem.getDaysAgo()+ (reviewsListItem.getDaysAgo() == 1 ? "day ago" : " days ago"));
+
+        /* display custom options unique to a user */
+        if(reviewsListItem.getReviewerId().equals(new UserUtil(context).getUserID())){
+           holder.deleteReview.setVisibility(View.VISIBLE);
+            holder.reviewer.setText(reviewsListItem.getReviewer()+" (you)");
+        }
+
+        holder.deleteReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(view.getContext())
+                    .setTitle("Confirm Deletion")
+                    .setMessage("Are you sure you want to delete your review?");
+                alertDialog.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.setNegativeButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        HttpDelete delete = new HttpDelete();
+                        String query = GET_REVIEWS+reviewsListItem.getReview().getId()+TOKEN_QUERY+(new UserUtil(context).getUserToken());
+                        try {
+                            delete.execute(query);
+                        }catch(Exception e) {
+                            Toast.makeText(context,"oops, something went wrong with the request", Toast.LENGTH_SHORT);
+                        }
+                        reviewsListItems.remove(position);
+                        notifyItemRemoved(position);
+                    }
+                });
+                AlertDialog dialog = alertDialog.create();
+                dialog.show();
+
+            }
+        });
+
     }
 
     /**
@@ -248,6 +298,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         public ImageView rating;
         public ImageView upvote;
         public ImageView downvote;
+        public TextView daysAgo;
+        public TextView deleteReview;
 
         /**
          * Constructor for ViewHolder
@@ -262,6 +314,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             rating = (ImageView) itemView.findViewById(R.id.reviews_rating);
             upvote = (ImageView) itemView.findViewById(R.id.reviews_helpful);
             downvote = (ImageView) itemView.findViewById(R.id.reviews_not_helpful);
+            daysAgo = (TextView) itemView.findViewById(R.id.reviews_days_ago);
+            deleteReview = (TextView) itemView.findViewById(R.id.reviews_delete_review);
         }
     }
 }

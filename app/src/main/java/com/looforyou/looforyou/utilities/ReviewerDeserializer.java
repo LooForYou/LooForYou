@@ -22,7 +22,6 @@ public class ReviewerDeserializer implements JsonDeserializer<Reviewer> {
         JsonObject jsonObject = json.getAsJsonObject();
 
         String firstName = jsonObject.get("first_name").getAsString();
-        Log.v("testresults firstname",firstName);
         String lastName = jsonObject.get("last_name").getAsString();
         String userName = jsonObject.get("username").getAsString();
         String imageUrl = jsonObject.get("image_url").getAsString();
