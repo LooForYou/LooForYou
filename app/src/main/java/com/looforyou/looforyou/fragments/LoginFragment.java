@@ -15,32 +15,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.looforyou.looforyou.Models.Token;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.activities.BookmarkActivity;
 import com.looforyou.looforyou.activities.ProfileActivity;
-import com.looforyou.looforyou.utilities.HttpPost;
-import com.looforyou.looforyou.utilities.TokenDeserializer;
 import com.looforyou.looforyou.utilities.UserUtil;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.looforyou.looforyou.Constants.LOGIN;
-import static com.looforyou.looforyou.Constants.ONE_YEAR;
 
 /**
  * This is a fragment for Login/Signups
@@ -129,37 +117,10 @@ public class LoginFragment extends Fragment {
         ) {
             @Override
             public void onClick(View view) {
-               /* set up arguments for server call */
-                Map<String, String> credentials = new HashMap<String, String>();
-                if (username.getText().toString().toLowerCase().contains("@")) {
-                    credentials.put("email", username.getText().toString().toLowerCase().trim());
-                } else {
-                    credentials.put("username", username.getText().toString().toLowerCase().trim());
-                }
-                credentials.put("password", password.getText().toString());
-                credentials.put("ttl", String.valueOf(ONE_YEAR));
-
-                 /* log in via server call */
-                HttpPost post = new HttpPost(credentials);
-                String result = null;
-                try {
-                    result = post.execute(LOGIN).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                if (result.isEmpty()) {
-                    Toast.makeText(getContext(), "invalid username or password", Toast.LENGTH_SHORT).show();
-                } else {
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeAdapter(Token.class, new TokenDeserializer());
-                    Gson gson = gsonBuilder.create();
-                    Token token = gson.fromJson(result, Token.class);
-
-                    /* set userToken and ID to shared preferences */
-                    userUtil.setUserToken(token.getID());
-                    userUtil.setUserID(token.getUserID());
+                if (userUtil.logIn(username, password, getContext())) {
+                    /* hide keyboard oncreate */
+                    InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                     /* triger logged in activity for profile activity, if available */
                     try {
@@ -175,10 +136,6 @@ public class LoginFragment extends Fragment {
                         ((BookmarkActivity) getActivity()).onLoggedIn();
                     } catch (Exception e) {
                     }
-
-                    /* hide keyboard oncreate */
-                    InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                    /* Reset title */
                     try {

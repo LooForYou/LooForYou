@@ -261,9 +261,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
         /* expand/collapse viewswitcher when changing views */
         holder.editSwitcher.setMeasureAllChildren(false);
-
+        UserUtil userUtil = new UserUtil(context);
         /* display custom options unique to a user */
-        if (reviewsListItem.getReviewerId().equals(new UserUtil(context).getUserID())) {
+        if (userUtil.isLoggedIn() && reviewsListItem.getReviewerId().equals(userUtil.getUserID())) {
             holder.deleteReview.setVisibility(View.VISIBLE);
             holder.reviewer.setText(reviewsListItem.getReviewer() + " (you)");
             holder.voteContainer.setVisibility(View.GONE);
