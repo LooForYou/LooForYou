@@ -16,7 +16,7 @@ public class Stars {
             case 4:
                 return R.drawable.four_stars_90_15;
             case 5:
-                return R.drawable.five_stars;
+                return R.drawable.five_stars_90_15;
             default:
                 return R.drawable.no_stars_90_15;
         }

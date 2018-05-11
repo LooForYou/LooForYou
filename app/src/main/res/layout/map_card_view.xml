@@ -51,7 +51,7 @@
                     android:duplicateParentState="true"
                     android:focusable="false"
                     android:gravity="bottom"
-                    android:text="0.0 mi" />
+                    android:text="distance unavailable" />
             </LinearLayout>
 
             <LinearLayout
@@ -103,8 +103,6 @@
                         android:id="@+id/map_extra_info_review_number"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
-
                         android:gravity="bottom|right"
                         android:text="0 reviews" />
                 </LinearLayout>

@@ -50,15 +50,8 @@ public class BathroomDeserializer implements JsonDeserializer<Bathroom>{
         if(!stringOpen.equals("") && stringOpen != null) {
             try {
                 open.setTime(dateFormat.parse(stringOpen));
-                Log.v("time:::",String.valueOf(dateFormat.parse(stringOpen)));
             } catch (ParseException e) {
                 e.printStackTrace();
-                try {
-                    Log.v("time:::","parse start time failed");
-                    Log.v("time:::",String.valueOf(dateFormat.parse(stringOpen)));
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
             }
         }else {
             open = null;
@@ -126,7 +119,6 @@ public class BathroomDeserializer implements JsonDeserializer<Bathroom>{
                     jsonObject.get("address").getAsString()
             );
             if(!jsonObject.get("image_url").getAsString().equals("")){
-                Log.v("drawable::",jsonObject.get("image_url").getAsString());
                 bathroom.setImageURL(jsonObject.get("image_url").getAsString());
             }
             return bathroom;

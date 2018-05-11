@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/default_padding">
+            >
+            <!--android:paddingBottom="@dimen/default_padding"-->
 
             <RelativeLayout
                 android:id="@+id/bathroom_fragment_webview_container"
@@ -78,7 +79,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingTop="4sp"
-                            android:text="0.00 mi"
+                            android:text="distance unavailable"
                             android:textAlignment="textEnd"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -137,12 +138,14 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/bathroom_fragment_toggle_bookmark_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@android:color/transparent"
                                 android:src="@drawable/ic_bookmark_button_disabled_45" />
 
                             <TextView
+                                android:id="@+id/bathroom_fragment_toggle_bookmark_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:paddingTop="1sp"
@@ -155,8 +158,8 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_horizontal"
                             android:clickable="true"
+                            android:gravity="center_horizontal"
                             android:orientation="vertical">
 
                             <ImageButton
@@ -195,7 +198,7 @@
                             android:id="@+id/bathroom_fragment_stars"
                             android:layout_width="115dp"
                             android:layout_height="30dp"
-                            android:src="@drawable/five_stars" />
+                            android:src="@drawable/five_stars_90_15" />
 
                         <TextView
                             android:id="@+id/bathroom_fragment_num_reviews"
@@ -220,7 +223,7 @@
                             android:orientation="vertical">
 
                             <ImageView
-                            android:id="@+id/bathroom_fragment_accessibility_icon"
+                                android:id="@+id/bathroom_fragment_accessibility_icon"
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:src="@drawable/ic_accessibility_disabled_20" />
@@ -332,12 +335,12 @@
                         android:layout_height="wrap_content"
                         android:gravity="end">
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="end"
-                            android:foregroundGravity="right"
-                            android:src="@drawable/ic_edit" />
+                        <!--<ImageView-->
+                        <!--android:layout_width="18dp"-->
+                        <!--android:layout_height="18dp"-->
+                        <!--android:layout_gravity="end"-->
+                        <!--android:foregroundGravity="right"-->
+                        <!--android:src="@drawable/ic_edit" />-->
                     </LinearLayout>
                 </LinearLayout>
 
@@ -397,68 +400,68 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/divider" />
+            <!--<include layout="@layout/divider" />-->
 
-            <LinearLayout
-                android:id="@+id/bathroom_fragment_gallery_container"
+            <!--<LinearLayout-->
+            <!--android:id="@+id/bathroom_fragment_gallery_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:paddingEnd="@dimen/default_padding"-->
+            <!--android:paddingStart="@dimen/default_padding">-->
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Pictures Of This Location"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="21sp" />-->
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/bathroom_fragment_gallery_pictures"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<ScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--<ImageView-->
+            <!--android:layout_width="75dp"-->
+            <!--android:layout_height="75dp"-->
+            <!--android:background="@color/colorAccent" />-->
+            <!--</ScrollView>-->
+            <!--</LinearLayout>-->
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="SEE ALL PICTURES"-->
+            <!--android:textColor="@color/colorPrimary" />-->
+            <!--</LinearLayout>-->
+
+            <include layout="@layout/divider" />
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingEnd="@dimen/default_padding"
-                android:paddingStart="@dimen/default_padding">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Pictures Of This Location"
-                    android:textColor="@color/black"
-                    android:textSize="21sp" />
-
-                <LinearLayout
-                    android:id="@+id/bathroom_fragment_gallery_pictures"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:layout_width="75dp"
-                            android:layout_height="75dp"
-                            android:background="@color/colorAccent" />
-                    </ScrollView>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="SEE ALL PICTURES"
-                    android:textColor="@color/colorPrimary" />
-            </LinearLayout>
-
-            <include layout="@layout/divider" />
-
+                android:layout_marginBottom="@dimen/default_padding"
+                android:text="Reviews"
+                android:paddingStart="@dimen/default_padding"
+                android:textColor="@color/black"
+                android:textSize="21sp" />
             <LinearLayout
                 android:id="@+id/bathroom_fragment_review_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/default_padding"
-                android:paddingStart="@dimen/default_padding">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Reviews"
-                    android:textColor="@color/black"
-                    android:textSize="21sp" />
+                android:paddingStart="@dimen/default_padding"
+                android:layout_marginBottom="@dimen/default_padding">
 
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="30dp"
-                    android:layout_marginTop="5dp"
                     android:alpha="0.4"
                     android:background="@drawable/border"
                     android:paddingEnd="6dp"
@@ -483,8 +486,9 @@
                     android:text="START YOUR REVIEW"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
-
+            </LinearLayout>
                 <TextView
+                    android:paddingStart="@dimen/default_padding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Top Reviews"
@@ -503,20 +507,23 @@
                     android:id="@+id/no_reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="There are currently no reviews for this location" />
+                    android:paddingStart="@dimen/default_padding"
+                    android:text="There are currently no reviews for this location"
+                    android:layout_marginBottom="@dimen/default_padding"/>
+
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
                     android:id="@+id/review_scroll_container"
-                    android:paddingBottom="30dp">
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/review_recycler_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            >
-                        </android.support.v7.widget.RecyclerView>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/review_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
-            </LinearLayout>
+
+
             <Button
                 android:id="@+id/bathroom_fragment_button"
                 android:layout_width="match_parent"

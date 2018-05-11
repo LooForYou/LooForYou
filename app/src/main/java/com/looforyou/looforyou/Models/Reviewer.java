@@ -2,8 +2,6 @@ package com.looforyou.looforyou.Models;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import java.util.ArrayList;
-
 /**
  * Created by ibreaker on 4/19/2018.
  */
@@ -15,18 +13,18 @@ public class Reviewer {
     private String imageUrl;
     private String email;
     private String id;
-
+    
     public Reviewer(String firstName, String lastName, String userName, String imageUrl, String email, String id) {
         this.firstName = WordUtils.capitalize(firstName);
         this.lastName = WordUtils.capitalize(lastName);
-        if(userName.equals("") || userName == null){
+        if (userName.equals("") || userName == null) {
             this.userName = firstName + " " + lastName;
-        }else {
+        } else {
             this.userName = WordUtils.capitalize(userName);
         }
-        if(imageUrl.equals("") || imageUrl == null){
+        if (imageUrl.equals("") || imageUrl == null) {
             this.imageUrl = "http://pronksiapartments.ee/wp-content/uploads/2015/10/placeholder-face-big.png";
-        }else {
+        } else {
             this.imageUrl = imageUrl;
         }
         this.email = email;
@@ -82,7 +80,7 @@ public class Reviewer {
         this.id = id;
     }
 
-    public String toString(){
+    public String toString() {
         return userName;
     }
 
