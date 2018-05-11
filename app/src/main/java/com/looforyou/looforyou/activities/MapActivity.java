@@ -2,6 +2,7 @@ package com.looforyou.looforyou.activities;
 
 import android.Manifest;
 import android.Manifest.permission;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -136,6 +138,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapCardFragmentPagerAdapter pagerAdapter;
     /* keeps track of bathroom card location for infinite scrolling */
     private int pagerCounter = 0;
+    /* Dialog object to display new dialog */
+    private Dialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,8 +250,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MapActivity.this, "profile...", Toast.LENGTH_SHORT).show();
+                TextView txtclose;
+                Button bSignUp;
+                Button bLogin;
+                myDialog.setContentView(R.layout.activity_login);
+                txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
+                txtclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                    }
+                });
 
+                bLogin = (Button) myDialog.findViewById(R.id.bLogin);
+                /* bind clicklistener to login button in dialog */
+                bLogin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        Intent login = new Intent(v.getContext(), ProfileActivity.class);
+                        startActivity(login);
+                    }
+                });
+                bSignUp = (Button) myDialog.findViewById(R.id.bRegister);
+                /* bind clicklistener to signup button in dialog */
+                bSignUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        Intent signup = new Intent(v.getContext(), ProfileActivity.class);
+                        startActivity(signup);
+                    }
+                });
+                myDialog.show();
             }
         });
 
