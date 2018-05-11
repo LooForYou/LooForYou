@@ -190,7 +190,7 @@ public class ReviewsListItem {
         int daysAgo = 0;
         long diff = 0;
         Date t = Calendar.getInstance().getTime();
-            diff = dateEdited.getTime() - t.getTime();
+            diff = (dateEdited == null ? dateCreated.getTime() : dateEdited.getTime()) - t.getTime();
             daysAgo = Math.round(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
         return daysAgo;
     }
