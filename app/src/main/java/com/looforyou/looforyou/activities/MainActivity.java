@@ -441,7 +441,6 @@ public class MainActivity extends AppCompatActivity implements BathroomViewFragm
 
         try {
             /* format distance based on target location */
-            //TODO extend to custom google places results location
             double dist = 0.0;
             if(newLocation!=null){
                 dist = MetricConverter.distanceBetweenInMiles(new LatLng(newLocation.getLatitude(), newLocation.getLongitude()), bathrooms.get(viewPager.getCurrentItem()).getLatLng());

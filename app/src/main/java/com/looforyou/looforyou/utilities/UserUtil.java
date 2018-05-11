@@ -26,7 +26,10 @@ import static com.looforyou.looforyou.Constants.ONE_YEAR;
 import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
 
 /**
- * Created by ibreaker on 5/2/2018.
+ * A utility class used for User-specific data such as saving tokens, ids, etc.
+ * Handles user login and logout as well
+ *
+ * @author mingtau li
  */
 
 public class UserUtil {
@@ -52,6 +55,13 @@ public class UserUtil {
 
     }
 
+    /**
+     * attempts to log user in using servercall
+     *
+     * @param username username input field
+     * @param password password input field
+     * @param context  parent context
+     */
     public static boolean logIn(EditText username, TextInputEditText password, Context context) {
         /* set up arguments for server call */
         Map<String, String> credentials = new HashMap<String, String>();
@@ -78,7 +88,6 @@ public class UserUtil {
             e.printStackTrace();
             return false;
         }
-
         if (result.isEmpty()) {
             Toast.makeText(context, "invalid username or password", Toast.LENGTH_SHORT).show();
             return false;
@@ -95,16 +104,11 @@ public class UserUtil {
         return true;
     }
 
-    public static void setUserID(String id) {
-        userIDEditor.putString(context.getString(R.string.saved_userID), id);
-        userIDEditor.commit();
-    }
-
-    public static void setUserToken(String id) {
-        userTokenEditor.putString(context.getString(R.string.saved_userToken), id);
-        userTokenEditor.commit();
-    }
-
+    /**
+     * checks to see if user is logged in by comparing userId retrieved from server to user id stored in preferences.
+     * if matched, user is logged in
+     * return boolean logged in
+     */
     public static boolean isLoggedIn() {
         HttpGet getAuthenticatedUser = new HttpGet();
         String result = null;
@@ -126,14 +130,46 @@ public class UserUtil {
         return id.equals(userID);
     }
 
+    /**
+     * getter for user id
+     *
+     * @return String user id
+     */
     public static String getUserID() {
         return userID;
     }
 
+    /**
+     * saves user id to sharedpreferences
+     *
+     * @param id user Id
+     */
+    public static void setUserID(String id) {
+        userIDEditor.putString(context.getString(R.string.saved_userID), id);
+        userIDEditor.commit();
+    }
+
+    /**
+     * retrieves user token
+     *
+     * @return String saved userToken
+     */
     public static String getUserToken() {
         return userToken;
     }
 
+    /**
+     * saves user token to sharedpreferences
+     *
+     * @param id user Id
+     */
+    public static void setUserToken(String id) {
+        userTokenEditor.putString(context.getString(R.string.saved_userToken), id);
+        userTokenEditor.commit();
+    }
+
+    /* logs user out
+    * @return String logOut result */
     public static String LogOut() {
         HttpPost post = new HttpPost(new JSONObject());
         String result = null;

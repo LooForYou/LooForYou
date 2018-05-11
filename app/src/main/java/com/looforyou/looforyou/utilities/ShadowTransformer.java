@@ -17,6 +17,7 @@ package com.looforyou.looforyou.utilities;
  *
  *
  * ShadowTransformer allows main viewPager to scale to size
+ * retrieved from online tutorial template
 */
 
 import android.support.v4.view.ViewPager;

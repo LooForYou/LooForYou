@@ -25,34 +25,44 @@ import java.util.List;
 import static android.content.Context.LOCATION_SERVICE;
 import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
 
-//import com.looforyou.looforyou.Manifest;
 
 /**
- * Created by ibreaker on 3/11/2018.
+ * Utility class used to load bathrooms from server
+ *
+ * @author mingtau li
  */
 
 public class LooLoader {
-    private static final String TAG = "TEST FEEDLIST LooLoader";
+    /* logtag for logs */
+    private static final String TAG = "LooLoader feedlist";
+    /* application context */
     private static Context appContext;
 
-    //    private static final String API_URL = "http://ec2-54-183-105-234.us-west-1.compute.amazonaws.com:9000/api/Bathrooms?access_token=pBWBnDboL5RSFunF6E08EZJGD1skk9kkX3xAKJwDK4VLhVgHg0nYdvUjz6Oh7401\n";
+    /**
+     * method used for loading bathrooms
+     * @param context parent activity context
+     * @param sortBy varArgs for optional sorting values */
     public static List<Bathroom> loadBathrooms(Context context, String... sortBy) {
         appContext = context;
         String API_URL = GET_BATHROOMS;
         try {
             List<Bathroom> bathroomList = new ArrayList<>();
+
+            /* initialize gsonbuilder and set adapter to bathroom deserializer */
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
             Gson gson = gsonBuilder.create();
 
-            //Loopback Async http requiest
+            /* Loopback Async http requiest */
             String result;
             HttpGet getRequest = new HttpGet();
             result = getRequest.execute(API_URL).get();
             ArrayList<Bathroom> bathrooms;
             if (!result.equals("")) {
+                /* populate list of bathrooms from server */
                 bathrooms = new ArrayList<Bathroom>(Arrays.asList(gson.fromJson(result, Bathroom[].class)));
             } else {
+                /* return blank custom bathrom object */
                 bathrooms = new ArrayList<Bathroom>();
                 Bathroom noBathroom = new Bathroom("");
                 noBathroom.setName("We weren't able to find bathrooms in the area");
@@ -61,8 +71,10 @@ public class LooLoader {
                 bathrooms.add(noBathroom);
             }
 
+            /* if sortBy has parameters, apply sort */
             if (sortBy.length > 0) {
                 final Location currentLocation = getCurrentLocation();
+                /* if sort by distance available, sort it from location closest to user */
                 if (String.valueOf(sortBy[0]).equalsIgnoreCase("distance")) {
                     Log.v("looLoader", "sorting by distance:");
                     Collections.sort(bathrooms, new Comparator<Bathroom>() {
@@ -78,14 +90,7 @@ public class LooLoader {
 
                 }
             }
-
-            for (Bathroom b : bathrooms) {
-                Log.v(TAG, "Bathroom:\n " + b);
-                bathroomList.add(b);
-            }
-
-
-            return bathroomList;
+            return bathrooms;
         } catch (Exception e) {
             Log.d(TAG, "parseException " + e);
             e.printStackTrace();
@@ -95,12 +100,15 @@ public class LooLoader {
 
     /**
      * This method looks for best location provider by checking availablility of gps or network location
+     * @return Location most accurate location
      */
     public static Location getCurrentLocation() {
+        /* new location manager for obtaining current location */
         LocationManager mLocationManager = (LocationManager) appContext.getSystemService(LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);
         Location bestLocation = null;
         for (String p : providers) {
+            /* permission check */
             if (ActivityCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return null;
             }
@@ -108,6 +116,7 @@ public class LooLoader {
             if (location == null) {
                 continue;
             }
+            /* find best location available from list of providers */
             if (bestLocation == null || location.getAccuracy() < bestLocation.getAccuracy()) {
                 bestLocation = location;
             }
@@ -115,24 +124,4 @@ public class LooLoader {
         return bestLocation;
     }
 
-    /* helper function to load json file from assets folder */
-    private static String loadJSONFromAsset(Context context, String jsonFileName) {
-        String json = null;
-        InputStream is = null;
-        try {
-            AssetManager manager = context.getAssets();
-            Log.d(TAG, "path " + jsonFileName);
-            is = manager.open(jsonFileName);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            Log.d(TAG, "write exception");
-            return null;
-        }
-        return json;
-    }
 }
