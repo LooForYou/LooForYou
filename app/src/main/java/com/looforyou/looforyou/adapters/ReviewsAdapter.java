@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +92,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         /* get current review list item*/
         final ReviewsListItem reviewsListItem = reviewsListItems.get(position);
         /* initialize rating */
-        if(reviewsListItem.getReview().getReviewerId().equals(new UserUtil(context).getUserID())){
+        if (reviewsListItem.getReview().getReviewerId().equals(new UserUtil(context).getUserID())) {
             ratingNum = reviewsListItem.getRating();
         }
         /* load reviewer name */
@@ -262,6 +261,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         /* expand/collapse viewswitcher when changing views */
         holder.editSwitcher.setMeasureAllChildren(false);
         UserUtil userUtil = new UserUtil(context);
+
         /* display custom options unique to a user */
         if (userUtil.isLoggedIn() && reviewsListItem.getReviewerId().equals(userUtil.getUserID())) {
             holder.deleteReview.setVisibility(View.VISIBLE);
@@ -271,31 +271,34 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             holder.editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    /* switch between textviews and editviews */
                     holder.editSwitcher.showNext();
                     holder.ratingSwitcher.showNext();
 
+                    /* save edited review data */
                     if (holder.editButton.getText().equals("Edit Review")) {
                         holder.editButton.setText("Done Editing");
                         holder.editText.setText(holder.content.getText());
-                        Toast.makeText(context,"rating: "+ratingNum, Toast.LENGTH_SHORT).show();
-                        if(ratingNum == 1){
+                        Toast.makeText(context, "rating: " + ratingNum, Toast.LENGTH_SHORT).show();
+                        if (ratingNum == 1) {
                             holder.rating.setImageResource(R.drawable.one_star_90_15);
-                            setEditStars(holder,1);
-                        }else if(ratingNum == 2){
+                            setEditStars(holder, 1);
+                        } else if (ratingNum == 2) {
                             holder.rating.setImageResource(R.drawable.two_stars_90_15);
-                            setEditStars(holder,2);
-                        }else if(ratingNum == 3){
+                            setEditStars(holder, 2);
+                        } else if (ratingNum == 3) {
                             holder.rating.setImageResource(R.drawable.three_stars_90_15);
-                            setEditStars(holder,3);
-                        }else if(ratingNum == 4){
+                            setEditStars(holder, 3);
+                        } else if (ratingNum == 4) {
                             holder.rating.setImageResource(R.drawable.four_stars_90_15);
-                            setEditStars(holder,4);
-                        }else if(ratingNum == 5){
+                            setEditStars(holder, 4);
+                        } else if (ratingNum == 5) {
                             holder.rating.setImageResource(R.drawable.five_stars_90_15);
-                            setEditStars(holder,5);
+                            setEditStars(holder, 5);
                         }
 
-
+                    /* prepare review data from view to be edited */
                     } else {
                         holder.editButton.setText("Edit Review");
                         InputMethodManager imm = (InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -309,13 +312,15 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                         String result = "";
                         URL query = null;
                         URL rawQuery = null;
-                        String testString = UPDATE_REVIEW + "?where={\"id\":\"" + reviewsListItems.get(position).getReviewId() + "\"}" + TOKEN_QUERY + (new UserUtil(context).getUserToken());
                         try {
+                            /* specify url for post request */
                             rawQuery = new URL(UPDATE_REVIEW + "?where={\"id\":\"" + reviewsListItems.get(position).getReviewId() + "\"}&" + TOKEN_QUERY + (new UserUtil(context).getUserToken()));
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
                         try {
+
+                            /* convert query string to URL format */
                             query = HttpUtils.encodeQuery(rawQuery);
 
                         } catch (Exception e) {
@@ -323,77 +328,82 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                         }
 
                         try {
+
+                        /* execute post request with encoded query string */
                             result = updateReview.execute(query.toString()).get();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
-                        if(!result.isEmpty()){
+                        if (!result.isEmpty()) {
+                            /* process changes to View if post request is successful */
                             holder.content.setText(holder.editText.getText().toString());
                             reviewsListItem.getReview().setRating(ratingNum);
-                            if(ratingNum == 1){
+                            if (ratingNum == 1) {
                                 holder.rating.setImageResource(R.drawable.one_star_90_15);
-                            }else if(ratingNum == 2) {
+                            } else if (ratingNum == 2) {
                                 holder.rating.setImageResource(R.drawable.two_stars_90_15);
-                            }else if(ratingNum == 3) {
+                            } else if (ratingNum == 3) {
                                 holder.rating.setImageResource(R.drawable.three_stars_90_15);
-                            }else if(ratingNum == 4) {
+                            } else if (ratingNum == 4) {
                                 holder.rating.setImageResource(R.drawable.four_stars_90_15);
-                            }else if(ratingNum == 5) {
+                            } else if (ratingNum == 5) {
                                 holder.rating.setImageResource(R.drawable.five_stars_90_15);
                             }
 
-
-                        }else {
-                            Toast.makeText(context,"something has gone wrong. please try again later", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "something has gone wrong. please try again later", Toast.LENGTH_SHORT).show();
                         }
-                        /* end edit content */
-
                     }
                 }
             });
 
         }
 
+        /* set click listener for first star */
         holder.star1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setEditStars(holder,1);
+                setEditStars(holder, 1);
                 ratingNum = 1;
             }
         });
 
+        /* set click listener for second star */
         holder.star2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setEditStars(holder,2);
+                setEditStars(holder, 2);
                 ratingNum = 2;
             }
         });
 
+        /* set click listener for third star */
         holder.star3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setEditStars(holder,3);
+                setEditStars(holder, 3);
                 ratingNum = 3;
             }
         });
 
+        /* set click listener for fourth star */
         holder.star4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setEditStars(holder,4);
+                setEditStars(holder, 4);
                 ratingNum = 4;
             }
         });
 
+        /* set click listener for fifth star */
         holder.star5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setEditStars(holder,5);
+                setEditStars(holder, 5);
                 ratingNum = 5;
-                Toast.makeText(context,"5: "+ratingNum, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "5: " + ratingNum, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -438,35 +448,39 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         });
 
     }
+
     /**
      * helper method for changing image resources when editing stars
-     * */
-    public void setEditStars(ViewHolder holder, int newRating){
-        if(newRating == 1){
+     *
+     * @param holder    parent ViewHolder
+     * @param newRating new rating amount
+     */
+    public void setEditStars(ViewHolder holder, int newRating) {
+        if (newRating == 1) {
             holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star2.setImageResource(R.drawable.ic_star_expanded_empty_15);
             holder.star3.setImageResource(R.drawable.ic_star_expanded_empty_15);
             holder.star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
             holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
-        }else if(newRating == 2){
+        } else if (newRating == 2) {
             holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star3.setImageResource(R.drawable.ic_star_expanded_empty_15);
             holder.star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
             holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
-        }else if(newRating == 3){
+        } else if (newRating == 3) {
             holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star3.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star4.setImageResource(R.drawable.ic_star_expanded_empty_15);
             holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
-        }else if(newRating == 4){
+        } else if (newRating == 4) {
             holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star3.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star4.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star5.setImageResource(R.drawable.ic_star_expanded_empty_15);
-        }else if(newRating == 5){
+        } else if (newRating == 5) {
             holder.star1.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star2.setImageResource(R.drawable.ic_star_expanded_full_15);
             holder.star3.setImageResource(R.drawable.ic_star_expanded_full_15);
@@ -514,6 +528,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         /**
          * Constructor for ViewHolder
          * Initializes all view items
+         *
+         * @param itemView parent View
          */
         public ViewHolder(View itemView) {
             super(itemView);

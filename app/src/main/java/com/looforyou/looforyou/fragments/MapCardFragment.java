@@ -157,13 +157,15 @@ public class MapCardFragment extends Fragment implements Serializable {
         HttpGet getReviews = new HttpGet();
         URL reviewRequest = null;
         try {
-            /* make get request for reviews via server call */
+            /* build url string for server call */
             reviewRequest = new URL(GET_REVIEWS + "?filter={\"where\":{\"bathroomId\": \"" + bathroom.getId() + "\"}}");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        /* convert url string to url-formatted URL */
         reviewRequest = HttpUtils.encodeQuery(reviewRequest);
         try {
+            /* make get request for reviews via server call */
             result = getReviews.execute(reviewRequest.toString()).get();
         } catch (InterruptedException e) {
             e.printStackTrace();

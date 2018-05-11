@@ -182,9 +182,12 @@ public class ReviewsListItem {
         this.dateEdited = dateEdited;
     }
 
+    /**
+     * calculates days elapsed since lastEdited timestamp
+     * @return int number of days ago since last review edit
+     * */
     public int getDaysAgo() {
         int daysAgo = 0;
-
         long diff = 0;
         Date t = Calendar.getInstance().getTime();
             diff = dateEdited.getTime() - t.getTime();
