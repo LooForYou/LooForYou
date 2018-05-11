@@ -8,7 +8,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 /**
- * Created by ibreaker on 3/23/2018.
+ * A list of global constants used for API calls and other misc function calls
+ *
+ * @author mingtau li
  */
 
 public class Constants {
@@ -33,6 +35,7 @@ public class Constants {
     public static final int ONE_YEAR = 60 * 60 * 24 * 365;
     public static final String UPDATE_REVIEW = GET_REVIEWS+"update";
     public static final String UPLOAD_IMAGE = "/upload-image";
+
     /* sorting options */
     public static final String SORT_BY_DISTANCE = "distance";
 
