@@ -26,13 +26,23 @@ import com.looforyou.looforyou.utilities.TabControl;
 
 import org.apache.commons.lang3.ObjectUtils;
 
+/**
+ * This is the activity class for adding new bathrooms
+ *
+ * @author Peter Bouris
+ */
+
 public class AddABathroomActivity extends AppCompatActivity {
 
+    /* Text view for Page Title */
     private TextView add_a_bathroom;
+
+    /* Image view for Bathroom Image upload */
     private ImageView bathroom_image;
     private static final int RESULT_LOAD_IMAGE = 1;
     private TextView bathroom_image_link;
 
+    /* Fields to edit Bathroom information */
     private EditText editBathroomName;
     private EditText editBathroomLocation;
     private EditText editBathroomInfo;
@@ -40,12 +50,14 @@ public class AddABathroomActivity extends AppCompatActivity {
     private TextView bathroom_attributes;
     private TextView bathroom_type;
 
+    /* Radio Buttons to select bathroom Gender */
     private RadioButton radioButton;
     private RadioGroup radioGroup;
     private RadioButton radioMale;
     private RadioButton radioFemale;
     private RadioButton radioNeutral;
 
+    /* Toggle Buttons to select amenities */
     private ToggleButton bathroom_accessible;
     private ToggleButton bathroom_free;
     private ToggleButton bathroom_keyless;
@@ -53,6 +65,7 @@ public class AddABathroomActivity extends AppCompatActivity {
     private ToggleButton bathroom_mirrors;
     private ToggleButton bathroom_baby_station;
 
+    /* Button to save and add new bathroom */
     private Button submitButton;
 
     @Override
