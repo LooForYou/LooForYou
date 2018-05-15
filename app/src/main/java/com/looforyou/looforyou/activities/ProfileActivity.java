@@ -1,11 +1,13 @@
 package com.looforyou.looforyou.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,6 +46,8 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
     TextView username = null;
     /* Button for logging out */
     Button logout = null;
+
+    public final int PICK_IMAGE = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +125,16 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
                     Picasso.get().load(pf).fit().centerCrop().into(profilePic);
                 }
 
+                profilePic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                    }
+                });
+
             } catch (Exception e) {
             }
         } catch (InterruptedException e) {
@@ -130,6 +144,18 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
         }
     }
 
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == PICK_IMAGE) {
+            Log.v("testresultcode intent",String.valueOf(data));
+            Log.v("testresultcode file",String.valueOf(data.getData()));
+
+
+        }
+    }
 
     /**
      * Returns respective fragment that user

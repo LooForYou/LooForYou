@@ -110,7 +110,7 @@ public class MapCardFragment extends Fragment implements Serializable {
         extraInfoParking = (ImageView) view.findViewById(R.id.map_extra_info_parking);
 
         /* load image into bathroom card  */
-        Picasso.get().load(bathroom.getImageURL()).fit().into(extraInfoImage);
+        Picasso.get().load(bathroom.getImageURL()).fit().centerCrop().into(extraInfoImage);
         /* load name into bathroom card  */
         extraInfoBathroomName.setText(bathroom.getName());
         /* load address into bathroom card  */
