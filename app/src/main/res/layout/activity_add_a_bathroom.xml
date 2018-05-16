@@ -51,7 +51,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="1dp"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
                     android:layout_marginTop="2dp">
@@ -68,33 +68,97 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="1dp"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
-                    android:layout_marginTop="2dp">
+                    android:layout_marginTop="1dp">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/editBathroomLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Bathroom Location"
+                        android:hint="Bathroom Address"
                         android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="1dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editBathroomHours_open"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Hours of Operation: Opens"
+                        android:inputType="time" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="1dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editBathroomHours_closed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Hours of Operation: Closes"
+                        android:inputType="time" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="1dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editMaintenanceDays"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Maintenance Days"
+                        android:inputType="textLongMessage" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="1dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editMaintenanceHours_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Maintenance Hours: start time"
+                        android:inputType="time" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
                     android:layout_marginTop="2dp">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/editBathroomInfo"
+                        android:id="@+id/editMaintenanceHours_end"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Bathroom Hours of Operation"
-                        android:inputType="textLongMessage" />
+                        android:hint="Maintenance Hours: end time"
+                        android:inputType="time" />
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
@@ -102,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="1dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginTop="2dp"
                     android:text="Select Attributes:"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -151,89 +215,96 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="2dp" >
 
-                    <ToggleButton
-                        android:id="@+id/bathroom_accessible"
-                        android:layout_width="110dp"
-                        android:layout_height="wrap_content"
+
+                    <CheckBox
+                        android:id="@+id/checkBox_free"
                         android:layout_alignParentStart="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="2.5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@color/colorPrimaryLight"
-                        android:textColor="@color/black"
-                        android:textOff="Not Disabled" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3.5dp"
+                        android:layout_marginRight="23.5dp"
+                        android:layout_weight="1"
+                        android:text="Free" />
 
-                    <ToggleButton
-                        android:id="@+id/bathroom_free"
+                    <CheckBox
+                        android:id="@+id/checkBox_disabled"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2.5dp"
                         android:layout_marginRight="2.5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@color/colorPrimaryLight"
-                        android:textColor="@color/black"
-                        android:textOff="Not Free" />
+                        android:layout_weight="1"
+                        android:text="Disabled" />
 
-                    <ToggleButton
-                        android:id="@+id/bathroom_keyless"
+                    <CheckBox
+                        android:id="@+id/checkBox_parking"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@color/colorPrimaryLight"
-                        android:textColor="@color/black"
-                        android:textOff="Locked" />
+                        android:layout_marginRight="2.5dp"
+                        android:layout_weight="1"
+                        android:text="Parking" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_padding"
+                android:layout_marginStart="@dimen/default_padding"
+                android:layout_marginTop="2dp" >
+
+                <CheckBox
+                    android:id="@+id/checkBox_locked"
+                    android:layout_alignParentStart="true"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="3.5dp"
+                    android:layout_marginRight="3.5dp"
+                    android:layout_weight="1"
+                    android:text="Locked" />
+
+                <CheckBox
+                    android:id="@+id/checkBox_mirrors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3.5dp"
+                    android:layout_marginRight="11.5dp"
+                    android:layout_weight="1"
+                    android:text="Mirrors" />
+
+                <CheckBox
+                    android:id="@+id/checkBox_diaperTable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3.5dp"
+                    android:layout_marginRight="3.5dp"
+                    android:layout_weight="1"
+                    android:text="Diaper Table" />
+
+            </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="2dp">
 
-                    <ToggleButton
-                        android:id="@+id/bathroom_parking"
-                        android:layout_width="wrap_content"
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editBathroomDescription"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="2.5dp"
-                        android:background="@color/colorPrimaryLight"
-                        android:textColor="@color/black"
-                        android:textOff="No Parking" />
-
-                    <ToggleButton
-                        android:id="@+id/bathroom_mirrors"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="2.5dp"
-                        android:background="@color/colorPrimaryLight"
-                        android:textColor="@color/black"
-                        android:textOff="No Mirrors" />
-
-                    <ToggleButton
-                        android:id="@+id/bathroom_baby_station"
-                        android:layout_width="110dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@color/colorPrimaryLight"
-                        android:textColor="@color/black"
-                        android:textOff="No Table" />
-                </LinearLayout>
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="textMultiLine"
+                        android:hint="Bathroom Description" />
+                </android.support.design.widget.TextInputLayout>
 
                 <Button
                     android:id="@+id/submitBathroom"

@@ -333,9 +333,9 @@ public class Bathroom implements Serializable, Parcelable {
     }
 
     /*
-    * getter for bathroom amenities
-    * @return ArrayList<String> list of amenities
-    * */
+     * getter for bathroom amenities
+     * @return ArrayList<String> list of amenities
+     * */
     public ArrayList<String> getAmenities() {
         return amenities;
     }

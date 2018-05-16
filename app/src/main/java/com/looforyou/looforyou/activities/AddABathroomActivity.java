@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,13 +23,16 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.TabControl;
+import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -50,12 +54,17 @@ public class AddABathroomActivity extends AppCompatActivity {
     /* Image view for Bathroom Image upload */
     private ImageView bathroom_image;
     private static final int RESULT_LOAD_IMAGE = 1;
+
     private TextView bathroom_image_link;
 
     /* Fields to edit Bathroom information */
     private EditText editBathroomName;
     private EditText editBathroomLocation;
-    private EditText editBathroomInfo;
+    private EditText editBathroomHours_open;
+    private EditText editBathroomHours_closed;
+    private EditText editMaintenanceDays;
+    private EditText editMaintenanceHours_start;
+    private EditText editMaintenanceHours_end;
 
     private TextView bathroom_attributes;
     private TextView bathroom_type;
@@ -67,13 +76,14 @@ public class AddABathroomActivity extends AppCompatActivity {
     private RadioButton radioFemale;
     private RadioButton radioNeutral;
 
-    /* Toggle Buttons to select amenities */
-    private ToggleButton bathroom_accessible;
-    private ToggleButton bathroom_free;
-    private ToggleButton bathroom_keyless;
-    private ToggleButton bathroom_parking;
-    private ToggleButton bathroom_mirrors;
-    private ToggleButton bathroom_baby_station;
+    /* Check Boxes to select amenities */
+    private CheckBox checkBox_free;
+    private CheckBox checkBox_disabled;
+    private CheckBox checkBox_parking;
+    private CheckBox checkBox_locked;
+    private CheckBox checkBox_mirrors;
+    private CheckBox checkBox_diaperTable;
+
 
     /* Button to save and add new bathroom */
     private Button submitButton;
@@ -103,7 +113,8 @@ public class AddABathroomActivity extends AppCompatActivity {
 
         final EditText editBathroomName = (EditText) findViewById(R.id.editBathroomName);
         final EditText editBathroomLocation = (EditText) findViewById(R.id.editBathroomLocation);
-        final EditText editBathroomInfo = (EditText) findViewById(R.id.editBathroomInfo);
+        final EditText editBathroomHours_open = (EditText) findViewById(R.id.editBathroomHours_open);
+        final EditText editBathroomHours_closed = (EditText) findViewById(R.id.editBathroomHours_closed);
 
         final RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         final RadioButton radioMale = (RadioButton) findViewById(R.id.radioMale);
@@ -126,111 +137,100 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final ToggleButton bathroom_accessible = (ToggleButton)findViewById(R.id.bathroom_accessible);
-        bathroom_accessible.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox_free = (CheckBox)findViewById(R.id.checkBox_free);
+        checkBox_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    bathroom_accessible.setTextOn("Disabled");
-                    bathroom_accessible.getBackground().mutate().setAlpha(255);
-                    bathroom_accessible.setTextColor(Color.WHITE);
+
                 } else {
-                    bathroom_accessible.setTextOff("Not Disabled");
-                    bathroom_accessible.getBackground().mutate().setAlpha(25);
-                    bathroom_accessible.setTextColor(Color.BLACK);
+
                 }
             }
         });
 
-        final ToggleButton bathroom_free = (ToggleButton)findViewById(R.id.bathroom_free);
-        bathroom_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox_disabled = (CheckBox)findViewById(R.id.checkBox_disabled);
+        checkBox_disabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    bathroom_free.setTextOn("Free");
-                    bathroom_free.getBackground().mutate().setAlpha(255);
-                    bathroom_free.setTextColor(Color.WHITE);
+
                 } else {
-                    bathroom_free.setTextOff("Not Free");
-                    bathroom_free.getBackground().mutate().setAlpha(25);
-                    bathroom_free.setTextColor(Color.BLACK);
+
                 }
             }
         });
 
-        final ToggleButton bathroom_keyless = (ToggleButton)findViewById(R.id.bathroom_keyless);
-        bathroom_keyless.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox_parking = (CheckBox)findViewById(R.id.checkBox_parking);
+        checkBox_parking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @SuppressLint("ResourceType")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    bathroom_keyless.setTextOn("Unlocked");
-                    bathroom_keyless.getBackground().mutate().setAlpha(255);
-                    bathroom_keyless.setTextColor(Color.WHITE);
+
                 } else {
-                    bathroom_keyless.setTextOff("Locked");
-                    bathroom_keyless.getBackground().mutate().setAlpha(25);
-                    bathroom_keyless.setTextColor(Color.BLACK);
+
                 }
             }
         });
 
-        final ToggleButton bathroom_parking = (ToggleButton)findViewById(R.id.bathroom_parking);
-        bathroom_parking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox_locked = (CheckBox)findViewById(R.id.checkBox_locked);
+        checkBox_locked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    bathroom_parking.setTextOn("Parking");
-                    bathroom_parking.getBackground().mutate().setAlpha(255);
-                    bathroom_parking.setTextColor(Color.WHITE);
+
                 } else {
-                    bathroom_parking.setTextOff("No Parking");
-                    bathroom_parking.getBackground().mutate().setAlpha(25);
-                    bathroom_parking.setTextColor(Color.BLACK);
+
                 }
             }
         });
 
-        final ToggleButton bathroom_mirrors = (ToggleButton)findViewById(R.id.bathroom_mirrors);
-        bathroom_mirrors.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox_mirrors = (CheckBox)findViewById(R.id.checkBox_mirrors);
+        checkBox_mirrors.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    bathroom_mirrors.setTextOn("Mirrors");
-                    bathroom_mirrors.getBackground().mutate().setAlpha(255);
-                    bathroom_mirrors.setTextColor(Color.WHITE);
+
                 } else {
-                    bathroom_mirrors.setTextOff("No Mirrors");
-                    bathroom_mirrors.getBackground().mutate().setAlpha(25);
-                    bathroom_mirrors.setTextColor(Color.BLACK);
+
                 }
             }
         });
 
-        final ToggleButton bathroom_baby_station = (ToggleButton)findViewById(R.id.bathroom_baby_station);
-        bathroom_baby_station.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox_diaperTable = (CheckBox)findViewById(R.id.checkBox_diaperTable);
+        checkBox_diaperTable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    bathroom_baby_station.setTextOn("Diaper Table");
-                    bathroom_baby_station.getBackground().mutate().setAlpha(255);
-                    bathroom_baby_station.setTextColor(Color.WHITE);
+
                 } else {
-                    bathroom_baby_station.setTextOff("No Table");
-                    bathroom_baby_station.getBackground().mutate().setAlpha(25);
-                    bathroom_baby_station.setTextColor(Color.BLACK);
+
                 }
             }
         });
 
         final Button submitButton = (Button)findViewById(R.id.submitBathroom);
-        final String bathroomName = editBathroomName.getText().toString();
-        final String bathroomLocation = editBathroomLocation.getText().toString();
-        String bathroomInfo = editBathroomInfo.getText().toString();
+        //final String bathroomName = editBathroomName.getText().toString();
+        //final String bathroomLocation = editBathroomLocation.getText().toString();
+        //final String bathroomHours_open = editBathroomHours_open.getText().toString();
+        //final String bathroomHours_closed = editBathroomHours_closed.getText().toString();
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Bathroom newBathroom= new Bathroom("b01");
+                //construct the bathroom object using user inputs
+                Bathroom newBathroom = new Bathroom("");
+                Gson gson = new Gson();
+                String json = gson.toJson(newBathroom);
+                try {
+                    JSONObject myObject = new JSONObject(json);
+                    HttpPost post = new HttpPost(myObject);
+                    post.execute(GET_BATHROOMS);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         });
 
