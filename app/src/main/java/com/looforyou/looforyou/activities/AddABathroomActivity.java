@@ -21,10 +21,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Context;
+
+import com.google.gson.JsonObject;
+import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.TabControl;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.json.JSONObject;
+
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
 
 /**
  * This is the activity class for adding new bathrooms
@@ -214,13 +224,13 @@ public class AddABathroomActivity extends AppCompatActivity {
         });
 
         final Button submitButton = (Button)findViewById(R.id.submitBathroom);
-        String bathroomName = editBathroomName.getText().toString();
-        String bathroomLocation = editBathroomLocation.getText().toString();
+        final String bathroomName = editBathroomName.getText().toString();
+        final String bathroomLocation = editBathroomLocation.getText().toString();
         String bathroomInfo = editBathroomInfo.getText().toString();
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AddABathroomActivity.this,"Bathroom Added", Toast.LENGTH_LONG).show();
+               Bathroom newBathroom= new Bathroom("b01");
             }
         });
 
@@ -240,8 +250,7 @@ public class AddABathroomActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
-            Uri selectedImage = data.getData();
-            bathroom_image.setImageURI(selectedImage);
+
         }
     }
 
@@ -251,13 +260,7 @@ public class AddABathroomActivity extends AppCompatActivity {
         final RadioButton radioButton = (RadioButton)findViewById(radioButtonID);
         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
     }
-/*
-    private void checkHandler() {
-        String bathroomName = editBathroomName.getText().toString();
-        String bathroomLocation = editBathroomLocation.getText().toString();
-        String bathroomInfo = editBathroomInfo.getText().toString();
-    }
-*/
+
     private void uploadImage(View v) {
 
 

@@ -1,5 +1,6 @@
 package com.looforyou.looforyou.utilities;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 
@@ -45,10 +46,10 @@ public class HttpPost extends AsyncTask<String, Void, String> {
         }
     }
 
-    public HttpPost(File image){
-        if (image.exists()){
+    public HttpPost(File file){
+        if (file.exists()){
             this.json = null;
-            this.file = image;
+            this.file = file;
         }
     }
 
