@@ -93,7 +93,6 @@
                     android:clickable="true"
                     android:focusable="false"/>
 
-
                 <EditText
                     android:id="@+id/editBathroomHours_closed"
                     android:layout_width="match_parent"
@@ -106,17 +105,101 @@
                     android:clickable="true"
                     android:focusable="false"/>
 
-                <EditText
-                    android:id="@+id/editMaintenanceDays"
+                <TextView
+                    android:id="@+id/maintenanceDays"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:text="Select Maintenance Days:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/default_padding"
                     android:layout_marginStart="@dimen/default_padding"
-                    android:layout_marginTop="1dp"
-                    android:hint="Maintenance Days"
-                    android:clickable="true"
-                    android:focusable="false"/>
+                    android:layout_marginTop="2dp" >
+
+                    <CheckBox
+                        android:id="@+id/checkBox_Mon"
+                        android:layout_alignParentStart="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_gravity="left"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="Mon" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox_Tue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="Tue" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox_Wed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="2.5dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:text="Wed" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox_Thu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:text="Thu" />
+                </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/default_padding"
+                        android:layout_marginStart="@dimen/default_padding"
+                        android:layout_marginTop="2dp" >
+
+                    <CheckBox
+                        android:id="@+id/checkBox_Fri"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_gravity="left"
+                        android:layout_weight="1"
+                        android:text="Fri" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox_Sat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:text="Sat" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox_Sun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_weight="1"
+                        android:text="Sun" />
+                </LinearLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
