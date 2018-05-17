@@ -1,6 +1,8 @@
 package com.looforyou.looforyou.activities;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,11 +16,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Context;
@@ -35,6 +39,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -94,11 +101,11 @@ public class AddABathroomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_a_bathroom);
 
         getSupportActionBar().setTitle("Add a New Bathroom");
-        
+
         //prevents keyboard from popping up on first load
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        final ImageView bathroom_image = (ImageView) findViewById(R.id.bathroom_image);
+        final ImageView bathroom_image = findViewById(R.id.bathroom_image);
         bathroom_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,24 +113,78 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final TextView bathroom_image_link = (TextView) findViewById(R.id.bathroom_image_link);
+        final TextView bathroom_image_link = findViewById(R.id.bathroom_image_link);
 
-        final TextView bathroom_attributes = (TextView) findViewById(R.id.bathroom_attributes);
-        final TextView bathroom_type = (TextView) findViewById(R.id.bathroom_type);
+        final TextView bathroom_attributes = findViewById(R.id.bathroom_attributes);
+        final TextView bathroom_type = findViewById(R.id.bathroom_type);
 
-        final EditText editBathroomName = (EditText) findViewById(R.id.editBathroomName);
-        final EditText editBathroomLocation = (EditText) findViewById(R.id.editBathroomLocation);
-        final EditText editBathroomHours_open = (EditText) findViewById(R.id.editBathroomHours_open);
-        final EditText editBathroomHours_closed = (EditText) findViewById(R.id.editBathroomHours_closed);
+        final EditText editBathroomName = findViewById(R.id.editBathroomName);
+        final EditText editBathroomLocation = findViewById(R.id.editBathroomLocation);
 
-        final RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        final RadioButton radioMale = (RadioButton) findViewById(R.id.radioMale);
-        final RadioButton radioFemale = (RadioButton) findViewById(R.id.radioFemale);
-        final RadioButton radioNeutral = (RadioButton) findViewById(R.id.radioNeutral);
+        final Calendar myCalendar = Calendar.getInstance();
+        final String date_time = "";
+        final int[] mHour = {myCalendar.get(Calendar.HOUR_OF_DAY)};
+        final int[] mMinute = {myCalendar.get(Calendar.MINUTE)};
+        final EditText editBathroomHours_open = findViewById(R.id.editBathroomHours_open);
+        final EditText editBathroomHours_closed = findViewById(R.id.editBathroomHours_closed);
+        final TimePickerDialog.OnTimeSetListener myTime = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                myCalendar.set(Calendar.MINUTE, minute);
+                String myFormat = "hh:mm";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                //need to fix this...
+                editBathroomHours_open.setText(sdf.format(myCalendar.getTime()));
+                editBathroomHours_closed.setText(sdf.format(myCalendar.getTime()));
+            }
+        };
 
+        editBathroomHours_open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(AddABathroomActivity.this, myTime, myCalendar
+                        .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
+                        false).show();
+            }
+        });
+
+        editBathroomHours_closed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(AddABathroomActivity.this, myTime, myCalendar
+                        .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
+                        false).show();
+            }
+        });
+
+        final EditText editMaintenanceDays = findViewById(R.id.editMaintenanceDays);
+        final DatePickerDialog.OnDateSetListener myDate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                String myFormat = "MM/dd/yy";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                editMaintenanceDays.setText(sdf.format(myCalendar.getTime()));
+            }
+        };
+
+        editMaintenanceDays.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(AddABathroomActivity.this, myDate, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
+        final RadioGroup radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnClickListener(new View.OnClickListener() {
             int radioButtonID = radioGroup.getCheckedRadioButtonId();
-            final RadioButton radioButton = (RadioButton)findViewById(radioButtonID);
+            final RadioButton radioButton = (RadioButton) findViewById(radioButtonID);
             @Override
             public void onClick(View v) {
                 switch (radioGroup.getCheckedRadioButtonId()){
@@ -137,7 +198,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final CheckBox checkBox_free = (CheckBox)findViewById(R.id.checkBox_free);
+        final CheckBox checkBox_free = findViewById(R.id.checkBox_free);
         checkBox_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -149,7 +210,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final CheckBox checkBox_disabled = (CheckBox)findViewById(R.id.checkBox_disabled);
+        final CheckBox checkBox_disabled = findViewById(R.id.checkBox_disabled);
         checkBox_disabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -161,7 +222,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final CheckBox checkBox_parking = (CheckBox)findViewById(R.id.checkBox_parking);
+        final CheckBox checkBox_parking = findViewById(R.id.checkBox_parking);
         checkBox_parking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @SuppressLint("ResourceType")
             @Override
@@ -174,7 +235,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final CheckBox checkBox_locked = (CheckBox)findViewById(R.id.checkBox_locked);
+        final CheckBox checkBox_locked = findViewById(R.id.checkBox_locked);
         checkBox_locked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -186,7 +247,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final CheckBox checkBox_mirrors = (CheckBox)findViewById(R.id.checkBox_mirrors);
+        final CheckBox checkBox_mirrors = findViewById(R.id.checkBox_mirrors);
         checkBox_mirrors.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -198,7 +259,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final CheckBox checkBox_diaperTable = (CheckBox)findViewById(R.id.checkBox_diaperTable);
+        final CheckBox checkBox_diaperTable = findViewById(R.id.checkBox_diaperTable);
         checkBox_diaperTable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -210,7 +271,7 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final Button submitButton = (Button)findViewById(R.id.submitBathroom);
+        final Button submitButton = findViewById(R.id.submitBathroom);
         //final String bathroomName = editBathroomName.getText().toString();
         //final String bathroomLocation = editBathroomLocation.getText().toString();
         //final String bathroomHours_open = editBathroomHours_open.getText().toString();
@@ -240,7 +301,13 @@ public class AddABathroomActivity extends AppCompatActivity {
 
 
     }
-
+/*
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        editMaintenanceDays.setText(sdf.format(myCalendar.getTime()));
+    }
+*/
     private void openGallery(){
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
@@ -254,13 +321,13 @@ public class AddABathroomActivity extends AppCompatActivity {
         }
     }
 
-
+/*
     private void rbCheck(View view) {
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
         final RadioButton radioButton = (RadioButton)findViewById(radioButtonID);
         Toast.makeText(getBaseContext(), radioButton.getText(), Toast.LENGTH_LONG).show();
     }
-
+*/
     private void uploadImage(View v) {
 
 
@@ -269,6 +336,8 @@ public class AddABathroomActivity extends AppCompatActivity {
     public void submitBathroom(View v) {
 
     }
+
+
 
 
 }
