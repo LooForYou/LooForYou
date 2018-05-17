@@ -1,29 +1,49 @@
 package com.looforyou.looforyou.activities;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.fragments.LoginFragment;
 import com.looforyou.looforyou.utilities.HttpGet;
+import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.TabControl;
 import com.looforyou.looforyou.utilities.UserUtil;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
 import static com.looforyou.looforyou.Constants.GET_USERS;
 import static com.looforyou.looforyou.Constants.TOKEN_QUERY;
+import static com.looforyou.looforyou.Constants.UPLOAD_IMAGE;
 
 /**
  * This is activity for displaying user profile information
@@ -44,6 +64,8 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
     TextView username = null;
     /* Button for logging out */
     Button logout = null;
+
+    public final int PICK_IMAGE = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +143,17 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
                     Picasso.get().load(pf).fit().centerCrop().into(profilePic);
                 }
 
+                /* TODO NOTE comment to activate intent to choose new profile picture from gallery */
+/*                profilePic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setType("image*//*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                    }
+                });*/
+
             } catch (Exception e) {
             }
         } catch (InterruptedException e) {
@@ -129,6 +162,51 @@ public class ProfileActivity extends AppCompatActivity implements LoginFragment.
             e.printStackTrace();
         }
     }
+
+
+/* TODO update profile image from activity result */
+/*    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == PICK_IMAGE) {
+            final Uri imageUri = data.getData();
+            String extension;
+            if(imageUri.getScheme().equals(ContentResolver.SCHEME_CONTENT)){
+                final MimeTypeMap mime = MimeTypeMap.getSingleton();
+                extension = mime.getExtensionFromMimeType(getContentResolver().getType(imageUri));
+            }else {
+                extension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(new File(imageUri.getPath())).toString());
+            }
+
+//            //////////////////////////////////////
+
+            String fileName = imageUri.getPath().substring(imageUri.getPath().lastIndexOf(":")+1);
+            Uri selectedImageUri = data.getData();
+            String imagepath = selectedImageUri.getPath();
+            File imageFile = new File(imagepath);
+
+
+//            Toast.makeText(this,"the path: "+extension, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"the path: "+fileName, Toast.LENGTH_SHORT).show();
+            String result = "null";
+
+            HttpPost post = new HttpPost(imageFile);
+
+            String url = GET_BATHROOMS + (new UserUtil(this).getUserID()) + UPLOAD_IMAGE;
+            try {
+                result = post.execute(url).get();
+                Log.v("testresultcode test","test");
+            } catch (InterruptedException e) {
+                Log.v("testresultcode result","fail");
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                Log.v("testresultcode result","fail");
+                e.printStackTrace();
+            }
+            Log.v("testresultcode result",result);
+
+        }
+    }*/
 
 
     /**

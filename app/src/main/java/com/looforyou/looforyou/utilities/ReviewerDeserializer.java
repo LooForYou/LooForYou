@@ -1,22 +1,30 @@
 package com.looforyou.looforyou.utilities;
 
-import android.util.Log;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.looforyou.looforyou.Models.Review;
 import com.looforyou.looforyou.Models.Reviewer;
 
 import java.lang.reflect.Type;
 
 /**
- * Created by ibreaker on 3/11/2018.
+ * Custom tool to deserialize Reviewer data retrieved from the server.
+ * This class converts the server's json response to custom a custom Reviewer object
+ *
+ * @author mingtau li
  */
 
 public class ReviewerDeserializer implements JsonDeserializer<Reviewer> {
+    /**
+     * override factory deserializer for custom reviewer deserialization
+     *
+     * @param json    jsonElement object containing reviewer info
+     * @param typeOfT specified type for deserializing json
+     * @param context Context of JSON Deserializer
+     * @return Reviewer object containing all reviewer info
+     */
     @Override
     public Reviewer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();

@@ -36,14 +36,14 @@
             android:background="@android:color/transparent"
             android:gravity="end"
             android:src="@drawable/ic_my_location_36"
-            android:paddingEnd="5dp"/>
+            android:paddingEnd="15dp"/>
         <ImageButton
             android:id="@+id/action_bar_sort_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_vertical|end"
             android:layout_weight="0"
             android:background="@android:color/transparent"
             android:paddingEnd="10dp"
