@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -27,11 +28,15 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Context;
 
+import java.lang.reflect.Array;
+import java.text.DateFormat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.looforyou.looforyou.Models.Bathroom;
+import com.looforyou.looforyou.Models.Coordinates;
 import com.looforyou.looforyou.R;
 import com.looforyou.looforyou.utilities.HttpPost;
+import com.looforyou.looforyou.utilities.LooLoader;
 import com.looforyou.looforyou.utilities.TabControl;
 import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
 
@@ -39,9 +44,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Date;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -55,9 +64,13 @@ import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
 
 public class AddABathroomActivity extends AppCompatActivity {
 
+    public enum Hours {
+        HOURS_OPEN, HOURS_CLOSED, MAINTENANCE_START, MAINTANANCE_END
+    }
     /* Text view for Page Title */
     private TextView add_a_bathroom;
 
+    private Hours hourType;
     /* Image view for Bathroom Image upload */
     private ImageView bathroom_image;
     private static final int RESULT_LOAD_IMAGE = 1;
@@ -72,6 +85,7 @@ public class AddABathroomActivity extends AppCompatActivity {
     private EditText editMaintenanceDays;
     private EditText editMaintenanceHours_start;
     private EditText editMaintenanceHours_end;
+    private EditText getEditBathroomDescription;
 
     private TextView bathroom_attributes;
     private TextView bathroom_type;
@@ -91,6 +105,13 @@ public class AddABathroomActivity extends AppCompatActivity {
     private CheckBox checkBox_mirrors;
     private CheckBox checkBox_diaperTable;
 
+    private CheckBox checkBox_Mon;
+    private CheckBox checkBox_Tue;
+    private CheckBox checkBox_Wed;
+    private CheckBox checkBox_Thu;
+    private CheckBox checkBox_Fri;
+    private CheckBox checkBox_Sat;
+    private CheckBox checkBox_Sun;
 
     /* Button to save and add new bathroom */
     private Button submitButton;
@@ -125,6 +146,7 @@ public class AddABathroomActivity extends AppCompatActivity {
         final String date_time = "";
         final int[] mHour = {myCalendar.get(Calendar.HOUR_OF_DAY)};
         final int[] mMinute = {myCalendar.get(Calendar.MINUTE)};
+        final EditText editBathroomDescription = findViewById(R.id.editBathroomDescription);
         final EditText editBathroomHours_open = findViewById(R.id.editBathroomHours_open);
         final EditText editBathroomHours_closed = findViewById(R.id.editBathroomHours_closed);
         final TimePickerDialog.OnTimeSetListener myTime = new TimePickerDialog.OnTimeSetListener() {
@@ -135,14 +157,28 @@ public class AddABathroomActivity extends AppCompatActivity {
                 String myFormat = "hh:mm";
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
                 //need to fix this...
-                editBathroomHours_open.setText(sdf.format(myCalendar.getTime()));
-                editBathroomHours_closed.setText(sdf.format(myCalendar.getTime()));
+
+                switch (hourType){
+                    case HOURS_OPEN:
+                        editBathroomHours_open.setText(sdf.format(myCalendar.getTime()));
+                        break;
+                    case HOURS_CLOSED:
+                        editBathroomHours_closed.setText(sdf.format(myCalendar.getTime()));
+                        break;
+                    case MAINTENANCE_START:
+                        editMaintenanceHours_start.setText(sdf.format(myCalendar.getTime()));
+                        break;
+                    case MAINTANANCE_END:
+                        editMaintenanceHours_end.setText(sdf.format(myCalendar.getTime()));
+                        break;
+                }
             }
         };
 
         editBathroomHours_open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hourType = Hours.HOURS_OPEN;
                 new TimePickerDialog(AddABathroomActivity.this, myTime, myCalendar
                         .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
                         false).show();
@@ -152,6 +188,27 @@ public class AddABathroomActivity extends AppCompatActivity {
         editBathroomHours_closed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hourType = Hours.HOURS_CLOSED;
+                new TimePickerDialog(AddABathroomActivity.this, myTime, myCalendar
+                        .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
+                        false).show();
+            }
+        });
+
+        editMaintenanceHours_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hourType = Hours.MAINTENANCE_START;
+                new TimePickerDialog(AddABathroomActivity.this, myTime, myCalendar
+                        .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
+                        false).show();
+            }
+        });
+
+        editMaintenanceHours_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hourType = Hours.MAINTANANCE_END;
                 new TimePickerDialog(AddABathroomActivity.this, myTime, myCalendar
                         .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
                         false).show();
@@ -168,18 +225,9 @@ public class AddABathroomActivity extends AppCompatActivity {
                 String myFormat = "MM/dd/yy";
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
                 editMaintenanceDays.setText(sdf.format(myCalendar.getTime()));
+
             }
         };
-
-        editMaintenanceDays.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(AddABathroomActivity.this, myDate, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
 
         final RadioGroup radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnClickListener(new View.OnClickListener() {
@@ -199,77 +247,19 @@ public class AddABathroomActivity extends AppCompatActivity {
         });
 
         final CheckBox checkBox_free = findViewById(R.id.checkBox_free);
-        checkBox_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-
-                } else {
-
-                }
-            }
-        });
-
         final CheckBox checkBox_disabled = findViewById(R.id.checkBox_disabled);
-        checkBox_disabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-
-                } else {
-
-                }
-            }
-        });
-
         final CheckBox checkBox_parking = findViewById(R.id.checkBox_parking);
-        checkBox_parking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-
-                } else {
-
-                }
-            }
-        });
-
         final CheckBox checkBox_locked = findViewById(R.id.checkBox_locked);
-        checkBox_locked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-
-                } else {
-
-                }
-            }
-        });
-
         final CheckBox checkBox_mirrors = findViewById(R.id.checkBox_mirrors);
-        checkBox_mirrors.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-
-                } else {
-
-                }
-            }
-        });
-
         final CheckBox checkBox_diaperTable = findViewById(R.id.checkBox_diaperTable);
-        checkBox_diaperTable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
 
-                } else {
-
-                }
-            }
-        });
+        final CheckBox checkBox_Mon = findViewById(R.id.checkBox_Mon);
+        final CheckBox checkBox_Tue = findViewById(R.id.checkBox_Tue);
+        final CheckBox checkBox_Wed = findViewById(R.id.checkBox_Wed);
+        final CheckBox checkBox_Thu = findViewById(R.id.checkBox_Thu);
+        final CheckBox checkBox_Fri = findViewById(R.id.checkBox_Fri);
+        final CheckBox checkBox_Sat = findViewById(R.id.checkBox_Sat);
+        final CheckBox checkBox_Sun = findViewById(R.id.checkBox_Sun);
 
         final Button submitButton = findViewById(R.id.submitBathroom);
         //final String bathroomName = editBathroomName.getText().toString();
@@ -280,17 +270,36 @@ public class AddABathroomActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //construct the bathroom object using user inputs
-                Bathroom newBathroom = new Bathroom("");
-                Gson gson = new Gson();
-                String json = gson.toJson(newBathroom);
+
                 try {
+                    //construct the bathroom object using user inputs
+                    DateFormat format = new SimpleDateFormat("hh:mm");
+                    Date hoursOpen = format.parse(editBathroomHours_open.getText().toString());
+                    Date hoursClosed = format.parse(editBathroomHours_closed.getText().toString());
+                    Date maintenanceStart = format.parse(editMaintenanceHours_start.getText().toString());
+                    Date maintenanceEnd = format.parse(editMaintenanceHours_end.getText().toString());
+
+                    ArrayList<String> descriptions = new ArrayList<String>(Arrays.asList(editBathroomDescription.getText().toString().split("\n")));
+
+                    Location location = LooLoader.getCurrentLocation();
+                    Coordinates coordinates = new Coordinates(location.getLatitude(), location.getLongitude());
+
+                    Bathroom bathroom = new Bathroom(editBathroomName.getText().toString(), coordinates, hoursOpen, hoursClosed,
+                                                    maintenanceStart, maintenanceEnd, createMaintenaceDays(),
+                                                    createAmenities(), descriptions, editBathroomLocation.getText().toString());
+
+                            //Bathroom newBathroom = new Bathroom();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(bathroom);
+
                     JSONObject myObject = new JSONObject(json);
                     HttpPost post = new HttpPost(myObject);
                     post.execute(GET_BATHROOMS);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
+                } catch (ParseException e){
+
                 }
             }
         });
@@ -321,6 +330,65 @@ public class AddABathroomActivity extends AppCompatActivity {
         }
     }
 
+    private String createMaintenaceDays(){
+        ArrayList<String> maintenaceDays = new ArrayList<String>();
+        String result = "";
+
+        if (checkBox_Mon.isChecked())
+            maintenaceDays.add("Mondays");
+
+        if (checkBox_Tue.isChecked())
+            maintenaceDays.add("Tuesdays");
+
+        if (checkBox_Wed.isChecked())
+            maintenaceDays.add("Wednesdays");
+
+        if (checkBox_Thu.isChecked())
+            maintenaceDays.add("Thursdays");
+
+        if (checkBox_Fri.isChecked())
+            maintenaceDays.add("Fridays");
+
+        if (checkBox_Sat.isChecked())
+            maintenaceDays.add("Saturdays");
+
+        if (checkBox_Sun.isChecked())
+            maintenaceDays.add("Sundays");
+
+        for (int i = 0; i < maintenaceDays.size(); i++){
+            result += maintenaceDays.get(i);
+
+            if (i < (maintenaceDays.size() - 1)){
+                result += ", ";
+            }
+        }
+
+        return result;
+    }
+
+    private ArrayList<String> createAmenities(){
+        ArrayList<String> amenities = new ArrayList<String>();
+
+        if (checkBox_free.isChecked())
+            amenities.add("free");
+
+        if (checkBox_disabled.isChecked())
+            amenities.add("disabled");
+
+        if (checkBox_parking.isChecked())
+            amenities.add("parking");
+
+        if (checkBox_locked.isChecked())
+            amenities.add("locked");
+
+        if (checkBox_mirrors.isChecked())
+            amenities.add("mirrors");
+
+        if (checkBox_diaperTable.isChecked())
+            amenities.add("diaper table");
+
+        return  amenities;
+    }
 /*
     private void rbCheck(View view) {
         int radioButtonID = radioGroup.getCheckedRadioButtonId();

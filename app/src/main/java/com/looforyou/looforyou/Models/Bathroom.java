@@ -102,6 +102,24 @@ public class Bathroom implements Serializable, Parcelable {
         this.id = id;
     }
 
+    public Bathroom(String name, Coordinates coordinates, Date startTime, Date endTime, Date maintenanceStart, Date maintenanceEnd, String maintenanceDays, ArrayList<String> amenities, ArrayList<String> descriptions, String address) {
+        this.name = name;
+        this.coordinates = coordinates;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.maintenanceStart = maintenanceStart;
+        this.maintenanceEnd = maintenanceEnd;
+        this.maintenanceDays = maintenanceDays;
+        this.amenities = amenities;
+        this.descriptions = descriptions;
+        reviews = new ArrayList<String>();
+        image = null;
+        this.address = address;
+        this.bookmarked = false;
+        this.rating = 0.0;
+        this.id = null;
+    }
+
     /**
      * instantiate variables with parcel object when reading in Parcelable
      *
