@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.JsonAdapter;
 import com.looforyou.looforyou.utilities.BathroomDeserializer;
+import com.looforyou.looforyou.utilities.BathroomSerializer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -169,6 +170,13 @@ public class Bathroom implements Serializable, Parcelable {
         }
         return null;
     }
+
+    /**
+     * getter for bookmarked
+     *
+     * @return true or false
+     */
+    public boolean getBookmarked(){return bookmarked;}
 
     /**
      * getter for reviews

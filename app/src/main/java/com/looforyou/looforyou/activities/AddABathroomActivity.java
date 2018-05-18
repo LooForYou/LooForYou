@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,13 +32,19 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.Context;
 
+import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.looforyou.looforyou.Manifest;
 import com.looforyou.looforyou.Models.Bathroom;
 import com.looforyou.looforyou.Models.Coordinates;
 import com.looforyou.looforyou.R;
+import com.looforyou.looforyou.utilities.BathroomDeserializer;
+import com.looforyou.looforyou.utilities.BathroomSerializer;
 import com.looforyou.looforyou.utilities.HttpPost;
 import com.looforyou.looforyou.utilities.LooLoader;
 import com.looforyou.looforyou.utilities.TabControl;
@@ -55,6 +65,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.looforyou.looforyou.Constants.GET_BATHROOMS;
+import static com.looforyou.looforyou.Constants.UPLOAD_IMAGE;
 
 /**
  * This is the activity class for adding new bathrooms
@@ -67,6 +78,8 @@ public class AddABathroomActivity extends AppCompatActivity {
     public enum Hours {
         HOURS_OPEN, HOURS_CLOSED, MAINTENANCE_START, MAINTANANCE_END
     }
+
+    private Bathroom resultFromRequest = null;
     /* Text view for Page Title */
     private TextView add_a_bathroom;
 
@@ -98,20 +111,20 @@ public class AddABathroomActivity extends AppCompatActivity {
     private RadioButton radioNeutral;
 
     /* Check Boxes to select amenities */
-    private CheckBox checkBox_free;
-    private CheckBox checkBox_disabled;
-    private CheckBox checkBox_parking;
-    private CheckBox checkBox_locked;
-    private CheckBox checkBox_mirrors;
-    private CheckBox checkBox_diaperTable;
+    private static CheckBox checkBox_free;
+    private static CheckBox checkBox_disabled;
+    private static CheckBox checkBox_parking;
+    private static CheckBox checkBox_locked;
+    private static CheckBox checkBox_mirrors;
+    private static CheckBox checkBox_diaperTable;
 
-    private CheckBox checkBox_Mon;
-    private CheckBox checkBox_Tue;
-    private CheckBox checkBox_Wed;
-    private CheckBox checkBox_Thu;
-    private CheckBox checkBox_Fri;
-    private CheckBox checkBox_Sat;
-    private CheckBox checkBox_Sun;
+    private static CheckBox checkBox_Mon;
+    private static CheckBox checkBox_Tue;
+    private static CheckBox checkBox_Wed;
+    private static CheckBox checkBox_Thu;
+    private static CheckBox checkBox_Fri;
+    private static CheckBox checkBox_Sat;
+    private static CheckBox checkBox_Sun;
 
     /* Button to save and add new bathroom */
     private Button submitButton;
@@ -127,12 +140,7 @@ public class AddABathroomActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         final ImageView bathroom_image = findViewById(R.id.bathroom_image);
-        bathroom_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+
 
         final TextView bathroom_image_link = findViewById(R.id.bathroom_image_link);
 
@@ -149,27 +157,27 @@ public class AddABathroomActivity extends AppCompatActivity {
         final EditText editBathroomDescription = findViewById(R.id.editBathroomDescription);
         final EditText editBathroomHours_open = findViewById(R.id.editBathroomHours_open);
         final EditText editBathroomHours_closed = findViewById(R.id.editBathroomHours_closed);
+        final EditText editMaintenanceHours_start = findViewById(R.id.editMaintenanceHours_start);
+        final EditText editMaintenanceHours_end = findViewById(R.id.editMaintenanceHours_end);
         final TimePickerDialog.OnTimeSetListener myTime = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 myCalendar.set(Calendar.MINUTE, minute);
-                String myFormat = "hh:mm";
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                //need to fix this...
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
 
                 switch (hourType){
                     case HOURS_OPEN:
-                        editBathroomHours_open.setText(sdf.format(myCalendar.getTime()));
+                        editBathroomHours_open.setText(dateFormat.format(myCalendar.getTime()));
                         break;
                     case HOURS_CLOSED:
-                        editBathroomHours_closed.setText(sdf.format(myCalendar.getTime()));
+                        editBathroomHours_closed.setText(dateFormat.format(myCalendar.getTime()));
                         break;
                     case MAINTENANCE_START:
-                        editMaintenanceHours_start.setText(sdf.format(myCalendar.getTime()));
+                        editMaintenanceHours_start.setText(dateFormat.format(myCalendar.getTime()));
                         break;
                     case MAINTANANCE_END:
-                        editMaintenanceHours_end.setText(sdf.format(myCalendar.getTime()));
+                        editMaintenanceHours_end.setText(dateFormat.format(myCalendar.getTime()));
                         break;
                 }
             }
@@ -215,20 +223,6 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final EditText editMaintenanceDays = findViewById(R.id.editMaintenanceDays);
-        final DatePickerDialog.OnDateSetListener myDate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, month);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "MM/dd/yy";
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                editMaintenanceDays.setText(sdf.format(myCalendar.getTime()));
-
-            }
-        };
-
         final RadioGroup radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnClickListener(new View.OnClickListener() {
             int radioButtonID = radioGroup.getCheckedRadioButtonId();
@@ -246,20 +240,20 @@ public class AddABathroomActivity extends AppCompatActivity {
             }
         });
 
-        final CheckBox checkBox_free = findViewById(R.id.checkBox_free);
-        final CheckBox checkBox_disabled = findViewById(R.id.checkBox_disabled);
-        final CheckBox checkBox_parking = findViewById(R.id.checkBox_parking);
-        final CheckBox checkBox_locked = findViewById(R.id.checkBox_locked);
-        final CheckBox checkBox_mirrors = findViewById(R.id.checkBox_mirrors);
-        final CheckBox checkBox_diaperTable = findViewById(R.id.checkBox_diaperTable);
+        checkBox_free = findViewById(R.id.checkBox_free);
+        checkBox_disabled = findViewById(R.id.checkBox_disabled);
+        checkBox_parking = findViewById(R.id.checkBox_parking);
+        checkBox_locked = findViewById(R.id.checkBox_locked);
+        checkBox_mirrors = findViewById(R.id.checkBox_mirrors);
+        checkBox_diaperTable = findViewById(R.id.checkBox_diaperTable);
 
-        final CheckBox checkBox_Mon = findViewById(R.id.checkBox_Mon);
-        final CheckBox checkBox_Tue = findViewById(R.id.checkBox_Tue);
-        final CheckBox checkBox_Wed = findViewById(R.id.checkBox_Wed);
-        final CheckBox checkBox_Thu = findViewById(R.id.checkBox_Thu);
-        final CheckBox checkBox_Fri = findViewById(R.id.checkBox_Fri);
-        final CheckBox checkBox_Sat = findViewById(R.id.checkBox_Sat);
-        final CheckBox checkBox_Sun = findViewById(R.id.checkBox_Sun);
+        checkBox_Mon = findViewById(R.id.checkBox_Mon);
+        checkBox_Tue = findViewById(R.id.checkBox_Tue);
+        checkBox_Wed = findViewById(R.id.checkBox_Wed);
+        checkBox_Thu = findViewById(R.id.checkBox_Thu);
+        checkBox_Fri = findViewById(R.id.checkBox_Fri);
+        checkBox_Sat = findViewById(R.id.checkBox_Sat);
+        checkBox_Sun = findViewById(R.id.checkBox_Sun);
 
         final Button submitButton = findViewById(R.id.submitBathroom);
         //final String bathroomName = editBathroomName.getText().toString();
@@ -273,11 +267,12 @@ public class AddABathroomActivity extends AppCompatActivity {
 
                 try {
                     //construct the bathroom object using user inputs
-                    DateFormat format = new SimpleDateFormat("hh:mm");
-                    Date hoursOpen = format.parse(editBathroomHours_open.getText().toString());
-                    Date hoursClosed = format.parse(editBathroomHours_closed.getText().toString());
-                    Date maintenanceStart = format.parse(editMaintenanceHours_start.getText().toString());
-                    Date maintenanceEnd = format.parse(editMaintenanceHours_end.getText().toString());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                    //DateFormat format = new SimpleDateFormat("hh:mm");
+                    Date hoursOpen = dateFormat.parse(editBathroomHours_open.getText().toString());
+                    Date hoursClosed = dateFormat.parse(editBathroomHours_closed.getText().toString());
+                    Date maintenanceStart = dateFormat.parse(editMaintenanceHours_start.getText().toString());
+                    Date maintenanceEnd = dateFormat.parse(editMaintenanceHours_end.getText().toString());
 
                     ArrayList<String> descriptions = new ArrayList<String>(Arrays.asList(editBathroomDescription.getText().toString().split("\n")));
 
@@ -289,17 +284,44 @@ public class AddABathroomActivity extends AppCompatActivity {
                                                     createAmenities(), descriptions, editBathroomLocation.getText().toString());
 
                             //Bathroom newBathroom = new Bathroom();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(bathroom);
+                    final GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(Bathroom.class, new BathroomSerializer());
+                    builder.setPrettyPrinting();
+                    final Gson gsonReq = builder.create();
+                    String json = gsonReq.toJson(bathroom);
 
                     JSONObject myObject = new JSONObject(json);
                     HttpPost post = new HttpPost(myObject);
-                    post.execute(GET_BATHROOMS);
+                    String result = post.execute(GET_BATHROOMS).get();
+
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(Bathroom.class, new BathroomDeserializer());
+                    Gson gsonRes = gsonBuilder.create();
+                    resultFromRequest = gsonRes.fromJson(result, Bathroom.class);
+                    bathroom_image.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try{
+                                if(ActivityCompat.checkSelfPermission((AddABathroomActivity.this), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                                    ActivityCompat.requestPermissions(AddABathroomActivity.this, new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, RESULT_LOAD_IMAGE);
+                                }else{
+                                    openGallery();
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 } catch (ParseException e){
-
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -323,10 +345,37 @@ public class AddABathroomActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults){
+        switch (requestCode){
+            case RESULT_LOAD_IMAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                }else{
+
+                }
+                break;
+        }
+    }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+                Uri uri = data.getData();
+                String[] filePathCol = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getContentResolver().query(uri, filePathCol, null, null, null);
+                cursor.moveToFirst();
+                int colomnIndex = cursor.getColumnIndex(filePathCol[0]);
+                String filePath = cursor.getString(colomnIndex);
+                cursor.close();
 
+                if (resultFromRequest != null) {
+                    File file = new File(filePath);
+                    HttpPost post = new HttpPost(file);
+                    String url = GET_BATHROOMS + resultFromRequest.getId() + UPLOAD_IMAGE;
+                    post.execute(url);
+                    bathroom_image.setImageURI(uri);
+                }
         }
     }
 

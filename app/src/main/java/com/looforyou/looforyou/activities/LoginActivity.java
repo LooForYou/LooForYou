@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button bRegister = (Button) findViewById(R.id.bRegister);
         final LoginButton bFBLogin = (LoginButton) findViewById(R.id.bFBLogin);
         bFBLogin.setReadPermissions(Arrays.asList(EMAIL));
-        final Button bGoogle = (Button) findViewById(R.id.bGoogleLogin);
+
 
         callbackManager = CallbackManager.Factory.create();
         bFBLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
