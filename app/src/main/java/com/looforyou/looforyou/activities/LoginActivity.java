@@ -37,14 +37,14 @@ public class LoginActivity extends AppCompatActivity {
         final Button bRegister = (Button) findViewById(R.id.bRegister);
         final LoginButton bFBLogin = (LoginButton) findViewById(R.id.bFBLogin);
         bFBLogin.setReadPermissions(Arrays.asList(EMAIL));
-
-
+        
         callbackManager = CallbackManager.Factory.create();
         bFBLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 tvFBstatus.setText("Login Success!");
                 etUserName.setText(loginResult.getAccessToken().getUserId());
+
             }
 
             @Override
